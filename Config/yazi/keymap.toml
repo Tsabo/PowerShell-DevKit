@@ -1,0 +1,7 @@
+# Extra keybindings for Yazi
+# e: open hovered/selected files in-terminal using Microsoft Edit
+
+[[mgr.prepend_keymap]]
+on   = ["e"]
+run  = 'shell --confirm --block -- edit "%*"'
+desc = "Edit (Microsoft Edit)"

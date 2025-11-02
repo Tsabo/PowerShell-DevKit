@@ -1,0 +1,1 @@
+function mangal {docker run --rm -ti -e "TERM=xterm-256color" -v ${PWD}/mangal/downloads:/downloads -v ${PWD}/mangal/config:/config metafates/mangal $args}

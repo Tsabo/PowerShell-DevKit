@@ -1,0 +1,203 @@
+name: Validate PowerShell Scripts
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate Scripts
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check PowerShell version  
+        shell: pwsh
+        run: |
+          Write-Host "PowerShell Version on ${{ matrix.os }}:"
+          $PSVersionTable
+          Write-Host "Platform: $($PSVersionTable.Platform)"
+          Write-Host "OS: $($PSVersionTable.OS)"
+      
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+      
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          # Run PSScriptAnalyzer with custom settings
+          $settingsFile = ".\PSScriptAnalyzerSettings.psd1"
+          $settings = if (Test-Path $settingsFile) { $settingsFile } else { "PSGallery" }
+          
+          Write-Host "Using PSScriptAnalyzer settings: $settings" -ForegroundColor Cyan
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings $settings -Severity @('Error', 'Warning', 'Information')
+          
+          if ($results) {
+            # Group by severity for better reporting
+            $errors = $results | Where-Object Severity -eq 'Error'
+            $warnings = $results | Where-Object Severity -eq 'Warning'
+            $info = $results | Where-Object Severity -eq 'Information'
+            
+            Write-Host "=== PSScriptAnalyzer Results ===" -ForegroundColor Cyan
+            
+            if ($errors) {
+              Write-Host "`n❌ Errors ($($errors.Count)):" -ForegroundColor Red
+              $errors | Format-Table RuleName, Severity, ScriptName, Line, Message -AutoSize
+            }
+            
+            if ($warnings) {
+              Write-Host "`n⚠️  Warnings ($($warnings.Count)):" -ForegroundColor Yellow
+              $warnings | Format-Table RuleName, Severity, ScriptName, Line, Message -AutoSize
+            }
+            
+            if ($info) {
+              Write-Host "`nℹ️  Information ($($info.Count)):" -ForegroundColor Blue
+              $info | Format-Table RuleName, Severity, ScriptName, Line, Message -AutoSize
+            }
+            
+            # Fail only on errors, allow warnings to pass
+            if ($errors) {
+              Write-Error "❌ PSScriptAnalyzer found $($errors.Count) error(s) that must be fixed"
+              exit 1
+            } else {
+              Write-Host "✅ No critical errors found. $($warnings.Count) warning(s) and $($info.Count) info message(s) reported." -ForegroundColor Green
+            }
+          } else {
+            Write-Host "✅ No issues found by PSScriptAnalyzer" -ForegroundColor Green
+          }
+      
+      - name: Generate PSScriptAnalyzer report
+        if: always()
+        shell: pwsh
+        run: |
+          # Generate detailed report for artifacts
+          $settingsFile = ".\PSScriptAnalyzerSettings.psd1"
+          $settings = if (Test-Path $settingsFile) { $settingsFile } else { "PSGallery" }
+          
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings $settings
+          
+          if ($results) {
+            # Export results to JSON for detailed analysis
+            $results | ConvertTo-Json -Depth 3 | Out-File "pssa-results.json" -Encoding UTF8
+            
+            # Create summary report
+            $summary = @{
+              TotalIssues = $results.Count
+              Errors = ($results | Where-Object Severity -eq 'Error').Count
+              Warnings = ($results | Where-Object Severity -eq 'Warning').Count
+              Information = ($results | Where-Object Severity -eq 'Information').Count
+              RulesSummary = $results | Group-Object RuleName | Sort-Object Count -Descending | Select-Object Name, Count
+            }
+            
+            $summary | ConvertTo-Json -Depth 3 | Out-File "pssa-summary.json" -Encoding UTF8
+            Write-Host "Generated PSScriptAnalyzer reports: pssa-results.json, pssa-summary.json"
+          } else {
+            Write-Host "No issues to report"
+            @{ Message = "No PSScriptAnalyzer issues found" } | ConvertTo-Json | Out-File "pssa-summary.json" -Encoding UTF8
+          }
+      
+      - name: Upload PSScriptAnalyzer results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pssa-results
+          path: |
+            pssa-*.json
+          retention-days: 30
+      
+      - name: Test profile syntax
+        shell: pwsh
+        run: |
+          $profilePath = ".\Microsoft.PowerShell_profile.ps1"
+          if (Test-Path $profilePath) {
+            $errors = $null
+            $null = [System.Management.Automation.PSParser]::Tokenize((Get-Content $profilePath -Raw), [ref]$errors)
+            
+            if ($errors) {
+              Write-Error "Profile has syntax errors:"
+              $errors | Format-Table -AutoSize
+              exit 1
+            } else {
+              Write-Host "✅ Profile syntax is valid"
+            }
+          }
+      
+      - name: Test custom modules syntax
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path ".\CustomModules" -Filter "*.psm1" -Recurse | ForEach-Object {
+            Write-Host "Testing: $($_.Name)"
+            $errors = $null
+            $null = [System.Management.Automation.PSParser]::Tokenize((Get-Content $_.FullName -Raw), [ref]$errors)
+            
+            if ($errors) {
+              Write-Error "Module $($_.Name) has syntax errors:"
+              $errors | Format-Table -AutoSize
+              exit 1
+            } else {
+              Write-Host "✅ $($_.Name) syntax is valid"
+            }
+          }
+      
+      - name: Test all scripts syntax
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path ".\Scripts" -Filter "*.ps1" -Recurse | ForEach-Object {
+            Write-Host "Testing: $($_.Name)"
+            $errors = $null
+            $null = [System.Management.Automation.PSParser]::Tokenize((Get-Content $_.FullName -Raw), [ref]$errors)
+            
+            if ($errors) {
+              Write-Error "Script $($_.Name) has syntax errors:"
+              $errors | Format-Table -AutoSize
+              exit 1
+            } else {
+              Write-Host "✅ $($_.Name) syntax is valid"
+            }
+          }
+      
+      - name: Validate Yazi configuration
+        shell: pwsh
+        run: |
+          $yaziConfig = ".\Config\yazi"
+          
+          if (Test-Path "$yaziConfig\yazi.toml") {
+            Write-Host "✅ yazi.toml exists"
+          } else {
+            Write-Error "❌ yazi.toml not found"
+            exit 1
+          }
+          
+          if (Test-Path "$yaziConfig\package.toml") {
+            Write-Host "✅ package.toml exists"
+          } else {
+            Write-Error "❌ package.toml not found"
+            exit 1
+          }
+      
+      - name: Validate oh-my-posh configuration
+        shell: pwsh
+        run: |
+          $ompConfig = ".\Config\oh-my-posh"
+          
+          Get-ChildItem -Path $ompConfig -Filter "*.json" | ForEach-Object {
+            Write-Host "Validating: $($_.Name)"
+            try {
+              $null = Get-Content $_.FullName | ConvertFrom-Json
+              Write-Host "✅ $($_.Name) is valid JSON"
+            } catch {
+              Write-Error "❌ $($_.Name) has invalid JSON: $_"
+              exit 1
+            }
+          }

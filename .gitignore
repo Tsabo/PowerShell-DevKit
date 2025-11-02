@@ -1,0 +1,62 @@
+# Ignore PowerShell module installation directories
+Modules/*/
+
+# Keep only the structure, not downloaded modules
+!Modules/.gitkeep
+
+# Ignore script info metadata
+Scripts/InstalledScriptInfos/
+
+# Ignore sensitive or local-specific data
+*.log
+*.tmp
+*~
+
+# Ignore script failure logs (user-specific troubleshooting data)
+Scripts/Logs/
+
+# Ignore Windows-specific files
+Thumbs.db
+desktop.ini
+
+# Ignore VS Code workspace settings (keep shared settings)
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Ignore backup files
+*.bak
+*.backup
+*_backup_*
+
+# Ignore export outputs
+*-Environment-Backup_*.md
+*-Environment-Backup_*.json
+
+# Ignore any local environment variables
+.env
+.env.local
+
+# Keep custom modules and configurations
+!CustomModules/
+!Config/
+
+# Ignore Yazi cache and state (keep config only)
+Config/yazi/plugins/*
+Config/yazi/flavors/*
+!Config/yazi/plugins/.gitkeep
+!Config/yazi/flavors/.gitkeep
+
+# Keep package.toml which defines plugins/flavors to install
+!Config/yazi/package.toml
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+.directory
+
+# Ignore any sensitive personal information
+secrets.ps1
+*.secret.ps1

@@ -1,10 +1,17 @@
-# 🧩 Custom PowerShell Modules
+# 🧩 Custom PowerShell Modules (User-Specific)
 
-This directory contains **auto-discovered** custom PowerShell modules that extend your PowerShell environment.
+This directory is for **your personal custom PowerShell modules** that extend your PowerShell environment. These modules are **auto-discovered** and loaded automatically.
 
 ## ✨ Auto-Discovery Feature
 
-Any `.psm1` file placed in this directory will be **automatically loaded** when PowerShell starts. No need to modify the profile!
+Any `.psm1` file you place in this directory will be **automatically loaded** when PowerShell starts. No need to modify the profile!
+
+## 📦 Custom vs Bundled Modules
+
+- **`CustomModules/`** (this directory) - Your personal modules, NOT tracked in git, auto-discovered
+- **`IncludedModules/`** - Bundled with DevKit repo, tracked in git, statically loaded
+
+## 🚀 Quick Start
 
 ### 📝 How It Works
 
@@ -14,45 +21,42 @@ Any `.psm1` file placed in this directory will be **automatically loaded** when 
 
 The profile scans this directory during deferred startup and loads all modules alphabetically.
 
-## 🚀 Quick Start
-
-### Option 1: Use the Template
+### Creating Your First Custom Module
 
 ```powershell
-# Copy the template
-Copy-Item example-module.psm1.template my-tools.psm1
-
-# Edit and customize
-code my-tools.psm1
-
-# Restart PowerShell - your module is loaded!
-```
-
-### Option 2: Create From Scratch
-
-```powershell
-# Create a new module file
+# Create a new custom module
 @'
-function Get-MyTool {
-    [CmdletBinding()]
-    param([string]$Name)
+<#
+.SYNOPSIS
+    My custom PowerShell utilities
+#>
 
-    Write-Host "Hello from $Name!"
+function Get-MyCustomTool {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Name
+    )
+
+    Write-Host "Running custom tool: $Name" -ForegroundColor Cyan
 }
 
-Export-ModuleMember -Function Get-MyTool
-'@ | Out-File -FilePath ".\my-tools.psm1" -Encoding UTF8
+# Export only the functions you want to be public
+Export-ModuleMember -Function Get-MyCustomTool
+'@ | Out-File -FilePath ".\PowerShell\CustomModules\my-utilities.psm1" -Encoding UTF8
 
-# Restart PowerShell
+# Restart PowerShell - your module is automatically loaded!
+# No need to modify the profile!
 ```
 
 ## 📋 Module Loading Rules
 
-- ✅ **Auto-Discovery**: All `.psm1` files in this directory
+- ✅ **Auto-Discovery**: All `.psm1` files in this directory are automatically found and loaded
 - ✅ **Alphabetical Order**: Modules load alphabetically by filename
 - ✅ **Load Order Control**: Use prefixes like `01-core.psm1`, `02-tools.psm1` if order matters
-- ✅ **Deferred Loading**: Modules load during idle time (fast startup)
-- ✅ **Error Handling**: Failed modules are silently skipped (won't break profile)
+- ✅ **Deferred Loading**: Modules load during idle time (fast PowerShell startup)
+- ✅ **Error Handling**: Failed modules are silently skipped (won't break your profile)
+- ✅ **Git Ignored**: Your custom modules stay private (not tracked in git)
 
 ## 💡 Best Practices
 
@@ -70,8 +74,13 @@ Get-Verb
 
 ### 2. **Export Only Public Functions**
 ```powershell
-function Get-PublicFunction { }
-function privateHelper { }
+function Get-PublicFunction {
+    # Public function
+}
+
+function privateHelper {
+    # Internal helper
+}
 
 # Only export public functions
 Export-ModuleMember -Function Get-PublicFunction
@@ -89,62 +98,107 @@ function Get-MyTool {
         Parameter description
     .EXAMPLE
         Get-MyTool -Name "Test"
+        Description of what this example does
     #>
     [CmdletBinding()]
     param([string]$Name)
 
-    # Function logic
+    # Function logic here
 }
 ```
 
 ### 4. **Use PSScriptAnalyzer**
 ```powershell
-# Validate your module before committing
-Invoke-ScriptAnalyzer -Path .\your-module.psm1 -Settings ..\..\PSScriptAnalyzerSettings.psd1
+# Validate your module for best practices
+Invoke-ScriptAnalyzer -Path .\PowerShell\CustomModules\my-utilities.psm1 -Settings .\PSScriptAnalyzerSettings.psd1
 ```
-
-## 📦 Included Modules
-
-- **`build_funtions.psm1`** - Build automation utilities
-- **`utilities.psm1`** - General helper functions
-- **`example-module.psm1.template`** - Template for creating new modules
 
 ## 🔗 Related Documentation
 
-- [CONTRIBUTING.md](../../CONTRIBUTING.md) - Contribution guidelines
-- [Microsoft.PowerShell_profile.ps1](../Microsoft.PowerShell_profile.ps1) - Profile implementation
+- [CONTRIBUTING.md](../../CONTRIBUTING.md) - Guidelines if you want to contribute to the DevKit
+- [Microsoft.PowerShell_profile.ps1](../Microsoft.PowerShell_profile.ps1) - Profile with auto-discovery implementation
 - [PSScriptAnalyzerSettings.psd1](../../PSScriptAnalyzerSettings.psd1) - Code quality rules
 
 ## 🎯 Pro Tips
 
-### Reload Modules Without Restarting
+### Reload Module Without Restarting
 
 ```powershell
-# Remove and reimport a module after changes
-Remove-Module utilities
-Import-Module $PROFILE\..\CustomModules\utilities.psm1 -Force
+# Remove and reimport after making changes
+Remove-Module my-utilities
+Import-Module $PROFILE\..\CustomModules\my-utilities.psm1 -Force
 ```
 
 ### Test Module in Isolation
 
 ```powershell
-# Import just one module for testing
-Import-Module .\my-module.psm1 -Force
+# Import just your module for testing
+Import-Module .\PowerShell\CustomModules\my-utilities.psm1 -Force
 
 # Check what functions are exported
-Get-Command -Module my-module
+Get-Command -Module my-utilities
 ```
 
 ### Debug Module Loading
 
 ```powershell
-# See what modules are loaded
+# See all loaded modules
 Get-Module
 
 # Check if your custom module loaded
-Get-Module utilities, build_funtions
+Get-Module my-utilities
 ```
+
+### Example: Simple Utility Module
+
+```powershell
+# PowerShell/CustomModules/quick-tools.psm1
+
+function Quick-Note {
+    <#
+    .SYNOPSIS
+        Quickly append a note to your daily notes file
+    .EXAMPLE
+        Quick-Note "Remember to check that PR"
+    #>
+    param([string]$Note)
+
+    $notesFile = "$HOME\Documents\notes.txt"
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm"
+    "$timestamp - $Note" | Add-Content $notesFile
+    Write-Host "✓ Note added!" -ForegroundColor Green
+}
+
+function Open-Notes {
+    <#
+    .SYNOPSIS
+        Open your notes file in the default editor
+    #>
+    $notesFile = "$HOME\Documents\notes.txt"
+    if (Test-Path $notesFile) {
+        Start-Process $notesFile
+    } else {
+        Write-Warning "No notes file found. Creating one..."
+        New-Item $notesFile -ItemType File
+        Start-Process $notesFile
+    }
+}
+
+Export-ModuleMember -Function Quick-Note, Open-Notes
+```
+
+## 🆚 When to Use CustomModules vs IncludedModules
+
+| Scenario | Directory to Use |
+|----------|-----------------|
+| Personal utilities just for you | `CustomModules/` |
+| Company-specific tools (not public) | `CustomModules/` |
+| Experimenting with new functions | `CustomModules/` |
+| Want to contribute to the DevKit | `IncludedModules/` (submit PR) |
+| Creating a feature for everyone | `IncludedModules/` (submit PR) |
 
 ---
 
 **Happy Scripting!** 🚀
+
+*This directory is git-ignored. Your custom modules stay on your machine and won't be overwritten by DevKit updates.*

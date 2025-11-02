@@ -1,5 +1,11 @@
 # 🛠️ Developer Quick Reference
 
+Quick reference for **contributors** working on the PowerShell DevKit codebase.
+
+> **📖 For End Users**: See [Scripts/README.md](Scripts/README.md) for how to use Setup.ps1, Test.ps1, Update.ps1, and other automation scripts.
+>
+> **📖 For Contributors**: See [CONTRIBUTING.md](CONTRIBUTING.md) for full contribution guidelines and workflow.
+
 ## Pre-Commit Validation Commands
 
 ```powershell
@@ -82,8 +88,9 @@ Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1
 # Test profile loading
 powershell -NoProfile -Command ". '$PROFILE'"
 
-# Test module imports
-Import-Module .\PowerShell\CustomModules\utilities.psm1 -Force
+# Test bundled module imports
+Import-Module .\PowerShell\IncludedModules\utilities.psm1 -Force
+Import-Module .\PowerShell\IncludedModules\build_funtions.psm1 -Force
 
 # Test syntax of all PS files
 Get-ChildItem -Include "*.ps1","*.psm1" -Recurse |
@@ -137,8 +144,10 @@ Get-Help about_PSAvoidUsingCmdletAliases
 ## File Locations
 
 - **Validation Script**: `.\Scripts\Validate-Code.ps1`
+- **Formatting Script**: `.\Scripts\Format-AllCode.ps1`
 - **PSScriptAnalyzer Settings**: `.\PSScriptAnalyzerSettings.psd1`
 - **Contributing Guide**: `.\CONTRIBUTING.md`
+- **User Script Guide**: `.\Scripts\README.md`
 - **GitHub Workflow**: `.\.github\workflows\validate.yml`
 
 ## Exit Codes

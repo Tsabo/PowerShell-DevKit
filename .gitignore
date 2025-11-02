@@ -15,6 +15,12 @@ Scripts/InstalledScriptInfos/
 # Ignore script failure logs (user-specific troubleshooting data)
 Scripts/Logs/
 
+# Ignore user-specific custom modules and scripts (but keep READMEs)
+PowerShell/CustomModules/*
+!PowerShell/CustomModules/README.md
+PowerShell/CustomScripts/*
+!PowerShell/CustomScripts/README.md
+
 # Ignore Windows-specific files
 Thumbs.db
 desktop.ini

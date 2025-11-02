@@ -2,6 +2,8 @@
 
 Thank you for considering contributing to this project! This document provides guidelines and instructions for contributing.
 
+> **⚡ Quick Reference**: See [DEVELOPER-REFERENCE.md](DEVELOPER-REFERENCE.md) for command cheatsheet, validation scripts, and common fixes.
+
 ## 📋 Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
@@ -66,8 +68,7 @@ git remote add upstream https://github.com/ORIGINAL-OWNER/powershell-environment
 ### Adding Features
 
 Great areas to contribute:
-- **Custom PowerShell Modules** - Add new `.psm1` files to `PowerShell/CustomModules/` (auto-discovered!)
-- **Bundled Modules** - Pre-packaged modules in `PowerShell/IncludedModules/` (if needed for distribution)
+- **Bundled Modules** - Add new `.psm1` files to `PowerShell/IncludedModules/` (shipped with repo)
 - **Additional Standard Modules** - Suggest useful PSGallery modules to include
 - **Yazi Plugins/Themes** - Additional Yazi configurations
 - **oh-my-posh Themes** - New prompt themes
@@ -75,12 +76,12 @@ Great areas to contribute:
 - **Bug Fixes** - Issue resolution
 - **Performance** - Optimization improvements
 
-#### 🆕 **Adding Custom Modules**
+#### 🆕 **Adding Bundled Modules** (Shipped with Repo)
 
-Creating a new custom module is simple - just add a `.psm1` file to `PowerShell/CustomModules/`:
+Adding a new bundled module to the DevKit - add a `.psm1` file to `PowerShell/IncludedModules/`:
 
 ```powershell
-# Example: PowerShell/CustomModules/my-tools.psm1
+# Example: PowerShell/IncludedModules/my-tools.psm1
 
 <#
 .SYNOPSIS
@@ -101,13 +102,16 @@ function Get-MyCustomTool {
 Export-ModuleMember -Function Get-MyCustomTool
 ```
 
-**That's it!** The module will be automatically discovered and loaded on next PowerShell startup. No need to modify the profile script.
+**That's it!** The module will be loaded via the Components system. Add it to the `Components.psm1` file to include it in the setup.
 
 **Module Loading Rules:**
-- ✅ Auto-discovered from `PowerShell/CustomModules/*.psm1`
-- ✅ Loaded alphabetically (use prefixes like `01-`, `02-` for ordering if needed)
+- ✅ Added to `PowerShell/IncludedModules/*.psm1`
+- ✅ Registered in `Scripts/Components.psm1` for static loading
 - ✅ Loaded during deferred startup (doesn't slow shell initialization)
 - ✅ Use `Export-ModuleMember` to control what's public
+- ✅ Shipped with the repo (tracked in git)
+
+**Note for Users:** If you want to add your own personal modules (not contributed to the repo), create them in `PowerShell/CustomModules/` instead. Those are auto-discovered and never overwritten by updates.
 
 ## 💻 Development Setup
 
@@ -299,9 +303,9 @@ Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1
 
 5. **✅ Module Import**
    ```powershell
-   # Test custom modules import correctly
-   Import-Module .\PowerShell\CustomModules\utilities.psm1 -Force
-   Import-Module .\PowerShell\CustomModules\build_functions.psm1 -Force
+   # Test bundled modules import correctly
+   Import-Module .\PowerShell\IncludedModules\utilities.psm1 -Force
+   Import-Module .\PowerShell\IncludedModules\build_functions.psm1 -Force
    ```
 
 6. **✅ Configuration Validation**

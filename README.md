@@ -156,12 +156,12 @@ PowerShell-DevKit/               # 🏠 Main repository
 │       ├── iterm2.omp.json     # Custom theme
 │       └── paradox.omp.json    # Alternative theme
 ├── 📁 PowerShell/               # PowerShell environment
-│   ├── 🧩 CustomModules/        # 🆕 Auto-discovered custom modules
+│   ├── 🧩 CustomModules/        # 🆕 User custom modules (auto-discovered, not in repo)
+│   ├── 🧩 IncludedModules/      # Bundled modules (shipped with repo, static)
 │   │   ├── build_funtions.psm1 # Build utilities
 │   │   ├── utilities.psm1      # Helper functions
 │   │   └── example-module.psm1.template  # Template for new modules
-│   ├── 📁 IncludedModules/      # Reserved for bundled modules (optional)
-│   ├── � Microsoft.PowerShell_profile.ps1  # Profile with auto-discovery
+│   ├── 📜 Microsoft.PowerShell_profile.ps1  # Profile with auto-discovery
 │   └── ⚙️ powershell.config.json            # PowerShell config
 ├── 📁 Scripts/                  # 🤖 Automation Suite
 │   ├── 🏗️ Components.psm1      # 🆕 Shared component library
@@ -375,25 +375,29 @@ oh-my-posh config export --output Config/oh-my-posh/mytheme.omp.json
 Add your own functions to `PowerShell/CustomModules/`:
 
 ```powershell
-# 🛠️ utilities.psm1 - General utilities
+# 🛠️ CustomModules/my-utilities.psm1 - Your custom utilities
 function My-CustomFunction {
     # Your code here
 }
+```
 
-# 🏗️ build_functions.psm1 - Build-related functions
+**IncludedModules** (bundled with repo):
+```powershell
+# 🏗️ IncludedModules/build_functions.psm1 - Build-related functions
 function Build-Solution {
     # Your build logic
 }
+
+# 🛠️ IncludedModules/utilities.psm1 - General helper functions
 ```
 
 **Module Loading:**
 - ✅ **Auto-Discovery** - Custom modules in `CustomModules/` loaded automatically
+- ✅ **Static Loading** - Bundled modules in `IncludedModules/` loaded via Components
 - ✅ **Alphabetical Order** - Modules loaded in sorted order for predictability
 - ✅ **Deferred Loading** - Fast PowerShell startup via `OnIdle` event
 - ✅ **Export Control** - Only export what you need
-- ✅ **Extensible** - Just drop new `.psm1` files in `CustomModules/` folder
-
-## 📝 Components Deep Dive
+- ✅ **Extensible** - Just drop new `.psm1` files in `CustomModules/` folder## 📝 Components Deep Dive
 
 ### 🎯 **Modern Yazi Setup** ⭐ **ENHANCED!**
 
@@ -831,12 +835,22 @@ This setup represents a **major architectural upgrade** with:
 - ✅ **Enterprise-grade logging** with actionable suggestions
 
 ### 🔄 **Contributing Guidelines**
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for complete contribution guidelines.
+
+**Quick Links:**
+- 📖 [CONTRIBUTING.md](CONTRIBUTING.md) - Full contribution workflow and standards
+- ⚡ [DEVELOPER-REFERENCE.md](DEVELOPER-REFERENCE.md) - Command cheatsheet and quick reference
+- 🚀 [Scripts/README.md](Scripts/README.md) - How to use the automation scripts
+
+**Quick Start for Contributors:**
 1. **Fork** the repository
 2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Test** your changes with `.\Scripts\Test.ps1`
-4. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-5. **Push** to the branch (`git push origin feature/amazing-feature`)
-6. **Open** a Pull Request
+3. **Validate** your changes with `.\Scripts\Validate-Code.ps1`
+4. **Test** your changes with `.\Scripts\Test.ps1`
+5. **Commit** your changes (`git commit -m 'feat: add amazing feature'`)
+6. **Push** to the branch (`git push origin feature/amazing-feature`)
+7. **Open** a Pull Request
 
 ### 💡 **Ideas for Contributions**
 - Additional component integrations

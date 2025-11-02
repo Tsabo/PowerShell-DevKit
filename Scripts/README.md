@@ -2,6 +2,8 @@
 
 This directory contains streamlined automation scripts for setting up, validating, and maintaining your PowerShell development environment.
 
+> **📖 For Contributors**: See [DEVELOPER-REFERENCE.md](../DEVELOPER-REFERENCE.md) for validation, testing, and contribution guidelines.
+
 ## 📁 Scripts Overview
 
 ### 🚀 Setup.ps1
@@ -77,7 +79,7 @@ Required Components: 9 / 9 installed
 # Update everything
 .\Update.ps1
 
-# Update only winget packages  
+# Update only winget packages
 .\Update.ps1 -WingetOnly
 
 # Update only PowerShell modules

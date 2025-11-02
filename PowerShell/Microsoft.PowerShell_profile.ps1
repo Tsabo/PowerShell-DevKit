@@ -17,10 +17,18 @@ if ($host.Name -eq 'ConsoleHost') {
 # Profile directory
 $profileDir = Split-Path -Parent $PROFILE
 
-# Add Scripts directory to PATH for this session
-$scriptsDir = Join-Path $profileDir "Scripts"
-if (Test-Path $scriptsDir) {
-    $env:PATH = "$scriptsDir;$env:PATH"
+# Add script directories to PATH for this session
+# IncludedScripts - bundled with repo
+# CustomScripts - user-specific (auto-created, git-ignored)
+$includedScriptsDir = Join-Path $profileDir "IncludedScripts"
+$customScriptsDir = Join-Path $profileDir "CustomScripts"
+
+$scriptPaths = @()
+if (Test-Path $includedScriptsDir) { $scriptPaths += $includedScriptsDir }
+if (Test-Path $customScriptsDir) { $scriptPaths += $customScriptsDir }
+
+if ($scriptPaths.Count -gt 0) {
+    $env:PATH = ($scriptPaths -join ";") + ";$env:PATH"
 }
 
 # Deferred module loading
@@ -42,6 +50,12 @@ function Import-CustomModules {
         }
         else { @() }
 
+        # Included modules (bundled with repo, static list)
+        $includedModules = @(
+            @{ Type = "CustomModule"; Name = "IncludedModules\utilities.psm1"; Options = @{ WarningAction = "SilentlyContinue" } },
+            @{ Type = "CustomModule"; Name = "IncludedModules\build_funtions.psm1"; Options = @{ WarningAction = "SilentlyContinue" } }
+        )
+
         # Standard modules and tools (environment-dependent)
         $standardItems = @(
             @{ Type = "StandardModule"; Name = "posh-git"; Options = @{} },
@@ -54,8 +68,8 @@ function Import-CustomModules {
             @{ Type = "Tool"; Name = "zoxide"; Command = { Invoke-Expression (& { (zoxide init powershell | Out-String) }) } }
         )
 
-        # Combine auto-discovered custom modules with standard items
-        $itemsToLoad = $customModules + $standardItems
+        # Combine auto-discovered custom modules with included modules and standard items
+        $itemsToLoad = $customModules + $includedModules + $standardItems
 
         $totalItems = $itemsToLoad.Count
         $currentItem = 0

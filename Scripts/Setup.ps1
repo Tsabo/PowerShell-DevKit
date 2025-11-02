@@ -81,7 +81,8 @@ function Write-SetupLog {
         [string]$Type,
         [string]$Operation,
         [string]$ErrorMessage,
-        [string]$FullOutput = ""
+        [string]$FullOutput = "",
+        [int]$ExitCode = 0
     )
 
     $logEntry = @{
@@ -91,7 +92,7 @@ function Write-SetupLog {
         Operation = $Operation
         ErrorMessage = $ErrorMessage
         FullOutput = $FullOutput
-        ExitCode = $LASTEXITCODE
+        ExitCode = $ExitCode
         IsAdmin = Test-IsAdmin
     }
 
@@ -257,30 +258,83 @@ function Install-WingetPackage {
 
     Write-Step "Installing $Name via winget..."
 
-    # Check if already installed
-    $installed = winget list --id $PackageId --exact 2>$null
-    if ($LASTEXITCODE -eq 0 -and $installed -match $PackageId) {
-        Write-Skip "$Name is already installed"
-        return $true
+    # Check if already installed with timeout
+    try {
+        Write-Host "  → Checking if already installed..." -ForegroundColor Gray
+
+        $checkJob = Start-Job -ScriptBlock {
+            param($pkgId)
+            $result = winget list --id $pkgId --exact --disable-interactivity 2>$null
+            return @{
+                Output = $result
+                ExitCode = $LASTEXITCODE
+            }
+        } -ArgumentList $PackageId
+
+        $checkCompleted = Wait-Job -Job $checkJob -Timeout 15
+
+        if ($checkCompleted) {
+            $checkResult = Receive-Job -Job $checkJob
+            Remove-Job -Job $checkJob
+
+            if ($checkResult.ExitCode -eq 0 -and $checkResult.Output -match $PackageId) {
+                Write-Skip "$Name is already installed"
+                return $true
+            }
+        }
+        else {
+            # Check timed out, continue with installation
+            Stop-Job -Job $checkJob
+            Remove-Job -Job $checkJob
+            Write-Host "  → Check timed out, proceeding with installation..." -ForegroundColor Yellow
+        }
+    }
+    catch {
+        Write-Host "  → Check failed, proceeding with installation..." -ForegroundColor Yellow
     }
 
     try {
-        $result = winget install $PackageId --silent --accept-package-agreements --accept-source-agreements 2>&1
-        $resultString = $result | Out-String
+        # Create a job to run winget with timeout
+        Write-Host "  → Running winget (timeout: 60s)..." -ForegroundColor Gray
 
-        if ($LASTEXITCODE -eq 0) {
-            Write-Success "$Name installed successfully"
-            return $true
+        $job = Start-Job -ScriptBlock {
+            param($pkgId)
+            $output = winget install $pkgId --silent --disable-interactivity --accept-package-agreements --accept-source-agreements 2>&1
+            return @{
+                Output = $output | Out-String
+                ExitCode = $LASTEXITCODE
+            }
+        } -ArgumentList $PackageId
+
+        # Wait for job with 60 second timeout
+        $completed = Wait-Job -Job $job -Timeout 60
+
+        if ($completed) {
+            $jobResult = Receive-Job -Job $job
+            Remove-Job -Job $job
+
+            if ($jobResult.ExitCode -eq 0) {
+                Write-Success "$Name installed successfully"
+                return $true
+            }
+            else {
+                Write-ErrorMsg "Failed to install $Name (exit code: $($jobResult.ExitCode))"
+                Write-SetupLog -Component $Name -Type "winget" -Operation "winget install $PackageId" -ErrorMessage "winget install failed" -ExitCode $jobResult.ExitCode -FullOutput $jobResult.Output
+                return $false
+            }
         }
         else {
-            Write-ErrorMsg "Failed to install $Name"
-            Write-SetupLog -Component $Name -Type "winget" -Operation "winget install $PackageId" -ErrorMessage "winget install failed" -FullOutput $resultString
+            # Timeout occurred
+            Stop-Job -Job $job
+            Remove-Job -Job $job
+            Write-ErrorMsg "Installation of $Name timed out after 60 seconds"
+            Write-SetupLog -Component $Name -Type "winget" -Operation "winget install $PackageId" -ErrorMessage "Installation timed out" -ExitCode -1
             return $false
         }
     }
     catch {
         Write-ErrorMsg "Error installing $Name : $_"
-        Write-SetupLog -Component $Name -Type "winget" -Operation "winget install $PackageId" -ErrorMessage $_.Exception.Message -FullOutput $_.Exception.ToString()
+        Write-SetupLog -Component $Name -Type "winget" -Operation "winget install $PackageId" -ErrorMessage $_.Exception.Message -ExitCode 0 -FullOutput $_.Exception.ToString()
         return $false
     }
 }
@@ -313,251 +367,9 @@ function Install-PSModuleIfMissing {
     }
 }
 
-# Install oh-my-posh with font
-function Install-OhMyPoshWithFont {
-    $success = Install-WinGetPackage -PackageId "JanDeDobbeleer.OhMyPosh" -Name "oh-my-posh"
-    if (-not $success) { return $false }
-
-    # Install font
-    Write-Step "Installing $FontName font..."
-    try {
-        if ($FontName -eq "CascadiaCode") {
-            $fontInstalled = winget list --id "Microsoft.CascadiaCode" --exact 2>$null
-            if ($LASTEXITCODE -eq 0 -and $fontInstalled -match "Microsoft.CascadiaCode") {
-                Write-Skip "CascadiaCode font is already installed"
-                return $true
-            }
-            else {
-                winget install Microsoft.CascadiaCode --silent --accept-package-agreements --accept-source-agreements
-                if ($LASTEXITCODE -eq 0) {
-                    Write-Success "CascadiaCode font installed"
-                    return $true
-                }
-            }
-        }
-        else {
-            Write-Host "  → Run 'oh-my-posh font install' manually to select $FontName" -ForegroundColor Yellow
-            return $true  # Consider this success - user needs to do manual step
-        }
-    }
-    catch {
-        Write-ErrorMsg "Font installation failed: $_"
-        return $false
-    }
-    return $false
-}
-
-# Install Yazi with configuration
-function Install-YaziWithConfig {
-    $success = Install-WinGetPackage -PackageId "sxyazi.yazi" -Name "Yazi"
-    if (-not $success) { return $false }
-
-    Write-Step "Installing optional Yazi dependencies..."
-    try {
-        $optionalDeps = @(
-            @{Id = "Gyan.FFmpeg"; Name = "FFmpeg" },
-            @{Id = "7zip.7zip"; Name = "7-Zip" },
-            @{Id = "jqlang.jq"; Name = "jq" },
-            @{Id = "oschwartz10612.Poppler"; Name = "Poppler" },
-            @{Id = "sharkdp.fd"; Name = "fd" },
-            @{Id = "BurntSushi.ripgrep.MSVC"; Name = "ripgrep" },
-            @{Id = "junegunn.fzf"; Name = "fzf" },
-            @{Id = "ajeetdsouza.zoxide"; Name = "zoxide" },
-            @{Id = "ImageMagick.ImageMagick"; Name = "ImageMagick" }
-        )
-
-        $installedCount = 0
-        foreach ($dep in $optionalDeps) {
-            $installed = winget list --id $dep.Id --exact 2>$null
-            if ($LASTEXITCODE -ne 0 -or $installed -notmatch $dep.Id) {
-                Write-Host "  → Installing $($dep.Name)..." -ForegroundColor Gray
-                winget install $dep.Id --silent --accept-package-agreements --accept-source-agreements 2>$null
-                if ($LASTEXITCODE -eq 0) { $installedCount++ }
-            }
-        }
-        Write-Success "Installed $installedCount optional Yazi dependencies"
-    }
-    catch {
-        Write-Host "  → Some optional dependencies may have failed to install" -ForegroundColor Yellow
-    }
-
-    Write-Step "Setting up Yazi configuration..."
-    try {
-        $yaziConfigDest = Join-Path $env:APPDATA "yazi"
-
-        # Check if yazi_config repo exists, clone if not
-        if (-not (Test-Path $yaziConfigDest)) {
-            Write-Host "  → Cloning Yazi configuration from GitHub..." -ForegroundColor Gray
-            git clone "https://github.com/Tsabo/yazi_config.git" $yaziConfigDest 2>$null
-            if ($LASTEXITCODE -eq 0) {
-                Write-Success "Yazi configuration cloned successfully"
-            }
-            else {
-                Write-ErrorMsg "Failed to clone Yazi configuration"
-                return $false
-            }
-        }
-        else {
-            Write-Host "  → Updating Yazi configuration..." -ForegroundColor Gray
-            Push-Location $yaziConfigDest
-            try {
-                git pull origin main 2>$null
-                if ($LASTEXITCODE -eq 0) {
-                    Write-Success "Yazi configuration updated"
-                }
-                else {
-                    Write-Host "  → Configuration update skipped (local changes may exist)" -ForegroundColor Yellow
-                }
-            }
-            finally {
-                Pop-Location
-            }
-        }
-
-        Write-Step "Installing Yazi packages..."
-        try {
-            # Install flavors
-            Write-Host "  → Installing flavors..." -ForegroundColor Gray
-            & ya pkg add "gosxrgxx/flexoki-light" 2>$null
-            & ya pkg add "956MB/vscode-dark-plus" 2>$null
-
-            # Install plugins (including your fork)
-            Write-Host "  → Installing plugins..." -ForegroundColor Gray
-            & ya pkg add "yazi-rs/plugins:git" 2>$null
-            & ya pkg add "Tsabo/githead.yazi#feature/guards_save_sync_block_with_pcall" 2>$null
-
-            Write-Success "Yazi packages installed"
-            return $true
-        }
-        catch {
-            Write-ErrorMsg "Yazi package installation failed: $_"
-            return $false
-        }
-    }
-    catch {
-        Write-ErrorMsg "Yazi configuration setup failed: $_"
-        return $false
-    }
-}
-
-# Deploy oh-my-posh theme
-function Deploy-OhMyPoshTheme {
-    Write-Step "Deploying oh-my-posh theme..."
-    try {
-        $ompConfigSource = Join-Path (Split-Path (Split-Path $PSScriptRoot)) "Config\oh-my-posh"
-
-        # Try OneDrive location first, fallback to regular Documents
-        $ompConfigDest = Join-Path $env:USERPROFILE "OneDrive\PowerShell\Posh"
-        if (-not (Test-Path (Split-Path $ompConfigDest))) {
-            $ompConfigDest = Join-Path $env:USERPROFILE "Documents\PowerShell\Posh"
-        }
-
-        if (Test-Path $ompConfigSource) {
-            if (-not (Test-Path $ompConfigDest)) {
-                New-Item -ItemType Directory -Path $ompConfigDest -Force | Out-Null
-            }
-
-            Copy-Item "$ompConfigSource\*.json" -Destination $ompConfigDest -Force
-            Write-Success "oh-my-posh theme deployed to: $ompConfigDest"
-            return $true
-        }
-        else {
-            Write-Skip "oh-my-posh theme source not found"
-            return $true
-        }
-    }
-    catch {
-        Write-ErrorMsg "oh-my-posh theme deployment failed: $_"
-        return $false
-    }
-}
-
-# Deploy PowerShell profile and modules
-function Deploy-PowerShellProfile {
-    Write-Step "Deploying PowerShell profile and custom modules..."
-    try {
-        $profilePath = $PROFILE
-        $profileDir = Split-Path -Parent $profilePath
-        $psSourceDir = Join-Path (Split-Path (Split-Path $PSScriptRoot)) "PowerShell"
-
-        $deployments = @(
-            @{Source = "Microsoft.PowerShell_profile.ps1"; Dest = $profilePath; Name = "PowerShell profile" }
-            @{Source = "powershell.config.json"; Dest = (Join-Path $profileDir "powershell.config.json"); Name = "PowerShell config" }
-            @{Source = "IncludedModules"; Dest = (Join-Path $profileDir "IncludedModules"); Name = "IncludedModules"; IsDirectory = $true }
-            @{Source = "IncludedScripts"; Dest = (Join-Path $profileDir "IncludedScripts"); Name = "IncludedScripts"; IsDirectory = $true }
-        )
-
-        if (-not (Test-Path $profileDir)) {
-            New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
-        }
-
-        foreach ($deployment in $deployments) {
-            $sourcePath = Join-Path $psSourceDir $deployment.Source
-
-            if (Test-Path $sourcePath) {
-                if ($deployment.IsDirectory) {
-                    if (Test-Path $deployment.Dest) {
-                        Remove-Item $deployment.Dest -Recurse -Force
-                    }
-                }
-                Copy-Item $sourcePath -Destination $deployment.Dest -Recurse:$deployment.IsDirectory -Force
-                Write-Success "$($deployment.Name) deployed to: $($deployment.Dest)"
-            }
-            else {
-                Write-Skip "$($deployment.Name) source not found at: $sourcePath"
-            }
-        }
-
-        # Create custom directories (user-specific, git-ignored)
-        $customModulesDir = Join-Path $profileDir "CustomModules"
-        $customScriptsDir = Join-Path $profileDir "CustomScripts"
-
-        if (-not (Test-Path $customModulesDir)) {
-            New-Item -ItemType Directory -Path $customModulesDir -Force | Out-Null
-            Write-Success "CustomModules directory created"
-        }
-
-        if (-not (Test-Path $customScriptsDir)) {
-            New-Item -ItemType Directory -Path $customScriptsDir -Force | Out-Null
-            Write-Success "CustomScripts directory created"
-        }
-
-        return $true
-    }
-    catch {
-        Write-ErrorMsg "PowerShell profile deployment failed: $_"
-        return $false
-    }
-}
-
-# Deploy Windows Terminal settings
-function Deploy-TerminalSettings {
-    Write-Step "Applying Windows Terminal font and window settings..."
-    try {
-        $terminalDeployScript = Join-Path $PSScriptRoot "Deploy-Terminal.ps1"
-
-        if (Test-Path $terminalDeployScript) {
-            $deployResult = & $terminalDeployScript -NoBackup 2>&1
-
-            if ($LASTEXITCODE -eq 0 -or $deployResult -match "successfully") {
-                Write-Success "Windows Terminal settings deployed"
-                return $true
-            }
-            else {
-                Write-ErrorMsg "Windows Terminal deployment failed"
-                return $false
-            }
-        }
-        else {
-            Write-Skip "Windows Terminal deployment script not found"
-            return $true
-        }
-    }
-    catch {
-        Write-ErrorMsg "Windows Terminal settings deployment failed: $_"
-        return $false
-    }
-}
+# Note: Custom installer functions (Install-OhMyPoshWithFont, Install-YaziWithConfig,
+# Deploy-OhMyPoshTheme, Deploy-PowerShellProfile, Deploy-TerminalSettings) are now
+# defined in Components.psm1 where they're used by the component definitions.
 
 # Process a single component
 function Install-SetupComponent {
@@ -572,7 +384,43 @@ function Install-SetupComponent {
     $success = switch ($Component.Type) {
         "winget" { Install-WinGetPackage -PackageId $Component.Properties.PackageId -Name $Component.Name }
         "module" { Install-PSModuleIfMissing -ModuleName $Component.Properties.ModuleName -DisplayName $Component.Name }
-        "custom" { & $Component.CustomInstaller }
+        "custom" {
+            try {
+                Write-Step "Installing $($Component.Name)..."
+                Write-Host "  → Running custom installer..." -ForegroundColor Gray
+                $result = & $Component.CustomInstaller 2>&1
+
+                # Debug: Show what we got back
+                Write-Host "  → Installer returned: $($result | Out-String)" -ForegroundColor DarkGray
+
+                # Check if result is explicitly false or null
+                if ($result -eq $false -or $null -eq $result) {
+                    Write-ErrorMsg "Custom installer returned: $result"
+                    $false
+                }
+                elseif ($result -is [bool]) {
+                    $result
+                }
+                else {
+                    # Try to convert to boolean, default to true if we got any output
+                    if ($result -match "true|success") {
+                        $true
+                    }
+                    elseif ($result -match "false|fail") {
+                        $false
+                    }
+                    else {
+                        # If we got here, assume success (function completed without error)
+                        $true
+                    }
+                }
+            }
+            catch {
+                Write-ErrorMsg "Custom installer exception: $_"
+                Write-ErrorMsg "Stack trace: $($_.ScriptStackTrace)"
+                $false
+            }
+        }
         default {
             Write-ErrorMsg "Unknown component type: $($Component.Type)"
             $false
@@ -591,7 +439,10 @@ function Install-SetupComponent {
             default { "Unknown operation" }
         }
 
-        Write-SetupLog -Component $Component.Name -Type $Component.Type -Operation $operation -ErrorMessage "Installation failed"
+        # Capture exit code immediately
+        $currentExitCode = if ($LASTEXITCODE) { $LASTEXITCODE } else { 0 }
+
+        Write-SetupLog -Component $Component.Name -Type $Component.Type -Operation $operation -ErrorMessage "Installation failed" -ExitCode $currentExitCode
 
         if ($Component.IsOptional) {
             $Results.Skipped += "$($Component.Name) (failed, optional)"
@@ -629,16 +480,50 @@ function Show-SetupSummary {
 
     # Next steps
     Write-Host "`n`n📝 NEXT STEPS:" -ForegroundColor Cyan
-    Write-Host "   1. Restart your PowerShell session or run: " -NoNewline
-    Write-Host "refreshenv" -ForegroundColor Yellow
-    Write-Host "   2. Configure your PowerShell profile if not already done" -ForegroundColor White
-    Write-Host "   3. Set your terminal font to CascadiaCode NF (Nerd Font)" -ForegroundColor White
-    Write-Host "   4. Configure oh-my-posh theme: " -NoNewline
-    Write-Host "oh-my-posh init pwsh --config <theme>" -ForegroundColor Yellow
+
+    if ($Results.Failed.Count -eq 0 -and $Results.Success -contains "PowerShell Profile") {
+        Write-Host "   1. Reload your profile to apply changes: " -NoNewline
+        Write-Host ". `$PROFILE" -ForegroundColor Yellow
+        Write-Host "   2. Set your terminal font to CascadiaCode NF (Nerd Font)" -ForegroundColor White
+        Write-Host "   3. Customize your environment using " -NoNewline
+        Write-Host "CustomProfile.ps1" -ForegroundColor Yellow
+        Write-Host "   4. Add your own modules to " -NoNewline
+        Write-Host "CustomModules\" -ForegroundColor Yellow
+        Write-Host "   5. Add your own scripts to " -NoNewline
+        Write-Host "CustomScripts\" -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "   1. Restart your PowerShell session or run: " -NoNewline
+        Write-Host "refreshenv" -ForegroundColor Yellow
+        Write-Host "   2. Configure your PowerShell profile if not already done" -ForegroundColor White
+        Write-Host "   3. Set your terminal font to CascadiaCode NF (Nerd Font)" -ForegroundColor White
+        Write-Host "   4. Configure oh-my-posh theme: " -NoNewline
+        Write-Host "oh-my-posh init pwsh --config <theme>" -ForegroundColor Yellow
+    }
 
     if ($Results.Failed.Count -eq 0) {
         Write-Host "`n🎉 " -NoNewline -ForegroundColor Green
         Write-Host "Setup completed successfully!" -ForegroundColor Green
+
+        # Offer to reload profile if it was deployed
+        if ($Results.Success -contains "PowerShell Profile") {
+            Write-Host "`n💡 Would you like to reload your profile now? " -NoNewline -ForegroundColor Cyan
+            Write-Host "(Y/n): " -NoNewline -ForegroundColor White
+            $response = Read-Host
+
+            if ($response -eq "" -or $response -match "^[Yy]") {
+                Write-Host "`n🔄 Reloading profile..." -ForegroundColor Cyan
+                try {
+                    . $PROFILE
+                    Write-Host "✅ Profile reloaded successfully!" -ForegroundColor Green
+                }
+                catch {
+                    Write-Host "⚠️  Could not reload profile: $_" -ForegroundColor Yellow
+                    Write-Host "   Please reload manually with: " -NoNewline
+                    Write-Host ". `$PROFILE" -ForegroundColor Yellow
+                }
+            }
+        }
     }
     else {
         Write-Host "`n⚠️  " -NoNewline -ForegroundColor Yellow

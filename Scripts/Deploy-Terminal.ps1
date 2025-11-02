@@ -48,13 +48,13 @@ function Get-WindowsTerminalPath {
         "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState",
         "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState"
     )
-    
+
     foreach ($path in $terminalPaths) {
         if (Test-Path $path) {
             return $path
         }
     }
-    
+
     return $null
 }
 
@@ -63,20 +63,20 @@ function Apply-MinimalSettings {
         [PSCustomObject]$Template,
         [PSCustomObject]$Existing
     )
-    
+
     # Start with existing settings as base
     $updated = $Existing | ConvertTo-Json -Depth 20 | ConvertFrom-Json
-    
+
     # Apply initial column width if specified in template
     if ($Template.initialCols) {
         $updated.initialCols = $Template.initialCols
     }
-    
+
     # Ensure profiles structure exists
     if (-not $updated.profiles) {
         $updated | Add-Member -NotePropertyName "profiles" -NotePropertyValue @{}
     }
-    
+
     # Apply font to defaults if specified in template
     if ($Template.profiles -and $Template.profiles.defaults -and $Template.profiles.defaults.font) {
         if (-not $updated.profiles.defaults) {
@@ -87,7 +87,7 @@ function Apply-MinimalSettings {
         }
         $updated.profiles.defaults.font.face = $Template.profiles.defaults.font.face
     }
-    
+
     return $updated
 }
 
@@ -104,26 +104,26 @@ function Deploy-WindowsTerminalSettings {
     # Find Windows Terminal
     Write-Step "Locating Windows Terminal installation..."
     $terminalPath = Get-WindowsTerminalPath
-    
+
     if (-not $terminalPath) {
         Write-ErrorMsg "Windows Terminal not found. Please install Windows Terminal from Microsoft Store."
         return $false
     }
-    
+
     Write-Success "Found Windows Terminal at: $terminalPath"
-    
+
     # Locate settings template
-    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+    $scriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
     $repoRoot = Split-Path -Parent $scriptDir
     $templatePath = Join-Path $repoRoot "Config\WindowsTerminal\settings.json"
-    
+
     if (-not (Test-Path $templatePath)) {
         Write-ErrorMsg "Settings template not found at: $templatePath"
         return $false
     }
-    
+
     Write-Success "Found settings template"
-    
+
     # Read template
     Write-Step "Loading settings template..."
     try {
@@ -134,17 +134,17 @@ function Deploy-WindowsTerminalSettings {
         Write-ErrorMsg "Failed to parse template: $_"
         return $false
     }
-    
+
     # Check existing settings
     $settingsPath = Join-Path $terminalPath "settings.json"
     $existing = $null
-    
+
     if (Test-Path $settingsPath) {
         Write-Step "Reading existing settings..."
         try {
             $existing = Get-Content $settingsPath -Raw | ConvertFrom-Json
             Write-Success "Existing settings loaded"
-            
+
             # Create backup unless disabled
             if (-not $NoBackup -and -not $Force) {
                 $backupPath = "$settingsPath.backup.$(Get-Date -Format 'yyyyMMdd-HHmmss')"
@@ -159,14 +159,15 @@ function Deploy-WindowsTerminalSettings {
             }
         }
     }
-    
+
     # Merge or replace settings
     Write-Step "Applying terminal settings..."
     try {
         if ($existing -and -not $Force) {
             Write-Host "  → Applying minimal settings to existing configuration..." -ForegroundColor Yellow
             $finalSettings = Apply-MinimalSettings -Template $template -Existing $existing
-        } else {
+        }
+        else {
             Write-Host "  → Creating new settings (no existing configuration found)..." -ForegroundColor Yellow
             # For new installations, create a basic settings file with our essentials
             $finalSettings = @{
@@ -178,11 +179,11 @@ function Deploy-WindowsTerminalSettings {
                 }
             }
         }
-        
+
         # Write settings
         $finalSettings | ConvertTo-Json -Depth 20 | Set-Content $settingsPath -Encoding UTF8
         Write-Success "Windows Terminal settings applied successfully"
-        
+
         return $true
     }
     catch {
@@ -194,7 +195,7 @@ function Deploy-WindowsTerminalSettings {
 # Run deployment
 try {
     $success = Deploy-WindowsTerminalSettings
-    
+
     if ($success) {
         Write-Host "`n🎉 " -NoNewline -ForegroundColor Green
         Write-Host "Windows Terminal settings deployed successfully!" -ForegroundColor Green
@@ -202,7 +203,9 @@ try {
         Write-Host "   1. Restart Windows Terminal to see changes" -ForegroundColor White
         Write-Host "   2. Font should automatically be set to 'CaskaydiaCove Nerd Font Mono'" -ForegroundColor White
         Write-Host "   3. Verify that oh-my-posh themes display correctly" -ForegroundColor White
-    } else {
+        exit 0
+    }
+    else {
         Write-Host "`n❌ Deployment failed. Please check the errors above." -ForegroundColor Red
         exit 1
     }

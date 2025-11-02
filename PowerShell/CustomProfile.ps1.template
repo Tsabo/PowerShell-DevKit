@@ -1,0 +1,88 @@
+<#
+.SYNOPSIS
+    User-specific PowerShell profile customizations
+.DESCRIPTION
+    This file is sourced at the end of Microsoft.PowerShell_profile.ps1
+    Add your own modules, functions, aliases, and settings here without
+    modifying the main profile (which may be updated by the DevKit).
+
+    To use this file:
+    1. Copy this template to CustomProfile.ps1 in the same directory
+    2. Add your customizations below
+    3. Restart PowerShell or reload your profile with: . $PROFILE
+
+    CustomProfile.ps1 is git-ignored, so your customizations won't be
+    overwritten by DevKit updates.
+#>
+
+# ============================================================================
+# CUSTOM MODULES
+# ============================================================================
+# Add your own standard modules here (from PSGallery or elsewhere)
+
+# Example: Import additional modules
+# Import-Module -Name Az -ErrorAction SilentlyContinue
+# Import-Module -Name Pester -ErrorAction SilentlyContinue
+
+# ============================================================================
+# CUSTOM FUNCTIONS
+# ============================================================================
+# Add your own functions here
+
+# Example: Quick navigation function
+# function goto-projects {
+#     Set-Location "C:\Projects"
+# }
+
+# Example: Git shortcuts
+# function gs { git status }
+# function gp { git pull }
+# function gpo { git push origin }
+
+# ============================================================================
+# CUSTOM ALIASES
+# ============================================================================
+# Add your own aliases here
+
+# Example: Common aliases
+# Set-Alias -Name np -Value notepad
+# Set-Alias -Name exp -Value explorer
+
+# ============================================================================
+# ENVIRONMENT VARIABLES
+# ============================================================================
+# Set custom environment variables for this session
+
+# Example: Custom paths
+# $env:MY_PROJECT_ROOT = "C:\Projects\MyApp"
+
+# ============================================================================
+# PROMPT CUSTOMIZATION
+# ============================================================================
+# Override or customize your prompt (if not using oh-my-posh)
+
+# Example: Simple custom prompt
+# function prompt {
+#     "$($executionContext.SessionState.Path.CurrentLocation)> "
+# }
+
+# ============================================================================
+# PSREADLINE CUSTOMIZATIONS
+# ============================================================================
+# Add additional PSReadLine key handlers or options
+
+# Example: Add custom key binding
+# Set-PSReadLineKeyHandler -Chord 'Ctrl+d' -Function DeleteChar
+
+# ============================================================================
+# CUSTOM INITIALIZATION
+# ============================================================================
+# Any other custom initialization code
+
+# Example: Display custom message
+# Write-Host "Custom profile loaded! 🚀" -ForegroundColor Green
+
+# Example: Load environment-specific settings
+# if ($env:COMPUTERNAME -eq "WORK-PC") {
+#     # Work-specific settings
+# }

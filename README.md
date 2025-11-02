@@ -397,7 +397,35 @@ function Build-Solution {
 - ✅ **Alphabetical Order** - Modules loaded in sorted order for predictability
 - ✅ **Deferred Loading** - Fast PowerShell startup via `OnIdle` event
 - ✅ **Export Control** - Only export what you need
-- ✅ **Extensible** - Just drop new `.psm1` files in `CustomModules/` folder## 📝 Components Deep Dive
+- ✅ **Extensible** - Just drop new `.psm1` files in `CustomModules/` folder
+
+### 🎨 **Custom Profile Override**
+
+**Safe customization without modifying the main profile:**
+
+```powershell
+# Copy the template to create your custom profile
+Copy-Item "$HOME\Documents\PowerShell\CustomProfile.ps1.template" `
+          "$HOME\Documents\PowerShell\CustomProfile.ps1"
+
+# Edit and add your customizations
+code "$HOME\Documents\PowerShell\CustomProfile.ps1"
+```
+
+**What you can add:**
+- ✅ **Custom Modules** - Import your own modules from PSGallery or elsewhere
+- ✅ **Functions** - Define your own functions
+- ✅ **Aliases** - Create shortcuts for common commands
+- ✅ **Environment Variables** - Set session-specific variables
+- ✅ **PSReadLine Customizations** - Additional key bindings
+- ✅ **Prompt Overrides** - Customize your prompt (if not using oh-my-posh)
+
+**Benefits:**
+- 🔒 **Git-Ignored** - Your customizations stay private
+- 🔄 **Update-Safe** - Won't be overwritten by DevKit updates
+- 🚀 **Auto-Loaded** - Sourced automatically at the end of profile loading
+
+## 📝 Components Deep Dive
 
 ### 🎯 **Modern Yazi Setup** ⭐ **ENHANCED!**
 

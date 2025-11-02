@@ -167,3 +167,11 @@ if ($host.Name -eq 'ConsoleHost') {
     Set-PSReadLineOption -PredictionViewStyle ListView
     Set-PSReadLineOption -EditMode Windows
 }
+
+# Load user-specific customizations if they exist
+# This allows users to add their own modules, functions, and settings
+# without modifying this profile (which may be updated by the DevKit)
+$customProfilePath = Join-Path $profileDir "CustomProfile.ps1"
+if (Test-Path $customProfilePath) {
+    . $customProfilePath
+}

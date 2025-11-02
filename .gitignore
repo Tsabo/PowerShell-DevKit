@@ -21,6 +21,9 @@ PowerShell/CustomModules/*
 PowerShell/CustomScripts/*
 !PowerShell/CustomScripts/README.md
 
+# Ignore user-specific profile customizations (but keep template)
+PowerShell/CustomProfile.ps1
+
 # Ignore Windows-specific files
 Thumbs.db
 desktop.ini

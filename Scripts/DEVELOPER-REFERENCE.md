@@ -3,6 +3,13 @@
 ## Pre-Commit Validation Commands
 
 ```powershell
+# 🎨 Format all code first (RECOMMENDED)
+./Scripts/Format-AllCode.ps1         # Linux/macOS/WSL
+.\Scripts\Format-AllCode.ps1         # Windows
+
+# 🔍 Preview formatting changes
+./Scripts/Format-AllCode.ps1 -WhatIf
+
 # 🚀 REQUIRED before every commit (cross-platform)
 ./Scripts/Validate-Code.ps1          # Linux/macOS/WSL
 .\Scripts\Validate-Code.ps1          # Windows
@@ -10,7 +17,7 @@
 # ⚡ Quick syntax check only
 ./Scripts/Validate-Code.ps1 -Quick
 
-# 🔍 Detailed analysis with all info  
+# 🔍 Detailed analysis with all info
 ./Scripts/Validate-Code.ps1 -Detailed
 
 # 📊 Export results to JSON files
@@ -29,7 +36,7 @@
 # Ubuntu/Debian
 sudo apt update && sudo apt install -y powershell
 
-# CentOS/RHEL/Fedora  
+# CentOS/RHEL/Fedora
 sudo dnf install -y powershell
 
 # macOS
@@ -52,7 +59,7 @@ Invoke-ScriptAnalyzer -Path . -Fix -Settings .\PSScriptAnalyzerSettings.psd1
 Invoke-ScriptAnalyzer -Path .\Scripts\Setup.ps1 -Settings .\PSScriptAnalyzerSettings.psd1
 
 # Export detailed results
-Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 | 
+Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 |
     Export-Csv "analysis-results.csv" -NoTypeInformation
 ```
 
@@ -79,8 +86,8 @@ powershell -NoProfile -Command ". '$PROFILE'"
 Import-Module .\PowerShell\CustomModules\utilities.psm1 -Force
 
 # Test syntax of all PS files
-Get-ChildItem -Include "*.ps1","*.psm1" -Recurse | 
-    ForEach-Object { 
+Get-ChildItem -Include "*.ps1","*.psm1" -Recurse |
+    ForEach-Object {
         $errors = $null
         [void][System.Management.Automation.PSParser]::Tokenize((Get-Content $_.FullName -Raw), [ref]$errors)
         if ($errors) { Write-Error "Error in $($_.Name)" }

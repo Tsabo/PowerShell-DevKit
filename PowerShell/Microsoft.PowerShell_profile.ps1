@@ -27,12 +27,23 @@ if (Test-Path $scriptsDir) {
 function Import-CustomModules {
     # Store original title
     $originalTitle = $Host.UI.RawUI.WindowTitle
-    
+
     try {
-        # Define all modules and tools to load
-        $itemsToLoad = @(
-            @{ Type = "CustomModule"; Name = "CustomModules\build_functions.psm1"; Options = @{ WarningAction = "SilentlyContinue" } },
-            @{ Type = "CustomModule"; Name = "CustomModules\utilities.psm1"; Options = @{ WarningAction = "SilentlyContinue" } },
+        # Auto-discover custom modules from CustomModules directory
+        # Any .psm1 file in CustomModules/ will be automatically loaded
+        # Modules are loaded alphabetically - use numeric prefixes (01-, 02-) if load order matters
+        $customModulesPath = Join-Path $profileDir "CustomModules"
+        $customModules = if (Test-Path $customModulesPath) {
+            Get-ChildItem -Path $customModulesPath -Filter "*.psm1" -ErrorAction SilentlyContinue |
+                Sort-Object Name |
+                ForEach-Object {
+                    @{ Type = "CustomModule"; Name = "CustomModules\$($_.Name)"; Options = @{ WarningAction = "SilentlyContinue" } }
+                }
+        }
+        else { @() }
+
+        # Standard modules and tools (environment-dependent)
+        $standardItems = @(
             @{ Type = "StandardModule"; Name = "posh-git"; Options = @{} },
             @{ Type = "StandardModule"; Name = "git-aliases"; Options = @{ DisableNameChecking = $true } },
             @{ Type = "StandardModule"; Name = "F7History"; Options = @{} },
@@ -42,29 +53,34 @@ function Import-CustomModules {
             @{ Type = "StandardModule"; Name = "PowerColorLS"; Options = @{} },
             @{ Type = "Tool"; Name = "zoxide"; Command = { Invoke-Expression (& { (zoxide init powershell | Out-String) }) } }
         )
-        
+
+        # Combine auto-discovered custom modules with standard items
+        $itemsToLoad = $customModules + $standardItems
+
         $totalItems = $itemsToLoad.Count
         $currentItem = 0
-        
+
         # Load all items
         foreach ($item in $itemsToLoad) {
             $currentItem++
             $Host.UI.RawUI.WindowTitle = "Loading modules [$currentItem/$totalItems]"
-            
+
             try {
                 $options = $item.Options
                 switch ($item.Type) {
                     "CustomModule" {
                         if ($options.Count -gt 0) {
                             Import-Module "$profileDir\$($item.Name)" @options
-                        } else {
+                        }
+                        else {
                             Import-Module "$profileDir\$($item.Name)"
                         }
                     }
                     "StandardModule" {
                         if ($options.Count -gt 0) {
                             Import-Module -Name $item.Name @options
-                        } else {
+                        }
+                        else {
                             Import-Module -Name $item.Name
                         }
                     }

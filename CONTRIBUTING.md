@@ -66,13 +66,48 @@ git remote add upstream https://github.com/ORIGINAL-OWNER/powershell-environment
 ### Adding Features
 
 Great areas to contribute:
-- Additional useful PowerShell modules
-- New custom functions in `CustomModules/`
-- Additional Yazi plugins or themes
-- New oh-my-posh themes
-- Documentation improvements
-- Bug fixes
-- Performance improvements
+- **Custom PowerShell Modules** - Add new `.psm1` files to `PowerShell/CustomModules/` (auto-discovered!)
+- **Bundled Modules** - Pre-packaged modules in `PowerShell/IncludedModules/` (if needed for distribution)
+- **Additional Standard Modules** - Suggest useful PSGallery modules to include
+- **Yazi Plugins/Themes** - Additional Yazi configurations
+- **oh-my-posh Themes** - New prompt themes
+- **Documentation** - Improvements and examples
+- **Bug Fixes** - Issue resolution
+- **Performance** - Optimization improvements
+
+#### 🆕 **Adding Custom Modules**
+
+Creating a new custom module is simple - just add a `.psm1` file to `PowerShell/CustomModules/`:
+
+```powershell
+# Example: PowerShell/CustomModules/my-tools.psm1
+
+<#
+.SYNOPSIS
+    My custom PowerShell utilities
+#>
+
+function Get-MyCustomTool {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Name
+    )
+
+    Write-Host "Running custom tool: $Name"
+}
+
+# Export only the functions you want to be public
+Export-ModuleMember -Function Get-MyCustomTool
+```
+
+**That's it!** The module will be automatically discovered and loaded on next PowerShell startup. No need to modify the profile script.
+
+**Module Loading Rules:**
+- ✅ Auto-discovered from `PowerShell/CustomModules/*.psm1`
+- ✅ Loaded alphabetically (use prefixes like `01-`, `02-` for ordering if needed)
+- ✅ Loaded during deferred startup (doesn't slow shell initialization)
+- ✅ Use `Export-ModuleMember` to control what's public
 
 ## 💻 Development Setup
 
@@ -80,7 +115,7 @@ Great areas to contribute:
    ```powershell
    # Run the setup script
    .\Scripts\Setup-PowerShellEnvironment.ps1
-   
+
    # Install PSScriptAnalyzer for linting
    Install-Module -Name PSScriptAnalyzer -Scope CurrentUser
    ```
@@ -134,15 +169,15 @@ function Verb-Noun {
         [Parameter(Mandatory)]
         [string]$ParameterName
     )
-    
+
     begin {
         Write-Verbose "Starting operation"
     }
-    
+
     process {
         # Main logic here
     }
-    
+
     end {
         Write-Verbose "Operation complete"
     }
@@ -205,7 +240,7 @@ Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1
 Invoke-ScriptAnalyzer -Path .\Scripts\Setup.ps1 -Settings .\PSScriptAnalyzerSettings.psd1
 
 # Export results for review
-Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 | 
+Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1 |
     ConvertTo-Json | Out-File "analysis-results.json"
 ```
 
@@ -237,8 +272,8 @@ Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1
 2. **✅ Syntax Validation**
    ```powershell
    # Test all PowerShell files
-   Get-ChildItem -Path . -Include "*.ps1", "*.psm1" -Recurse | 
-       ForEach-Object { 
+   Get-ChildItem -Path . -Include "*.ps1", "*.psm1" -Recurse |
+       ForEach-Object {
            $errors = $null
            [void][System.Management.Automation.PSParser]::Tokenize((Get-Content $_.FullName -Raw), [ref]$errors)
            if ($errors) { Write-Error "Syntax error in $($_.Name): $($errors[0].Message)" }
@@ -249,7 +284,7 @@ Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1
    ```powershell
    # Test your specific changes
    .\Scripts\Test.ps1
-   
+
    # For setup script changes, test on clean environment
    .\Scripts\Setup.ps1 -WhatIf
    ```
@@ -273,7 +308,7 @@ Invoke-ScriptAnalyzer -Path . -Recurse -Settings .\PSScriptAnalyzerSettings.psd1
    ```powershell
    # Test Yazi config (if modified)
    yazi --check-config
-   
+
    # Test oh-my-posh theme (if modified)
    oh-my-posh config validate --config .\Config\oh-my-posh\iterm2.omp.json
    ```
@@ -481,7 +516,7 @@ By contributing, you agree that your contributions will be licensed under the MI
 Every PR automatically runs comprehensive validation via GitHub Actions:
 
 - ✅ **PSScriptAnalyzer** with project settings
-- ✅ **Syntax validation** for all PowerShell files  
+- ✅ **Syntax validation** for all PowerShell files
 - ✅ **Configuration validation** (JSON, TOML, PSD1)
 - ✅ **Module import testing**
 - ✅ **Cross-platform compatibility** checks

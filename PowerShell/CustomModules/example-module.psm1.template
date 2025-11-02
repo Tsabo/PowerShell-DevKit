@@ -1,0 +1,49 @@
+# Example Custom Module Template
+# Drop this file in PowerShell/CustomModules/ and it will be auto-discovered on next shell startup
+
+<#
+.SYNOPSIS
+    Example custom PowerShell module for demonstration purposes.
+    
+.DESCRIPTION
+    This is a template showing how to create a custom module that will be
+    automatically discovered and loaded by the PowerShell DevKit profile.
+    
+    Simply rename this file and add your own functions!
+    
+.NOTES
+    - This module is auto-discovered from PowerShell/CustomModules/
+    - Modules load alphabetically (use 01-, 02- prefixes if order matters)
+    - Use Export-ModuleMember to control what's public
+#>
+
+function Get-ExampleFunction {
+    <#
+    .SYNOPSIS
+        An example function in a custom module
+    .DESCRIPTION
+        Demonstrates how to create a properly documented function
+    .PARAMETER Name
+        The name to greet
+    .EXAMPLE
+        Get-ExampleFunction -Name "World"
+        Returns: "Hello, World!"
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $false)]
+        [string]$Name = "PowerShell DevKit User"
+    )
+    
+    Write-Host "Hello, $Name!" -ForegroundColor Cyan
+    Write-Host "This function was auto-loaded from CustomModules!" -ForegroundColor Green
+}
+
+function Invoke-ExamplePrivateFunction {
+    # This is a private helper function - not exported
+    Write-Verbose "This is a private function, not exported"
+}
+
+# Export only public functions
+# If you don't specify Export-ModuleMember, all functions are exported
+Export-ModuleMember -Function Get-ExampleFunction

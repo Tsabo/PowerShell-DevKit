@@ -61,7 +61,7 @@ A complete, enterprise-grade PowerShell development environment automation suite
 - **Auto-Deploy**: Git-based configuration management
 - **Update Integration**: Native `ya pkg` updates in Update.ps1
 
-#### **Optional Dependencies** 
+#### **Optional Dependencies**
 | Tool | Purpose | Package Manager | Enhancement |
 |------|---------|-----------------|-------------|
 | **FFmpeg** | Video thumbnails | winget | Media previews |
@@ -78,19 +78,19 @@ A complete, enterprise-grade PowerShell development environment automation suite
 - **git** - Git repository status display
 - **githead** - Enhanced git info (custom fork with bug fixes)
 
-#### **Yazi Themes** (Auto-installed via `ya pkg`)  
+#### **Yazi Themes** (Auto-installed via `ya pkg`)
 - **flexoki-light** - Light theme option
 - **vscode-dark-plus** - Dark theme matching VS Code
 
 ### 🔧 **Configuration Management**
 - ✅ **Windows Terminal** - Font and window settings
-- ✅ **PowerShell Profile** - Custom modules and functions  
+- ✅ **PowerShell Profile** - Custom modules and functions
 - ✅ **oh-my-posh Theme** - Custom prompt configuration
 - ✅ **Yazi Configuration** - Git-managed setup with plugins
 
 ### ⚙️ **Optional Components**
 - **gsudo** - Elevated permissions helper (Optional)
-- **PowerColorLS** - Enhanced directory listings (Optional)  
+- **PowerColorLS** - Enhanced directory listings (Optional)
 - **Scoop + resvg** - SVG support for Yazi (Optional)
 
 ## 🚀 Quick Start
@@ -156,10 +156,12 @@ PowerShell-DevKit/               # 🏠 Main repository
 │       ├── iterm2.omp.json     # Custom theme
 │       └── paradox.omp.json    # Alternative theme
 ├── 📁 PowerShell/               # PowerShell environment
-│   ├── 🧩 CustomModules/        # Custom PowerShell modules
-│   │   ├── build_funtions.psm1 # Build utilities  
-│   │   └── utilities.psm1      # Helper functions
-│   ├── 📜 Microsoft.PowerShell_profile.ps1  # Profile template
+│   ├── 🧩 CustomModules/        # 🆕 Auto-discovered custom modules
+│   │   ├── build_funtions.psm1 # Build utilities
+│   │   ├── utilities.psm1      # Helper functions
+│   │   └── example-module.psm1.template  # Template for new modules
+│   ├── 📁 IncludedModules/      # Reserved for bundled modules (optional)
+│   ├── � Microsoft.PowerShell_profile.ps1  # Profile with auto-discovery
 │   └── ⚙️ powershell.config.json            # PowerShell config
 ├── 📁 Scripts/                  # 🤖 Automation Suite
 │   ├── 🏗️ Components.psm1      # 🆕 Shared component library
@@ -169,21 +171,21 @@ PowerShell-DevKit/               # 🏠 Main repository
 │   ├── 🖥️ Deploy-Terminal.ps1  # Windows Terminal deployment
 │   ├── 📊 Logs/                # 🆕 Failure diagnostics (git-ignored)
 │   │   ├── setup-details.json  # Setup failure logs
-│   │   └── update-details.json # Update failure logs  
+│   │   └── update-details.json # Update failure logs
 │   └── 📖 README.md
 ├── .gitignore                   # 🆕 Enhanced with logs exclusion
 ├── LICENSE
 └── README.md                    # 🆕 This comprehensive guide
 ```
 
-### 🆕 **Modern Yazi Configuration** 
+### 🆕 **Modern Yazi Configuration**
 The Yazi setup now uses a **separate git repository** for better management:
 
 ```
 ~\AppData\Roaming\yazi/          # 🎯 Live Yazi configuration
 ├── config/                      # Auto-cloned from yazi_config repo
 │   ├── yazi.toml               # Main configuration
-│   ├── keymap.toml             # Custom keybindings  
+│   ├── keymap.toml             # Custom keybindings
 │   ├── theme.toml              # Theme selection
 │   └── init.lua                # Lua initialization
 ├── flavors/                     # 🎨 Auto-installed themes
@@ -204,7 +206,7 @@ The Yazi setup now uses a **separate git repository** for better management:
 # 🎯 Full setup (recommended)
 .\Scripts\Setup.ps1
 
-# ⚡ Skip optional components (gsudo, PowerColorLS, Scoop, resvg)  
+# ⚡ Skip optional components (gsudo, PowerColorLS, Scoop, resvg)
 .\Scripts\Setup.ps1 -SkipOptional
 
 # 📊 Show detailed failure information from previous runs
@@ -234,7 +236,7 @@ The Yazi setup now uses a **separate git repository** for better management:
 
 # 📊 Shows status of all components:
 # ✅ Winget Packages (with versions)
-# ✅ PowerShell Modules (with versions)  
+# ✅ PowerShell Modules (with versions)
 # ✅ Scoop Packages (with versions)
 # ✅ Custom Components (Yazi, oh-my-posh, etc.)
 ```
@@ -247,7 +249,7 @@ The Yazi setup now uses a **separate git repository** for better management:
 # 🔄 Update everything (recommended)
 .\Scripts\Update.ps1
 
-# 📦 Update only winget packages  
+# 📦 Update only winget packages
 .\Scripts\Update.ps1 -WingetOnly
 
 # 📚 Update only PowerShell modules
@@ -256,13 +258,13 @@ The Yazi setup now uses a **separate git repository** for better management:
 # 📊 Show detailed failure information
 .\Scripts\Update.ps1 -ShowDetails
 
-# 🧹 Clear stored failure logs  
+# 🧹 Clear stored failure logs
 .\Scripts\Update.ps1 -ClearLogs
 ```
 
 **🆕 Update Sources:**
 - 📦 **Winget Packages** - Windows Package Manager
-- 📚 **PowerShell Modules** - PowerShell Gallery  
+- 📚 **PowerShell Modules** - PowerShell Gallery
 - 🗂️ **Scoop Packages** - Scoop package manager (if installed)
 - 🎯 **Yazi Ecosystem** - Native `ya pkg` updates + git config sync
 - 🎨 **Configuration Repos** - Git-based config updates
@@ -273,7 +275,7 @@ The Yazi setup now uses a **separate git repository** for better management:
 # 🛡️ Deploy with backup (safe)
 .\Scripts\Deploy-Terminal.ps1
 
-# ⚡ Deploy without backup  
+# ⚡ Deploy without backup
 .\Scripts\Deploy-Terminal.ps1 -NoBackup
 ```
 
@@ -287,7 +289,7 @@ The system uses a **shared component library** (`Components.psm1`) that provides
 # 🎯 Single source of truth for all components
 class SetupComponent {
     [string]$Name           # Component name
-    [string]$Type          # winget, module, custom  
+    [string]$Type          # winget, module, custom
     [hashtable]$Properties # Package IDs, module names, etc.
     [bool]$IsOptional      # Skip with -SkipOptional
     [scriptblock]$CustomInstaller    # For complex setups
@@ -310,7 +312,7 @@ Advanced logging system with actionable suggestions:
 {
   "Timestamp": "2025-11-01 10:30:15",
   "Component": "Yazi",
-  "Type": "winget", 
+  "Type": "winget",
   "Operation": "winget install sxyazi.yazi",
   "ErrorMessage": "Network timeout",
   "FullOutput": "...",
@@ -320,7 +322,7 @@ Advanced logging system with actionable suggestions:
 ```
 
 **Smart Suggestions Engine:**
-- 🔐 **Permission Issues** → "Run as Administrator" 
+- 🔐 **Permission Issues** → "Run as Administrator"
 - 🌐 **Network Problems** → "Check internet connection"
 - 📦 **Package Conflicts** → Specific resolution steps
 - 🎯 **Component-Specific** → Tailored troubleshooting
@@ -335,12 +337,12 @@ Yazi now uses **git-based configuration management**:
 # 🔄 Configuration is auto-managed via git
 # Location: ~/.yazi/ (cloned from yazi_config repo)
 
-# 🔄 Update Yazi configuration and packages  
+# 🔄 Update Yazi configuration and packages
 .\Scripts\Update.ps1  # Automatically updates both
 
 # 🎨 Manual package management
 ya pkg add <plugin>     # Add new plugins
-ya pkg update          # Update all packages  
+ya pkg update          # Update all packages
 ya pkg list            # List installed packages
 
 # 🎯 Current auto-installed packages:
@@ -349,7 +351,7 @@ ya pkg list            # List installed packages
 ```
 
 **Key Configuration Files:**
-- `yazi.toml` - Main configuration  
+- `yazi.toml` - Main configuration
 - `keymap.toml` - Custom keybindings
 - `theme.toml` - Theme selection
 - `init.lua` - Lua initialization
@@ -374,20 +376,22 @@ Add your own functions to `PowerShell/CustomModules/`:
 
 ```powershell
 # 🛠️ utilities.psm1 - General utilities
-function My-CustomFunction { 
+function My-CustomFunction {
     # Your code here
 }
 
-# 🏗️ build_functions.psm1 - Build-related functions  
+# 🏗️ build_functions.psm1 - Build-related functions
 function Build-Solution {
     # Your build logic
 }
 ```
 
 **Module Loading:**
-- ✅ **Auto-Discovery** - Modules loaded automatically
-- ✅ **Deferred Loading** - Fast PowerShell startup
+- ✅ **Auto-Discovery** - Custom modules in `CustomModules/` loaded automatically
+- ✅ **Alphabetical Order** - Modules loaded in sorted order for predictability
+- ✅ **Deferred Loading** - Fast PowerShell startup via `OnIdle` event
 - ✅ **Export Control** - Only export what you need
+- ✅ **Extensible** - Just drop new `.psm1` files in `CustomModules/` folder
 
 ## 📝 Components Deep Dive
 
@@ -396,7 +400,7 @@ function Build-Solution {
 **Revolutionary file manager experience with enterprise-grade configuration:**
 
 #### **🏗️ Architecture**
-- **Base Installation**: `winget install sxyazi.yazi`  
+- **Base Installation**: `winget install sxyazi.yazi`
 - **Configuration Source**: Git repository (`yazi_config`)
 - **Package Management**: Native Yazi `ya pkg` system
 - **Update Integration**: Unified with `Update.ps1`
@@ -410,7 +414,7 @@ ya pkg add yazi-rs/plugins:git
 ya pkg add Tsabo/githead.yazi#feature/guards_save_sync_block_with_pcall
 ```
 
-#### **🎨 Auto-Installed Themes**  
+#### **🎨 Auto-Installed Themes**
 ```powershell
 # 🌙 Dark theme matching VS Code
 ya pkg add 956MB/vscode-dark-plus
@@ -427,7 +431,7 @@ winget install 7zip.7zip            # Archive support
 winget install oschwartz10612.Poppler  # PDF support
 winget install ImageMagick.ImageMagick  # Image processing
 
-# 🔍 Search & Processing (auto-installed)  
+# 🔍 Search & Processing (auto-installed)
 winget install jqlang.jq            # JSON processing
 winget install sharkdp.fd           # Fast file search
 winget install BurntSushi.ripgrep.MSVC  # Text search
@@ -446,7 +450,7 @@ scoop install resvg                 # SVG rendering
 - Smart auto-loading of custom modules
 - Optimized PATH management
 
-# 🎯 Enhanced Functionality  
+# 🎯 Enhanced Functionality
 - PSReadLine with predictive IntelliSense
 - Argument completers (winget, dotnet, git)
 - UTF-8 encoding by default
@@ -454,7 +458,7 @@ scoop install resvg                 # SVG rendering
 
 # 🛠️ Custom Functions (auto-loaded)
 clean          # Remove bin/obj directories recursively
-y              # Yazi with directory change on exit  
+y              # Yazi with directory change on exit
 Open-Solution  # Open .sln files in Visual Studio
 ```
 
@@ -489,7 +493,7 @@ exit
 # Open new PowerShell window
 ```
 
-### 2️⃣ **Verify Installation**  
+### 2️⃣ **Verify Installation**
 ```powershell
 # 🧪 Run comprehensive validation
 .\Scripts\Test.ps1
@@ -503,7 +507,7 @@ exit
 - Settings → Profiles → Defaults → Appearance → Font face
 - Set to: `CaskaydiaCove Nerd Font Mono`
 
-**VS Code:**  
+**VS Code:**
 - Settings → Terminal → Integrated: Font Family
 - Set to: `'CaskaydiaCove Nerd Font Mono'`
 
@@ -518,7 +522,7 @@ yazi                 # Standard Yazi (no directory change)
 Ctrl+R              # Fuzzy search command history
 Ctrl+F              # Fuzzy find files
 
-# 🎯 Test smart navigation  
+# 🎯 Test smart navigation
 z docs              # Jump to most-used "docs" directory
 z -                 # Go to previous directory
 
@@ -544,7 +548,7 @@ z -                 # Go to previous directory
 # 🆕 Pull latest Terminal environment changes
 git pull origin main
 
-# 🔧 Re-run setup to apply new features  
+# 🔧 Re-run setup to apply new features
 .\Scripts\Setup.ps1
 ```
 
@@ -593,7 +597,7 @@ The system now includes **advanced failure recovery** with actionable suggestion
 .\Scripts\Update.ps1 -ShowDetails    # Update failures
 
 # 🧹 Clear failure logs
-.\Scripts\Setup.ps1 -ClearLogs       # Clear setup logs  
+.\Scripts\Setup.ps1 -ClearLogs       # Clear setup logs
 .\Scripts\Update.ps1 -ClearLogs      # Clear update logs
 ```
 
@@ -616,7 +620,7 @@ The system now includes **advanced failure recovery** with actionable suggestion
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 # For Scoop installation specifically:
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser  
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # (Scoop requires this setting)
 ```
 
@@ -658,7 +662,7 @@ winget install Microsoft.CascadiaCode
 # Settings → Profiles → Defaults → Appearance → Font face
 # Set to: "CaskaydiaCove Nerd Font Mono"
 
-# Configure in VS Code:  
+# Configure in VS Code:
 # Settings → Terminal → Integrated: Font Family
 # Set to: 'CaskaydiaCove Nerd Font Mono'
 ```
@@ -704,7 +708,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # Manual installation:
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 
-# ❌ Issue: resvg not installing  
+# ❌ Issue: resvg not installing
 # ✅ Solution: Ensure Scoop is installed first
 scoop install resvg
 ```
@@ -717,7 +721,7 @@ scoop install resvg
 
 # Shows detailed status of all components:
 # ✅ Component installed and working
-# ⚠️  Component installed but issues detected  
+# ⚠️  Component installed but issues detected
 # ❌ Component missing or broken
 # ℹ️  Component skipped (optional)
 ```
@@ -726,14 +730,14 @@ scoop install resvg
 ```
 🔹 Winget Packages:
   ✅ oh-my-posh (v19.14.2)
-  ✅ Yazi (v0.2.4)  
+  ✅ Yazi (v0.2.4)
   ✅ fzf (v0.44.1)
 
 🔹 PowerShell Modules:
   ✅ PSFzf (v2.5.22)
   ✅ Terminal-Icons (v0.11.0)
 
-🔹 Scoop Packages:  
+🔹 Scoop Packages:
   ✅ resvg (v0.35.0)
 
 🔹 Custom Components:
@@ -745,7 +749,7 @@ scoop install resvg
 
 1. **📊 Check Detailed Logs**: Use `-ShowDetails` parameters
 2. **🧪 Run Validation**: Use `Test.ps1` for status overview
-3. **🔄 Try Updates**: Use `Update.ps1` to refresh everything  
+3. **🔄 Try Updates**: Use `Update.ps1` to refresh everything
 4. **🧹 Clean Start**: Use `-ClearLogs` then re-run setup
 5. **📚 Check Dependencies**: Ensure internet, winget, PowerShell 7+ available
 
@@ -754,7 +758,7 @@ scoop install resvg
 ### 🗂️ **Yazi File Manager**
 ```powershell
 y                    # 🎯 Open Yazi with directory change integration
-yazi                 # 🗂️ Standard Yazi (no directory change)  
+yazi                 # 🗂️ Standard Yazi (no directory change)
 
 # Within Yazi:
 j/k                  # Navigate up/down
@@ -762,7 +766,7 @@ Enter               # Enter directory or open file
 q                   # Quit (y command changes to last directory)
 <Space>             # Select files
 c                   # Copy selected files
-x                   # Cut selected files  
+x                   # Cut selected files
 p                   # Paste files
 d                   # Delete selected files
 /                   # Search in current directory
@@ -775,7 +779,7 @@ Ctrl+F              # 📁 Fuzzy find files in current directory
 fzf                 # 🔍 Direct fuzzy finder
 ```
 
-### 🎯 **Smart Navigation**  
+### 🎯 **Smart Navigation**
 ```powershell
 z docs              # 🎯 Jump to most-used directory matching "docs"
 z project           # 🎯 Smart jump to project directories
@@ -787,9 +791,9 @@ zoxide query docs   # 🔍 Query zoxide database
 ```powershell
 # Your oh-my-posh prompt automatically shows:
 # � Current directory
-# 🌿 Git branch (if in git repo)  
+# 🌿 Git branch (if in git repo)
 # ✅ Clean working directory
-# ❌ Dirty working directory  
+# ❌ Dirty working directory
 # ↑2 ↓1 Ahead/behind remote
 ```
 
@@ -800,7 +804,7 @@ zoxide query docs   # 🔍 Query zoxide database
 - [**oh-my-posh Documentation**](https://ohmyposh.dev/) - Prompt theme engine
 - [**PowerShell 7+ Documentation**](https://docs.microsoft.com/en-us/powershell/) - Modern PowerShell
 
-### 🔌 **PowerShell Modules**  
+### 🔌 **PowerShell Modules**
 - [**PSFzf**](https://github.com/kelleyma49/PSFzf) - Fuzzy finder integration
 - [**posh-git**](https://github.com/dahlbyk/posh-git) - Git status in prompt
 - [**Terminal-Icons**](https://github.com/devblackops/Terminal-Icons) - File icons
@@ -813,7 +817,7 @@ zoxide query docs   # 🔍 Query zoxide database
 
 ### 🛠️ **Package Managers**
 - [**winget**](https://docs.microsoft.com/en-us/windows/package-manager/winget/) - Windows Package Manager
-- [**Scoop**](https://scoop.sh/) - Command-line installer for Windows  
+- [**Scoop**](https://scoop.sh/) - Command-line installer for Windows
 - [**PowerShell Gallery**](https://www.powershellgallery.com/) - PowerShell module repository
 
 ## 🤝 Contributing
@@ -826,12 +830,12 @@ This setup represents a **major architectural upgrade** with:
 - ✅ **Multi-source update system** (winget + modules + scoop + yazi)
 - ✅ **Enterprise-grade logging** with actionable suggestions
 
-### 🔄 **Contributing Guidelines**  
+### 🔄 **Contributing Guidelines**
 1. **Fork** the repository
 2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
 3. **Test** your changes with `.\Scripts\Test.ps1`
 4. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-5. **Push** to the branch (`git push origin feature/amazing-feature`)  
+5. **Push** to the branch (`git push origin feature/amazing-feature`)
 6. **Open** a Pull Request
 
 ### 💡 **Ideas for Contributions**
@@ -851,7 +855,7 @@ This setup represents a **major architectural upgrade** with:
 - [**Yazi**](https://github.com/sxyazi/yazi) by sxyazi - Revolutionary terminal file manager
 - [**oh-my-posh**](https://github.com/JanDeDobbeleer/oh-my-posh) by Jan De Dobbeleer - Beautiful prompt engine
 
-### 🔌 **PowerShell Ecosystem**  
+### 🔌 **PowerShell Ecosystem**
 - [**PSFzf**](https://github.com/kelleyma49/PSFzf) by kelleyma49 - Fuzzy finder integration
 - [**posh-git**](https://github.com/dahlbyk/posh-git) by Keith Dahlby - Git integration
 - [**Terminal-Icons**](https://github.com/devblackops/Terminal-Icons) by devblackops - Beautiful file icons

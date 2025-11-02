@@ -9,7 +9,7 @@
     - Syntax validation for all .ps1 and .psm1 files
     - Configuration file validation (JSON, TOML)
     - Custom project-specific checks
-    
+
     Use this script before committing changes to ensure code quality standards.
 
 .PARAMETER Quick
@@ -46,7 +46,7 @@
 .NOTES
     This script is designed to be run before committing code changes.
     It uses the project's PSScriptAnalyzerSettings.psd1 for custom rules.
-    
+
     Exit codes:
     0 = Success (no errors)
     1 = PSScriptAnalyzer errors found
@@ -59,17 +59,17 @@
 param(
     [Parameter(HelpMessage = "Run only essential checks for faster validation")]
     [switch]$Quick,
-    
+
     [Parameter(HelpMessage = "Show detailed results including Information messages")]
     [switch]$Detailed,
-    
+
     [Parameter(HelpMessage = "Path to validate (defaults to current directory)")]
     [ValidateScript({ Test-Path $_ })]
     [string]$Path = ".",
-    
+
     [Parameter(HelpMessage = "Treat warnings as failures")]
     [switch]$FailOnWarnings,
-    
+
     [Parameter(HelpMessage = "Export detailed results to JSON files")]
     [switch]$Export
 )
@@ -78,7 +78,7 @@ param(
 
 function Write-ValidationHeader {
     param([string]$Title)
-    
+
     Write-Host ""
     Write-Host "=" * 60 -ForegroundColor Cyan
     Write-Host " $Title" -ForegroundColor Cyan
@@ -91,21 +91,21 @@ function Write-ValidationResult {
         [ValidateSet("Success", "Warning", "Error", "Info")]
         [string]$Type = "Info"
     )
-    
+
     $color = switch ($Type) {
         "Success" { "Green" }
         "Warning" { "Yellow" }
         "Error" { "Red" }
         "Info" { "Cyan" }
     }
-    
+
     $icon = switch ($Type) {
         "Success" { "✅" }
         "Warning" { "⚠️ " }
         "Error" { "❌" }
         "Info" { "ℹ️ " }
     }
-    
+
     Write-Host "$icon $Message" -ForegroundColor $color
 }
 
@@ -121,12 +121,12 @@ function Test-PSScriptAnalyzerAvailable {
 
 function Test-SyntaxErrors {
     param([string]$FilePath)
-    
+
     try {
         $errors = $null
         $content = Get-Content -Path $FilePath -Raw -ErrorAction Stop
         $null = [System.Management.Automation.PSParser]::Tokenize($content, [ref]$errors)
-        
+
         return @{
             HasErrors = $errors.Count -gt 0
             Errors = $errors
@@ -157,40 +157,40 @@ try {
     $startTime = Get-Date
     $totalIssues = 0
     $criticalIssues = 0
-    
+
     Write-ValidationHeader "PowerShell Code Quality Validation"
     Write-Host "Path: $Path" -ForegroundColor Gray
     Write-Host "Mode: $(if ($Quick) { 'Quick' } elseif ($Detailed) { 'Detailed' } else { 'Standard' })" -ForegroundColor Gray
     Write-Host "Started: $($startTime.ToString('yyyy-MM-dd HH:mm:ss'))" -ForegroundColor Gray
-    
+
     # Check dependencies
     Write-ValidationHeader "Dependency Check"
-    
+
     if (-not (Test-PSScriptAnalyzerAvailable)) {
         Write-ValidationResult "PSScriptAnalyzer module not found" -Type "Error"
         Write-Host "Install with: Install-Module -Name PSScriptAnalyzer -Scope CurrentUser" -ForegroundColor Yellow
         exit 4
     }
-    
+
     Write-ValidationResult "PSScriptAnalyzer module available" -Type "Success"
-    
+
     # Find PowerShell files (cross-platform path filtering)
-    $psFiles = Get-ChildItem -Path $Path -Include "*.ps1", "*.psm1" -Recurse | 
-        Where-Object { 
-            $_.FullName -notmatch [regex]::Escape([System.IO.Path]::DirectorySeparatorChar + '.git' + [System.IO.Path]::DirectorySeparatorChar) -and 
+    $psFiles = Get-ChildItem -Path $Path -Include "*.ps1", "*.psm1" -Recurse |
+        Where-Object {
+            $_.FullName -notmatch [regex]::Escape([System.IO.Path]::DirectorySeparatorChar + '.git' + [System.IO.Path]::DirectorySeparatorChar) -and
             $_.FullName -notmatch [regex]::Escape([System.IO.Path]::DirectorySeparatorChar + 'Logs' + [System.IO.Path]::DirectorySeparatorChar)
         }
-    
+
     Write-ValidationResult "Found $($psFiles.Count) PowerShell files to validate" -Type "Info"
-    
+
     if ($psFiles.Count -eq 0) {
         Write-ValidationResult "No PowerShell files found to validate" -Type "Warning"
         exit 0
     }
-    
+
     # Syntax validation (always run)
     Write-ValidationHeader "Syntax Validation"
-    
+
     $syntaxErrors = @()
     foreach ($file in $psFiles) {
         $result = Test-SyntaxErrors -FilePath $file.FullName
@@ -202,7 +202,7 @@ try {
             Write-Host "✓ $($file.Name)" -ForegroundColor DarkGreen
         }
     }
-    
+
     if ($syntaxErrors.Count -gt 0) {
         Write-ValidationResult "$($syntaxErrors.Count) files have syntax errors" -Type "Error"
         $criticalIssues += $syntaxErrors.Count
@@ -210,40 +210,41 @@ try {
     else {
         Write-ValidationResult "All files have valid syntax" -Type "Success"
     }
-    
+
     # Skip PSScriptAnalyzer in Quick mode
     if (-not $Quick) {
         Write-ValidationHeader "PSScriptAnalyzer Code Quality Check"
-        
+
         # Determine settings file (cross-platform path)
         $settingsFile = Get-CrossPlatformPath (Join-Path $Path "PSScriptAnalyzerSettings.psd1")
-        $settings = if (Test-Path $settingsFile) { 
+        $settings = if (Test-Path $settingsFile) {
             Write-Host "Using project settings: $settingsFile" -ForegroundColor Gray
-            $settingsFile 
-        } 
-        else { 
-            Write-Host "Using default PSGallery settings" -ForegroundColor Gray
-            "PSGallery" 
+            $settingsFile
         }
-        
+        else {
+            Write-Host "Using default PSGallery settings" -ForegroundColor Gray
+            "PSGallery"
+        }
+
         # Run PSScriptAnalyzer
         try {
-            $severityLevels = if ($Detailed) { 
-                @('Error', 'Warning', 'Information') 
-            } else { 
-                @('Error', 'Warning') 
+            $severityLevels = if ($Detailed) {
+                @('Error', 'Warning', 'Information')
             }
-            
+            else {
+                @('Error', 'Warning')
+            }
+
             Write-Host "Analyzing with severity levels: $($severityLevels -join ', ')" -ForegroundColor Gray
-            
+
             $results = Invoke-ScriptAnalyzer -Path $Path -Recurse -Settings $settings -Severity $severityLevels
-            
+
             if ($results) {
                 # Group by severity
-                $errors = $results | Where-Object Severity -eq 'Error'
-                $warnings = $results | Where-Object Severity -eq 'Warning'
-                $information = $results | Where-Object Severity -eq 'Information'
-                
+                $errors = $results | Where-Object Severity -EQ 'Error'
+                $warnings = $results | Where-Object Severity -EQ 'Warning'
+                $information = $results | Where-Object Severity -EQ 'Information'
+
                 # Report errors
                 if ($errors) {
                     Write-Host ""
@@ -254,7 +255,7 @@ try {
                     }
                     $criticalIssues += $errors.Count
                 }
-                
+
                 # Report warnings
                 if ($warnings) {
                     Write-Host ""
@@ -270,12 +271,12 @@ try {
                             Write-Host "  ⚠️  $($_.Name): $($_.Count) occurrence(s)" -ForegroundColor Yellow
                         }
                     }
-                    
+
                     if ($FailOnWarnings) {
                         $criticalIssues += $warnings.Count
                     }
                 }
-                
+
                 # Report information (if detailed)
                 if ($information -and $Detailed) {
                     Write-Host ""
@@ -284,15 +285,15 @@ try {
                         Write-Host "  ℹ️  $($_.Name): $($_.Count) occurrence(s)" -ForegroundColor Cyan
                     }
                 }
-                
+
                 $totalIssues = $results.Count
-                
+
                 # Export results if requested
                 if ($Export) {
                     $exportPath = "validation-results.json"
                     $results | ConvertTo-Json -Depth 3 | Out-File $exportPath -Encoding UTF8
                     Write-ValidationResult "Detailed results exported to: $exportPath" -Type "Info"
-                    
+
                     $summary = @{
                         Timestamp = Get-Date
                         TotalFiles = $psFiles.Count
@@ -315,18 +316,18 @@ try {
             $criticalIssues++
         }
     }
-    
+
     # Configuration validation (if not Quick mode)
     if (-not $Quick) {
         Write-ValidationHeader "Configuration File Validation"
-        
+
         # Test JSON files (cross-platform filtering)
-        $jsonFiles = Get-ChildItem -Path $Path -Include "*.json" -Recurse | 
-            Where-Object { 
-                $_.FullName -notmatch [regex]::Escape([System.IO.Path]::DirectorySeparatorChar + '.git' + [System.IO.Path]::DirectorySeparatorChar) -and 
+        $jsonFiles = Get-ChildItem -Path $Path -Include "*.json" -Recurse |
+            Where-Object {
+                $_.FullName -notmatch [regex]::Escape([System.IO.Path]::DirectorySeparatorChar + '.git' + [System.IO.Path]::DirectorySeparatorChar) -and
                 $_.FullName -notmatch [regex]::Escape([System.IO.Path]::DirectorySeparatorChar + 'node_modules' + [System.IO.Path]::DirectorySeparatorChar)
             }
-        
+
         foreach ($file in $jsonFiles) {
             try {
                 $null = Get-Content $file.FullName | ConvertFrom-Json
@@ -337,11 +338,11 @@ try {
                 $criticalIssues++
             }
         }
-        
-        # Test PowerShell data files (cross-platform filtering)  
+
+        # Test PowerShell data files (cross-platform filtering)
         $psdFiles = Get-ChildItem -Path $Path -Include "*.psd1" -Recurse |
             Where-Object { $_.FullName -notmatch [regex]::Escape([System.IO.Path]::DirectorySeparatorChar + '.git' + [System.IO.Path]::DirectorySeparatorChar) }
-            
+
         foreach ($file in $psdFiles) {
             try {
                 $null = Import-PowerShellDataFile $file.FullName
@@ -353,34 +354,34 @@ try {
             }
         }
     }
-    
+
     # Final results
     Write-ValidationHeader "Validation Results"
-    
+
     $endTime = Get-Date
     $duration = $endTime - $startTime
-    
+
     Write-Host "Validation completed in $($duration.TotalSeconds.ToString('F1')) seconds" -ForegroundColor Gray
     Write-Host "Files checked: $($psFiles.Count)" -ForegroundColor Gray
-    
+
     if ($criticalIssues -eq 0) {
         Write-ValidationResult "🎉 All checks passed! Code is ready for commit." -Type "Success"
-        
+
         if ($totalIssues -gt 0 -and -not $FailOnWarnings) {
             Write-ValidationResult "Note: $totalIssues non-critical issue(s) found (warnings/info)" -Type "Info"
         }
-        
+
         exit 0
     }
     else {
         Write-ValidationResult "❌ $criticalIssues critical issue(s) must be fixed before committing" -Type "Error"
-        
+
         Write-Host ""
         Write-Host "💡 Quick fixes:" -ForegroundColor Yellow
         Write-Host "  • Run 'Invoke-ScriptAnalyzer -Path . -Fix' to auto-fix some issues" -ForegroundColor Yellow
         Write-Host "  • Check CONTRIBUTING.md for common rule violations and fixes" -ForegroundColor Yellow
         Write-Host "  • Use 'Get-Help about_PSScriptAnalyzer' for more information" -ForegroundColor Yellow
-        
+
         if ($syntaxErrors.Count -gt 0) {
             exit 2
         }

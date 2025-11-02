@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://tsabo.github.io/PowerShell-DevKit/</loc>
+         <lastmod>2025-11-02</lastmod>
+    </url>
+    <url>
+         <loc>https://tsabo.github.io/PowerShell-DevKit/LOCAL_DEVELOPMENT/</loc>
+         <lastmod>2025-11-02</lastmod>
+    </url>
+    <url>
+         <loc>https://tsabo.github.io/PowerShell-DevKit/faq/</loc>
+         <lastmod>2025-11-02</lastmod>
+    </url>
+    <url>
+         <loc>https://tsabo.github.io/PowerShell-DevKit/troubleshooting/</loc>
+         <lastmod>2025-11-02</lastmod>
+    </url>
+    <url>
+         <loc>https://tsabo.github.io/PowerShell-DevKit/components/overview/</loc>
+         <lastmod>2025-11-02</lastmod>
+    </url>
+    <url>
+         <loc>https://tsabo.github.io/PowerShell-DevKit/getting-started/installation/</loc>
+         <lastmod>2025-11-02</lastmod>
+    </url>
+    <url>
+         <loc>https://tsabo.github.io/PowerShell-DevKit/getting-started/quick-start/</loc>
+         <lastmod>2025-11-02</lastmod>
+    </url>
+    <url>
+         <loc>https://tsabo.github.io/PowerShell-DevKit/getting-started/requirements/</loc>
+         <lastmod>2025-11-02</lastmod>
+    </url>
+</urlset>

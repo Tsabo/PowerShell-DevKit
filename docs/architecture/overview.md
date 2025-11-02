@@ -79,7 +79,9 @@ class SetupComponent {
     [scriptblock]$CustomInstaller
     [scriptblock]$CustomValidator
 }
-```## Component Definition Structure
+```
+
+## Component Definition Structure
 
 Each component in the system follows a standardized definition:
 

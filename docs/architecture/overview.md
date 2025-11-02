@@ -45,7 +45,7 @@ graph TB
     end
 
     subgraph Library["Shared Component Library"]
-        Components["Components.psm1<br/><br/>class SetupComponent {<br/>  Name: string<br/>  Type: winget | module | custom<br/>  Properties: hashtable<br/>  IsOptional: bool<br/>  CustomInstaller: scriptblock<br/>  CustomValidator: scriptblock<br/>}"]
+        Components["Components.psm1<br/><br/>SetupComponent Class<br/>(See structure below)"]
     end
 
     subgraph Types["Component Types"]
@@ -68,7 +68,18 @@ graph TB
     style Components fill:#fff9c4
 ```
 
-## Component Definition Structure
+### SetupComponent Class Structure
+
+```powershell
+class SetupComponent {
+    [string]$Name
+    [string]$Type                      # winget | module | custom
+    [hashtable]$Properties
+    [bool]$IsOptional
+    [scriptblock]$CustomInstaller
+    [scriptblock]$CustomValidator
+}
+```## Component Definition Structure
 
 Each component in the system follows a standardized definition:
 

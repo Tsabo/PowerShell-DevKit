@@ -84,10 +84,30 @@ nav:
     - Requirements: getting-started/requirements.md
   - Components:
     - Overview: components/overview.md
+    - oh-my-posh: components/oh-my-posh.md
+    - Yazi File Manager: components/yazi.md
+    - PowerShell Profile: components/powershell.md
+    - Windows Terminal: components/terminal.md
+    - Optional Components: components/optional.md
+  - Scripts:
+    - Overview: scripts/overview.md
+    - Setup.ps1: scripts/setup.md
+    - Test.ps1: scripts/test.md
+    - Update.ps1: scripts/update.md
+    - Deploy-Terminal.ps1: scripts/deploy-terminal.md
+  - Configuration:
+    - Customization Guide: configuration/customization.md
+    - Custom Modules: configuration/custom-modules.md
+    - Custom Profile: configuration/custom-profile.md
+    - Themes: configuration/themes.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Component System: architecture/components.md
+    - Failure Recovery: architecture/failure-recovery.md
+  - Development:
+    - Contributing: development/contributing.md
+    - Developer Reference: development/developer-reference.md
+    - Testing Guide: development/testing.md
   - Troubleshooting: troubleshooting.md
   - FAQ: faq.md
-  # More pages coming soon:
-  # - Scripts (Setup, Test, Update)
-  # - Configuration (Customization, Custom Modules, Custom Profile)
-  # - Development (Architecture, Contributing, Components)
-  # - Individual component pages (oh-my-posh, Yazi, Terminal, PowerShell)
+  - Local Development: LOCAL_DEVELOPMENT.md

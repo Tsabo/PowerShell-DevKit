@@ -1269,17 +1269,17 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#component-definition-structure" class="md-nav__link">
+    <nav class="md-nav" aria-label="System Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setupcomponent-class-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      Component Definition Structure
+      SetupComponent Class Structure
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Component Definition Structure">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#type-winget" class="md-nav__link">
@@ -1871,17 +1871,17 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#component-definition-structure" class="md-nav__link">
+    <nav class="md-nav" aria-label="System Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setupcomponent-class-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      Component Definition Structure
+      SetupComponent Class Structure
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Component Definition Structure">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#type-winget" class="md-nav__link">
@@ -2205,7 +2205,7 @@
     end
 
     subgraph Library["Shared Component Library"]
-        Components["Components.psm1&lt;br/&gt;&lt;br/&gt;class SetupComponent {&lt;br/&gt;  Name: string&lt;br/&gt;  Type: winget | module | custom&lt;br/&gt;  Properties: hashtable&lt;br/&gt;  IsOptional: bool&lt;br/&gt;  CustomInstaller: scriptblock&lt;br/&gt;  CustomValidator: scriptblock&lt;br/&gt;}"]
+        Components["Components.psm1&lt;br/&gt;&lt;br/&gt;SetupComponent Class&lt;br/&gt;(See structure below)"]
     end
 
     subgraph Types["Component Types"]
@@ -2226,21 +2226,33 @@
     style Library fill:#fff4e6
     style Types fill:#f3e5f5
     style Components fill:#fff9c4</code></pre>
-<h2 id="component-definition-structure">Component Definition Structure<a class="headerlink" href="#component-definition-structure" title="Permanent link">&para;</a></h2>
-<p>Each component in the system follows a standardized definition:</p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">@{</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">Name</span> <span class="p">=</span> <span class="s2">&quot;ComponentName&quot;</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nb">Type </span><span class="p">=</span> <span class="s2">&quot;winget&quot;</span> <span class="p">|</span> <span class="s2">&quot;module&quot;</span> <span class="p">|</span> <span class="s2">&quot;custom&quot;</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">IsOptional</span> <span class="p">=</span> <span class="nv">$false</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">Properties</span> <span class="p">=</span> <span class="p">@{</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="c"># Type-specific properties</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="n">PackageId</span> <span class="p">=</span> <span class="s2">&quot;...&quot;</span>      <span class="c"># For winget</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="n">ModuleName</span> <span class="p">=</span> <span class="s2">&quot;...&quot;</span>     <span class="c"># For module</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="c"># etc.</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="p">}</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">CustomInstaller</span> <span class="p">=</span> <span class="p">{</span> <span class="p">}</span>      <span class="c"># Optional custom logic</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">CustomValidator</span> <span class="p">=</span> <span class="p">{</span> <span class="p">}</span>      <span class="c"># Optional custom validation</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">}</span>
+<h3 id="setupcomponent-class-structure">SetupComponent Class Structure<a class="headerlink" href="#setupcomponent-class-structure" title="Permanent link">&para;</a></h3>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">class</span> <span class="n">SetupComponent</span> <span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="no">[string]</span><span class="nv">$Name</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="no">[string]</span><span class="nv">$Type</span>                      <span class="c"># winget | module | custom</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="no">[hashtable]</span><span class="nv">$Properties</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="no">[bool]</span><span class="nv">$IsOptional</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="no">[scriptblock]</span><span class="nv">$CustomInstaller</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="no">[scriptblock]</span><span class="nv">$CustomValidator</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">```</span><span class="c">## Component Definition Structure</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">Each</span> <span class="n">component</span> <span class="k">in</span> <span class="n">the</span> <span class="n">system</span> <span class="n">follows</span> <span class="n">a</span> <span class="n">standardized</span> <span class="n">definition</span><span class="p">:</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">```</span><span class="n">powershell</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">@{</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">Name</span> <span class="p">=</span> <span class="s2">&quot;ComponentName&quot;</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="nb">Type </span><span class="p">=</span> <span class="s2">&quot;winget&quot;</span> <span class="p">|</span> <span class="s2">&quot;module&quot;</span> <span class="p">|</span> <span class="s2">&quot;custom&quot;</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">IsOptional</span> <span class="p">=</span> <span class="nv">$false</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">Properties</span> <span class="p">=</span> <span class="p">@{</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="c"># Type-specific properties</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        <span class="n">PackageId</span> <span class="p">=</span> <span class="s2">&quot;...&quot;</span>      <span class="c"># For winget</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        <span class="n">ModuleName</span> <span class="p">=</span> <span class="s2">&quot;...&quot;</span>     <span class="c"># For module</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="c"># etc.</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="p">}</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">CustomInstaller</span> <span class="p">=</span> <span class="p">{</span> <span class="p">}</span>      <span class="c"># Optional custom logic</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="n">CustomValidator</span> <span class="p">=</span> <span class="p">{</span> <span class="p">}</span>      <span class="c"># Optional custom validation</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="type-winget">Type: winget<a class="headerlink" href="#type-winget" title="Permanent link">&para;</a></h3>
 <p>For Windows Package Manager packages:</p>

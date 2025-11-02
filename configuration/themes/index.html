@@ -12,13 +12,13 @@
         <meta name="author" content="Tsabo">
       
       
-        <link rel="canonical" href="https://tsabo.github.io/PowerShell-DevKit/getting-started/installation/">
+        <link rel="canonical" href="https://tsabo.github.io/PowerShell-DevKit/configuration/themes/">
       
       
-        <link rel="prev" href="../quick-start/">
+        <link rel="prev" href="../custom-profile/">
       
       
-        <link rel="next" href="../requirements/">
+        <link rel="next" href="../../architecture/overview/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Installation - PowerShell DevKit</title>
+        <title>Themes - PowerShell DevKit</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installation-guide" class="md-skip">
+        <a href="#theme-customization" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Installation
+              Themes
             
           </span>
         </div>
@@ -252,13 +252,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../quick-start/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../getting-started/quick-start/" class="md-tabs__link">
           
   
   
@@ -314,11 +312,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../configuration/customization/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../customization/" class="md-tabs__link">
           
   
   
@@ -498,31 +498,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -535,7 +532,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Getting Started
@@ -549,7 +546,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quick-start/" class="md-nav__link">
+      <a href="../../getting-started/quick-start/" class="md-nav__link">
         
   
   
@@ -569,32 +566,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Installation
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -605,278 +580,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#before-you-begin" class="md-nav__link">
-    <span class="md-ellipsis">
-      Before You Begin
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation Methods
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installation Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#method-1-automated-setup-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      Method 1: Automated Setup (Recommended)
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Method 1: Automated Setup (Recommended)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-clone-the-repository" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 1: Clone the Repository
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-run-setup-script" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 2: Run Setup Script
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-verify-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Step 3: Verify Installation
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#method-2-manual-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Method 2: Manual Installation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Method 2: Manual Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-install-core-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. Install Core Tools
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-install-powershell-modules" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. Install PowerShell Modules
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-deploy-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Deploy Configuration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Post-Installation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Post-Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reload-your-profile" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reload Your Profile
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#verify-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Verify Installation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#install-optional-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      Install Optional Components
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#setup-process-details" class="md-nav__link">
-    <span class="md-ellipsis">
-      Setup Process Details
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Setup Process Details">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-the-setup-script-does" class="md-nav__link">
-    <span class="md-ellipsis">
-      What the Setup Script Does
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#progress-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      Progress Indicators
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#timeout-protection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Timeout Protection
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting Installation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#checking-logs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Checking Logs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getting-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      Getting Help
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      Next Steps
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#updating" class="md-nav__link">
-    <span class="md-ellipsis">
-      Updating
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -889,7 +592,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../requirements/" class="md-nav__link">
+      <a href="../../getting-started/requirements/" class="md-nav__link">
         
   
   
@@ -1273,28 +976,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -1307,7 +1013,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Configuration
@@ -1321,7 +1027,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/customization/" class="md-nav__link">
+      <a href="../customization/" class="md-nav__link">
         
   
   
@@ -1344,7 +1050,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/custom-modules/" class="md-nav__link">
+      <a href="../custom-modules/" class="md-nav__link">
         
   
   
@@ -1367,7 +1073,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/custom-profile/" class="md-nav__link">
+      <a href="../custom-profile/" class="md-nav__link">
         
   
   
@@ -1387,10 +1093,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../configuration/themes/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Themes
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1401,6 +1129,212 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#oh-my-posh-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      oh-my-posh Themes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="oh-my-posh Themes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#browse-available-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Browse Available Themes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preview-a-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preview a Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-default-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Change Default Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-custom-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create Custom Theme
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create Custom Theme">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-export-current-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Export Current Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-edit-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Edit Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-test-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Test Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-make-permanent" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Make Permanent
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theme-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Theme Structure
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-terminal-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Windows Terminal Themes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows Terminal Themes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#built-in-schemes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Built-in Schemes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-color-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Color Scheme
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yazi-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yazi Themes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Yazi Themes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available Themes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switch-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switch Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-additional-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install Additional Themes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      See Also
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1748,56 +1682,83 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#before-you-begin" class="md-nav__link">
+  <a href="#oh-my-posh-themes" class="md-nav__link">
     <span class="md-ellipsis">
-      Before You Begin
+      oh-my-posh Themes
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation Methods
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installation Methods">
+    <nav class="md-nav" aria-label="oh-my-posh Themes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#method-1-automated-setup-recommended" class="md-nav__link">
+  <a href="#browse-available-themes" class="md-nav__link">
     <span class="md-ellipsis">
-      Method 1: Automated Setup (Recommended)
+      Browse Available Themes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Method 1: Automated Setup (Recommended)">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preview-a-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preview a Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-default-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Change Default Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-custom-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create Custom Theme
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create Custom Theme">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-clone-the-repository" class="md-nav__link">
+  <a href="#1-export-current-theme" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 1: Clone the Repository
+      1. Export Current Theme
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-run-setup-script" class="md-nav__link">
+  <a href="#2-edit-theme" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 2: Run Setup Script
+      2. Edit Theme
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-3-verify-installation" class="md-nav__link">
+  <a href="#3-test-theme" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 3: Verify Installation
+      3. Test Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-make-permanent" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Make Permanent
     </span>
   </a>
   
@@ -1809,44 +1770,44 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#method-2-manual-installation" class="md-nav__link">
+  <a href="#theme-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      Method 2: Manual Installation
+      Theme Structure
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Method 2: Manual Installation">
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-terminal-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Windows Terminal Themes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Windows Terminal Themes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-install-core-tools" class="md-nav__link">
+  <a href="#built-in-schemes" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Install Core Tools
+      Built-in Schemes
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-install-powershell-modules" class="md-nav__link">
+  <a href="#custom-color-scheme" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Install PowerShell Modules
+      Custom Color Scheme
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-deploy-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Deploy Configuration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1856,37 +1817,37 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#post-installation" class="md-nav__link">
+  <a href="#yazi-themes" class="md-nav__link">
     <span class="md-ellipsis">
-      Post-Installation
+      Yazi Themes
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Post-Installation">
+    <nav class="md-nav" aria-label="Yazi Themes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#reload-your-profile" class="md-nav__link">
+  <a href="#available-themes" class="md-nav__link">
     <span class="md-ellipsis">
-      Reload Your Profile
+      Available Themes
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#verify-installation" class="md-nav__link">
+  <a href="#switch-theme" class="md-nav__link">
     <span class="md-ellipsis">
-      Verify Installation
+      Switch Theme
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#install-optional-components" class="md-nav__link">
+  <a href="#install-additional-themes" class="md-nav__link">
     <span class="md-ellipsis">
-      Install Optional Components
+      Install Additional Themes
     </span>
   </a>
   
@@ -1898,102 +1859,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#setup-process-details" class="md-nav__link">
+  <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
-      Setup Process Details
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Setup Process Details">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-the-setup-script-does" class="md-nav__link">
-    <span class="md-ellipsis">
-      What the Setup Script Does
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#progress-indicators" class="md-nav__link">
-    <span class="md-ellipsis">
-      Progress Indicators
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#timeout-protection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Timeout Protection
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Troubleshooting Installation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      Common Issues
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#checking-logs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Checking Logs
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getting-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      Getting Help
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      Next Steps
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#updating" class="md-nav__link">
-    <span class="md-ellipsis">
-      Updating
+      See Also
     </span>
   </a>
   
@@ -2018,212 +1886,149 @@
   
 
 
-<h1 id="installation-guide">Installation Guide<a class="headerlink" href="#installation-guide" title="Permanent link">&para;</a></h1>
-<p>Complete step-by-step guide to installing PowerShell DevKit.</p>
-<h2 id="before-you-begin">Before You Begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
+<h1 id="theme-customization">Theme Customization<a class="headerlink" href="#theme-customization" title="Permanent link">&para;</a></h1>
+<p>Customize the visual appearance of your PowerShell environment.</p>
+<h2 id="oh-my-posh-themes">oh-my-posh Themes<a class="headerlink" href="#oh-my-posh-themes" title="Permanent link">&para;</a></h2>
+<h3 id="browse-available-themes">Browse Available Themes<a class="headerlink" href="#browse-available-themes" title="Permanent link">&para;</a></h3>
+<p>Visit: https://ohmyposh.dev/docs/themes</p>
+<h3 id="preview-a-theme">Preview a Theme<a class="headerlink" href="#preview-a-theme" title="Permanent link">&para;</a></h3>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Preview theme temporarily</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">oh-my-posh</span> <span class="n">init</span> <span class="n">pwsh</span> <span class="p">-</span><span class="n">-config</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="n">oh-my-posh</span> <span class="n">get</span> <span class="n">shell-themes-path</span><span class="p">)</span><span class="s2">\jandedobbeleer.omp.json&quot;</span> <span class="p">|</span> <span class="nb">Invoke-Expression</span>
+</span></code></pre></div>
+<p>Reload profile to return to default.</p>
+<h3 id="change-default-theme">Change Default Theme<a class="headerlink" href="#change-default-theme" title="Permanent link">&para;</a></h3>
+<p><strong>Edit your profile:</strong></p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">code</span> <span class="nv">$PROFILE</span>
+</span></code></pre></div>
+<p><strong>Find and modify:</strong></p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Change this line</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">oh-my-posh</span> <span class="n">init</span> <span class="n">pwsh</span> <span class="p">-</span><span class="n">-config</span> <span class="s2">&quot;$PSScriptRoot\..\..\Config\oh-my-posh\iterm2.omp.json&quot;</span> <span class="p">|</span> <span class="nb">Invoke-Expression</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># To use built-in theme</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">oh-my-posh</span> <span class="n">init</span> <span class="n">pwsh</span> <span class="p">-</span><span class="n">-config</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="n">oh-my-posh</span> <span class="n">get</span> <span class="n">shell-themes-path</span><span class="p">)</span><span class="s2">\paradox.omp.json&quot;</span> <span class="p">|</span> <span class="nb">Invoke-Expression</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Or custom theme in Config folder</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">oh-my-posh</span> <span class="n">init</span> <span class="n">pwsh</span> <span class="p">-</span><span class="n">-config</span> <span class="s2">&quot;$PSScriptRoot\..\..\Config\oh-my-posh\mytheme.omp.json&quot;</span> <span class="p">|</span> <span class="nb">Invoke-Expression</span>
+</span></code></pre></div>
+<h3 id="create-custom-theme">Create Custom Theme<a class="headerlink" href="#create-custom-theme" title="Permanent link">&para;</a></h3>
+<h4 id="1-export-current-theme">1. Export Current Theme<a class="headerlink" href="#1-export-current-theme" title="Permanent link">&para;</a></h4>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">oh-my-posh</span> <span class="n">config</span> <span class="n">export</span> <span class="p">-</span><span class="n">-output</span> <span class="s2">&quot;Config\oh-my-posh\mytheme.omp.json&quot;</span>
+</span></code></pre></div>
+<h4 id="2-edit-theme">2. Edit Theme<a class="headerlink" href="#2-edit-theme" title="Permanent link">&para;</a></h4>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">code</span> <span class="n">Config</span><span class="p">\</span><span class="n">oh-my-posh</span><span class="p">\</span><span class="n">mytheme</span><span class="p">.</span><span class="n">omp</span><span class="p">.</span><span class="n">json</span>
+</span></code></pre></div>
+<h4 id="3-test-theme">3. Test Theme<a class="headerlink" href="#3-test-theme" title="Permanent link">&para;</a></h4>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">oh-my-posh</span> <span class="n">init</span> <span class="n">pwsh</span> <span class="p">-</span><span class="n">-config</span> <span class="s2">&quot;.\Config\oh-my-posh\mytheme.omp.json&quot;</span> <span class="p">|</span> <span class="nb">Invoke-Expression</span>
+</span></code></pre></div>
+<h4 id="4-make-permanent">4. Make Permanent<a class="headerlink" href="#4-make-permanent" title="Permanent link">&para;</a></h4>
+<p>Update <code>$PROFILE</code> to use your custom theme.</p>
+<h3 id="theme-structure">Theme Structure<a class="headerlink" href="#theme-structure" title="Permanent link">&para;</a></h3>
+<p>Basic theme JSON:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json&quot;</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;final_space&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">&quot;console_title_template&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{ .Shell }} in {{ .Folder }}&quot;</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">&quot;blocks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prompt&quot;</span><span class="p">,</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">      </span><span class="nt">&quot;alignment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">      </span><span class="nt">&quot;segments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;path&quot;</span><span class="p">,</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">          </span><span class="nt">&quot;style&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;powerline&quot;</span><span class="p">,</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">          </span><span class="nt">&quot;powerline_symbol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\uE0B0&quot;</span><span class="p">,</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">          </span><span class="nt">&quot;foreground&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#ffffff&quot;</span><span class="p">,</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">          </span><span class="nt">&quot;background&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#61AFEF&quot;</span><span class="p">,</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">          </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">            </span><span class="nt">&quot;style&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;folder&quot;</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">          </span><span class="p">}</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;git&quot;</span><span class="p">,</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">          </span><span class="nt">&quot;style&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;powerline&quot;</span><span class="p">,</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">          </span><span class="nt">&quot;powerline_symbol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\uE0B0&quot;</span><span class="p">,</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">          </span><span class="nt">&quot;foreground&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#193549&quot;</span><span class="p">,</span>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">          </span><span class="nt">&quot;background&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#95ffa4&quot;</span><span class="p">,</span>
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">          </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">            </span><span class="nt">&quot;display_status&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">          </span><span class="p">}</span>
+</span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">      </span><span class="p">]</span>
+</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-6-33"><a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-6-34"><a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="windows-terminal-themes">Windows Terminal Themes<a class="headerlink" href="#windows-terminal-themes" title="Permanent link">&para;</a></h2>
+<h3 id="built-in-schemes">Built-in Schemes<a class="headerlink" href="#built-in-schemes" title="Permanent link">&para;</a></h3>
+<p>Windows Terminal includes many color schemes:</p>
 <ol>
-<li>Review the <a href="../requirements/">Requirements</a></li>
-<li>Close all PowerShell windows (setup will reload profile automatically)</li>
-<li>Ensure you have internet connectivity</li>
+<li>Open Settings (<code>Ctrl+,</code>)</li>
+<li>Profiles → Defaults → Appearance</li>
+<li>Color scheme: Select from dropdown</li>
 </ol>
-<h2 id="installation-methods">Installation Methods<a class="headerlink" href="#installation-methods" title="Permanent link">&para;</a></h2>
-<h3 id="method-1-automated-setup-recommended">Method 1: Automated Setup (Recommended)<a class="headerlink" href="#method-1-automated-setup-recommended" title="Permanent link">&para;</a></h3>
-<p>This is the easiest way to get started.</p>
-<h4 id="step-1-clone-the-repository">Step 1: Clone the Repository<a class="headerlink" href="#step-1-clone-the-repository" title="Permanent link">&para;</a></h4>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Navigate to where you want to install</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">Dev</span>  <span class="c"># or your preferred location</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Clone the repository</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">Tsabo</span><span class="p">/</span><span class="n">PowerShell-DevKit</span><span class="p">.</span><span class="n">git</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">cd </span><span class="n">PowerShell-DevKit</span>
+<h3 id="custom-color-scheme">Custom Color Scheme<a class="headerlink" href="#custom-color-scheme" title="Permanent link">&para;</a></h3>
+<p><strong>Edit settings.json:</strong></p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;schemes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My Custom Theme&quot;</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">      </span><span class="nt">&quot;background&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#1E1E1E&quot;</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">      </span><span class="nt">&quot;foreground&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#D4D4D4&quot;</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">      </span><span class="nt">&quot;black&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#000000&quot;</span><span class="p">,</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">      </span><span class="nt">&quot;blue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#0037DA&quot;</span><span class="p">,</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">      </span><span class="nt">&quot;cyan&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#3A96DD&quot;</span><span class="p">,</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">      </span><span class="nt">&quot;green&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#13A10E&quot;</span><span class="p">,</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">      </span><span class="nt">&quot;purple&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#881798&quot;</span><span class="p">,</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">      </span><span class="nt">&quot;red&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#C50F1F&quot;</span><span class="p">,</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">      </span><span class="nt">&quot;white&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#CCCCCC&quot;</span><span class="p">,</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">      </span><span class="nt">&quot;yellow&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#C19C00&quot;</span><span class="p">,</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">      </span><span class="nt">&quot;brightBlack&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#767676&quot;</span><span class="p">,</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">      </span><span class="nt">&quot;brightBlue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#3B78FF&quot;</span><span class="p">,</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">      </span><span class="nt">&quot;brightCyan&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#61D6D6&quot;</span><span class="p">,</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">      </span><span class="nt">&quot;brightGreen&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#16C60C&quot;</span><span class="p">,</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">      </span><span class="nt">&quot;brightPurple&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#B4009E&quot;</span><span class="p">,</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">      </span><span class="nt">&quot;brightRed&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#E74856&quot;</span><span class="p">,</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">      </span><span class="nt">&quot;brightWhite&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#F2F2F2&quot;</span><span class="p">,</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">      </span><span class="nt">&quot;brightYellow&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#F9F1A5&quot;</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="p">}</span>
 </span></code></pre></div>
-<h4 id="step-2-run-setup-script">Step 2: Run Setup Script<a class="headerlink" href="#step-2-run-setup-script" title="Permanent link">&para;</a></h4>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">As Administrator (Recommended)</label><label for="__tabbed_1_2">As Standard User</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Right-click PowerShell and &quot;Run as Administrator&quot;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">Dev</span><span class="p">\</span><span class="n">PowerShell-DevKit</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span>
+<p><strong>Apply the scheme:</strong></p>
+<ol>
+<li>Settings → Profiles → Defaults → Appearance</li>
+<li>Color scheme: "My Custom Theme"</li>
+</ol>
+<h2 id="yazi-themes">Yazi Themes<a class="headerlink" href="#yazi-themes" title="Permanent link">&para;</a></h2>
+<h3 id="available-themes">Available Themes<a class="headerlink" href="#available-themes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>vscode-dark-plus (default)</li>
+<li>flexoki-light</li>
+</ul>
+<h3 id="switch-theme">Switch Theme<a class="headerlink" href="#switch-theme" title="Permanent link">&para;</a></h3>
+<p><strong>Edit:</strong> <code>$env:APPDATA\yazi\config\theme.toml</code></p>
+<div class="language-toml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Use dark theme</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">use</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~/.config/yazi/flavors/vscode-dark-plus.yazi&quot;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Or light theme</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># use = &quot;~/.config/yazi/flavors/flexoki-light.yazi&quot;</span>
 </span></code></pre></div>
-<p><strong>Benefits:</strong>
-- All components install successfully
-- Windows Terminal configured automatically
-- No UAC prompts during installation</p>
-</div>
-<div class="tabbed-block">
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span>
-</span></code></pre></div>
-<p><strong>Limitations:</strong>
-- Some components may be skipped
-- May require manual UAC approval
-- Windows Terminal config might need manual copy</p>
-</div>
-</div>
-</div>
-<h4 id="step-3-verify-installation">Step 3: Verify Installation<a class="headerlink" href="#step-3-verify-installation" title="Permanent link">&para;</a></h4>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Run the test script</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Test</span><span class="p">.</span><span class="n">ps1</span>
-</span></code></pre></div>
-<p>Expected output shows all components installed with ✓ marks.</p>
-<h3 id="method-2-manual-installation">Method 2: Manual Installation<a class="headerlink" href="#method-2-manual-installation" title="Permanent link">&para;</a></h3>
-<p>If you prefer to install components individually:</p>
-<h4 id="1-install-core-tools">1. Install Core Tools<a class="headerlink" href="#1-install-core-tools" title="Permanent link">&para;</a></h4>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Install oh-my-posh</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">winget</span> <span class="n">install</span> <span class="n">JanDeDobbeleer</span><span class="p">.</span><span class="n">OhMyPosh</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Install Yazi</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">winget</span> <span class="n">install</span> <span class="n">sxyazi</span><span class="p">.</span><span class="n">yazi</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Install fzf</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">winget</span> <span class="n">install</span> <span class="n">junegunn</span><span class="p">.</span><span class="n">fzf</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Install zoxide</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">winget</span> <span class="n">install</span> <span class="n">ajeetdsouza</span><span class="p">.</span><span class="n">zoxide</span>
-</span></code></pre></div>
-<h4 id="2-install-powershell-modules">2. Install PowerShell Modules<a class="headerlink" href="#2-install-powershell-modules" title="Permanent link">&para;</a></h4>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">PSFzf</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">Terminal-Icons</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">F7History</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Install-Module</span> <span class="n">-Name</span> <span class="n">posh-git</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-</span></code></pre></div>
-<h4 id="3-deploy-configuration">3. Deploy Configuration<a class="headerlink" href="#3-deploy-configuration" title="Permanent link">&para;</a></h4>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Run deployment scripts individually</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Deploy-Terminal</span><span class="p">.</span><span class="n">ps1</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Deploy-PowerShellProfile</span><span class="p">.</span><span class="n">ps1</span>
-</span></code></pre></div>
-<h2 id="post-installation">Post-Installation<a class="headerlink" href="#post-installation" title="Permanent link">&para;</a></h2>
-<h3 id="reload-your-profile">Reload Your Profile<a class="headerlink" href="#reload-your-profile" title="Permanent link">&para;</a></h3>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Apply the new configuration</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="p">.</span> <span class="nv">$PROFILE</span>
-</span></code></pre></div>
-<h3 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h3>
-<p>Run the test script to ensure everything is working:</p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Test</span><span class="p">.</span><span class="n">ps1</span>
-</span></code></pre></div>
-<h3 id="install-optional-components">Install Optional Components<a class="headerlink" href="#install-optional-components" title="Permanent link">&para;</a></h3>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Install Yazi optional dependencies</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Install-YaziOptionals</span>
+<h3 id="install-additional-themes">Install Additional Themes<a class="headerlink" href="#install-additional-themes" title="Permanent link">&para;</a></h3>
+<p>Browse: https://github.com/yazi-rs/flavors</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Install theme</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">ya</span> <span class="n">pkg</span> <span class="n">add</span> <span class="s2">&quot;username/theme-name&quot;</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Install just plugins</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Install-YaziOptionals</span> <span class="n">-PluginsOnly</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># Install just dependencies</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">Install-YaziOptionals</span> <span class="n">-DependenciesOnly</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Update theme.toml to use it</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">code</span> <span class="nv">$env:APPDATA</span><span class="p">\</span><span class="n">yazi</span><span class="p">\</span><span class="n">config</span><span class="p">\</span><span class="n">theme</span><span class="p">.</span><span class="n">toml</span>
 </span></code></pre></div>
-<h2 id="setup-process-details">Setup Process Details<a class="headerlink" href="#setup-process-details" title="Permanent link">&para;</a></h2>
-<h3 id="what-the-setup-script-does">What the Setup Script Does<a class="headerlink" href="#what-the-setup-script-does" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Prerequisites Check</strong></li>
-<li>Validates PowerShell version</li>
-<li>Checks for winget availability</li>
-<li>
-<p>Verifies internet connectivity</p>
-</li>
-<li>
-<p><strong>Core Installation</strong></p>
-</li>
-<li>Installs oh-my-posh with CascadiaCode font</li>
-<li>Installs Yazi file manager</li>
-<li>Installs fzf, zoxide, and other tools</li>
-<li>
-<p>Installs PowerShell modules from Gallery</p>
-</li>
-<li>
-<p><strong>Configuration Deployment</strong></p>
-</li>
-<li>Copies Windows Terminal settings</li>
-<li>Deploys PowerShell profile</li>
-<li>Deploys oh-my-posh themes</li>
-<li>
-<p>Clones Yazi configuration</p>
-</li>
-<li>
-<p><strong>Yazi Ecosystem</strong></p>
-</li>
-<li>Installs optional dependencies (FFmpeg, 7-Zip, etc.)</li>
-<li>Installs Yazi plugins (git, githead)</li>
-<li>
-<p>Sets up themes (flexoki-light, vscode-dark-plus)</p>
-</li>
-<li>
-<p><strong>Verification</strong></p>
-</li>
-<li>Runs component tests</li>
-<li>Displays installation summary</li>
-<li>Shows any issues that need attention</li>
-</ol>
-<h3 id="progress-indicators">Progress Indicators<a class="headerlink" href="#progress-indicators" title="Permanent link">&para;</a></h3>
-<p>During installation, you'll see:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>🔹 Installing oh-my-posh...
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  → Checking if already installed...
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  ✓ oh-my-posh installed successfully
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>🔹 Installing Yazi...
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  → Installing Yazi...
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  ✓ Yazi binary installed
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  → Installing optional dependencies for enhanced functionality...
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    → [1/7] Checking FFmpeg (for video thumbnails)...
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>      ✓ FFmpeg installed
-</span></code></pre></div>
-<h3 id="timeout-protection">Timeout Protection<a class="headerlink" href="#timeout-protection" title="Permanent link">&para;</a></h3>
-<p>All package installations have built-in timeouts:
-- <strong>15 seconds</strong> for checking if already installed
-- <strong>60 seconds</strong> for package installation
-- <strong>30 seconds</strong> for git operations</p>
-<p>If any operation times out, it's skipped and installation continues.</p>
-<h2 id="troubleshooting-installation">Troubleshooting Installation<a class="headerlink" href="#troubleshooting-installation" title="Permanent link">&para;</a></h2>
-<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
-<div class="admonition warning">
-<p class="admonition-title">Execution Policy Error</p>
-<p><strong>Error:</strong> <code>cannot be loaded because running scripts is disabled</code></p>
-<p><strong>Solution:</strong>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">-ExecutionPolicy</span> <span class="n">RemoteSigned</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-</span></code></pre></div></p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">winget Not Found</p>
-<p><strong>Error:</strong> <code>winget: The term 'winget' is not recognized</code></p>
-<p><strong>Solution:</strong>
-- Update Windows to latest version
-- Install <a href="https://www.microsoft.com/p/app-installer/9nblggh4nns1">App Installer</a> from Microsoft Store</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Module Installation Failed</p>
-<p><strong>Error:</strong> <code>Unable to install module from PSGallery</code></p>
-<p><strong>Solution:</strong>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Trust PSGallery</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Set-PSRepository</span> <span class="n">-Name</span> <span class="n">PSGallery</span> <span class="n">-InstallationPolicy</span> <span class="n">Trusted</span>
-</span></code></pre></div></p>
-</div>
-<h3 id="checking-logs">Checking Logs<a class="headerlink" href="#checking-logs" title="Permanent link">&para;</a></h3>
-<p>Setup logs are saved to <code>.\Scripts\Logs\Setup_YYYYMMDD_HHMMSS.log</code></p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># View the most recent log</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-Content</span> <span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Setup_</span><span class="p">*.</span><span class="n">log</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">50</span>
-</span></code></pre></div>
-<h3 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h3>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Check the <a href="../../troubleshooting/">Troubleshooting</a> page</li>
-<li>Review <a href="../../faq/">FAQ</a></li>
-<li>Open an issue on <a href="https://github.com/Tsabo/PowerShell-DevKit/issues">GitHub</a></li>
+<li><a href="../../components/oh-my-posh/">oh-my-posh Component</a></li>
+<li><a href="../../components/terminal/">Windows Terminal Component</a></li>
+<li><a href="../../components/yazi/">Yazi Component</a></li>
+<li><a href="../customization/">Customization Guide</a></li>
 </ul>
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../quick-start/">Quick Start Guide</a> - Get started using your new environment</li>
-</ul>
-<!-- - [Customization](../configuration/customization.md) - Personalize your setup *(Coming soon)* -->
-<ul>
-<li><a href="../../components/overview/">Component Overview</a> - Learn about installed tools</li>
-</ul>
-<h2 id="updating">Updating<a class="headerlink" href="#updating" title="Permanent link">&para;</a></h2>
-<p>After initial installation, keep everything up to date:</p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Run the update script</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Update</span><span class="p">.</span><span class="n">ps1</span>
-</span></code></pre></div>
-<p>This updates:
-- All winget packages
-- PowerShell modules
-- Yazi configuration
-- Yazi plugins and themes</p>
 
 
 

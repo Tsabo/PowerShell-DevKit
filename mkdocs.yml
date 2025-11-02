@@ -1,0 +1,93 @@
+site_name: PowerShell DevKit
+site_description: Enterprise-grade PowerShell development environment automation suite
+site_author: Tsabo
+site_url: https://tsabo.github.io/PowerShell-DevKit/
+
+repo_name: Tsabo/PowerShell-DevKit
+repo_url: https://github.com/Tsabo/PowerShell-DevKit
+edit_uri: edit/master/docs/
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  # Disabled until docs are committed to git
+  # - git-revision-date-localized:
+  #     enable_creation_date: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Tsabo
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: getting-started/quick-start.md
+    - Installation: getting-started/installation.md
+    - Requirements: getting-started/requirements.md
+  - Components:
+    - Overview: components/overview.md
+  - Troubleshooting: troubleshooting.md
+  - FAQ: faq.md
+  # More pages coming soon:
+  # - Scripts (Setup, Test, Update)
+  # - Configuration (Customization, Custom Modules, Custom Profile)
+  # - Development (Architecture, Contributing, Components)
+  # - Individual component pages (oh-my-posh, Yazi, Terminal, PowerShell)

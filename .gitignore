@@ -69,3 +69,7 @@ Config/yazi/flavors/*
 # Ignore any sensitive personal information
 secrets.ps1
 *.secret.ps1
+
+# MkDocs
+site/
+.cache/

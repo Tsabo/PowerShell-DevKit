@@ -249,14 +249,17 @@ function Install-YaziWithConfig {
             Write-Host "  → Cloning yazi_config repository (timeout: 30s)..." -ForegroundColor Gray
             $gitJob = Start-Job -ScriptBlock {
                 param($dest)
-                git clone "https://github.com/Tsabo/yazi_config.git" $dest 2>&1
+                git clone "https://github.com/Tsabo/yazi_config.git" $dest 2>&1 | Out-Null
                 return $LASTEXITCODE
             } -ArgumentList $yaziConfigDest
 
             $gitCompleted = Wait-Job -Job $gitJob -Timeout 30
             if ($gitCompleted) {
-                $gitExitCode = Receive-Job -Job $gitJob
+                $gitOutput = Receive-Job -Job $gitJob
                 Remove-Job -Job $gitJob
+                # Get the last item which is the exit code
+                $gitExitCode = $gitOutput | Select-Object -Last 1
+
                 if ($gitExitCode -eq 0) {
                     Write-Host "  ✓ Yazi configuration cloned successfully" -ForegroundColor Green
                 }
@@ -331,54 +334,48 @@ function Install-YaziWithConfig {
         Write-Host "    You may need to restart your terminal and run 'Install-YaziOptionals -PluginsOnly'" -ForegroundColor DarkGray
     }
     else {
-        # Install standard git plugin via ya pkg
-        Write-Host "    → [1/2] Installing git plugin (git integration)..." -ForegroundColor Gray
-        try {
-            $output = & { ya pkg add "yazi-rs/plugins:git" } 2>&1
-            $exitCode = $LASTEXITCODE
-            $outputString = ($output | Out-String).Trim()
+        # Define plugins to install
+        $yaziPlugins = @(
+            # plugins
+            @{Name = "git"; Package = "yazi-rs/plugins:git"; Description = "git integration" }
+            @{Name = "githead"; Package = "Tsabo/githead"; Description = "git status in header" }
+            @{Name = "piper"; Package = "yazi-rs/plugins:piper"; Description = "previewer" }
 
-            if ($exitCode -eq 0 -or $outputString -match "already|installed|updated|success|exists") {
-                if ($outputString -match "already exists") {
-                    Write-Host "      ✓ git plugin already installed" -ForegroundColor Green
+            #flavors
+            @{Name = "flexoki-light"; Package = "gosxrgxx/flexoki-light"; Description = "light theme" }
+            @{Name = "vscode-dark-plus"; Package = "956MB/vscode-dark-plus"; Description = "dark theme" }
+        )
+
+        $pluginCount = $yaziPlugins.Count
+        $pluginIndex = 0
+
+        foreach ($plugin in $yaziPlugins) {
+            $pluginIndex++
+            Write-Host "    → [$pluginIndex/$pluginCount] Installing $($plugin.Name) plugin ($($plugin.Description))..." -ForegroundColor Gray
+
+            try {
+                $output = & { ya pkg add $plugin.Package } 2>&1
+                $exitCode = $LASTEXITCODE
+                $outputString = ($output | Out-String).Trim()
+
+                if ($exitCode -eq 0 -or $outputString -match "already|installed|updated|success|exists") {
+                    if ($outputString -match "already exists") {
+                        Write-Host "      ✓ $($plugin.Name) plugin already installed" -ForegroundColor Green
+                    }
+                    else {
+                        Write-Host "      ✓ $($plugin.Name) plugin installed" -ForegroundColor Green
+                    }
                 }
                 else {
-                    Write-Host "      ✓ git plugin installed" -ForegroundColor Green
+                    Write-Host "      ⚠ $($plugin.Name) plugin failed (optional, continuing)" -ForegroundColor Yellow
+                    if ($outputString) {
+                        Write-Host "        Output: $outputString" -ForegroundColor DarkGray
+                    }
                 }
             }
-            else {
-                Write-Host "      ⚠ git plugin failed (optional, continuing)" -ForegroundColor Yellow
+            catch {
+                Write-Host "      ⚠ $($plugin.Name) plugin failed: $_ (optional, continuing)" -ForegroundColor Yellow
             }
-        }
-        catch {
-            Write-Host "      ⚠ git plugin failed: $_ (optional, continuing)" -ForegroundColor Yellow
-        }
-
-        # Install githead plugin from Tsabo fork
-        Write-Host "    → [2/2] Installing githead plugin (git status in header)..." -ForegroundColor Gray
-
-        try {
-            $output = & { ya pkg add "Tsabo/githead" } 2>&1
-            $exitCode = $LASTEXITCODE
-            $outputString = ($output | Out-String).Trim()
-
-            if ($exitCode -eq 0 -or $outputString -match "already|installed|updated|success|exists") {
-                if ($outputString -match "already exists") {
-                    Write-Host "      ✓ githead plugin already installed" -ForegroundColor Green
-                }
-                else {
-                    Write-Host "      ✓ githead plugin installed" -ForegroundColor Green
-                }
-            }
-            else {
-                Write-Host "      ⚠ githead plugin failed (optional, continuing)" -ForegroundColor Yellow
-                if ($outputString) {
-                    Write-Host "        Output: $outputString" -ForegroundColor DarkGray
-                }
-            }
-        }
-        catch {
-            Write-Host "      ⚠ githead plugin failed: $_ (optional, continuing)" -ForegroundColor Yellow
         }
     }    return $true
 }
@@ -674,6 +671,7 @@ function Get-EnvironmentComponents {
         [SetupComponent]::new("Microsoft Edit", "winget", @{PackageId = "Microsoft.Edit" })
         [SetupComponent]::new("posh-git", "module", @{ModuleName = "posh-git" })
         [SetupComponent]::new("PowerColorLS", "module", @{ModuleName = "PowerColorLS" }, $true)
+        [SetupComponent]::new("glow", "winget", @{PackageId = "charmbracelet.glow" })
         [SetupComponent]::new("Scoop", { Install-Scoop }, { Test-ScoopInstalled }, $true)
         [SetupComponent]::new("resvg", { Install-ScoopPackage -PackageName "resvg" -DisplayName "resvg" }, { Test-ScoopPackage -PackageName "resvg" }, $true)
         [SetupComponent]::new("Yazi", { Install-YaziWithConfig }, { Test-Yazi }, $false)

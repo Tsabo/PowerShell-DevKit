@@ -36,41 +36,36 @@ Three main orchestrator scripts handle different lifecycle phases:
 
 ## System Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                   Orchestrator Layer                     │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐        │
-│  │ Setup.ps1  │  │  Test.ps1  │  │ Update.ps1 │        │
-│  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘        │
-│        │                │                │               │
-│        └────────────────┴────────────────┘               │
-│                         │                                │
-└─────────────────────────┼────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│              Shared Component Library                    │
-│                  (Components.psm1)                       │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │  class SetupComponent {                          │   │
-│  │    [string]$Name                                 │   │
-│  │    [string]$Type  # winget, module, custom      │   │
-│  │    [hashtable]$Properties                        │   │
-│  │    [bool]$IsOptional                             │   │
-│  │    [scriptblock]$CustomInstaller                 │   │
-│  │    [scriptblock]$CustomValidator                 │   │
-│  │  }                                               │   │
-│  └─────────────────────────────────────────────────┘   │
-└───────────────────────┬─────────────────────────────────┘
-                        │
-                        ▼
-┌───────────────────────────────────────────────────────────┐
-│                  Component Types                          │
-│  ┌──────────┐  ┌──────────┐  ┌────────────────┐         │
-│  │  Winget  │  │  Module  │  │     Custom     │         │
-│  │ Packages │  │ PSGallery│  │ (Configuration)│         │
-│  └──────────┘  └──────────┘  └────────────────┘         │
-└───────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Orchestrator["Orchestrator Layer"]
+        Setup["Setup.ps1<br/>Installation & Configuration"]
+        Test["Test.ps1<br/>Validation & Health Checks"]
+        Update["Update.ps1<br/>Multi-source Updates"]
+    end
+
+    subgraph Library["Shared Component Library"]
+        Components["Components.psm1<br/><br/>class SetupComponent {<br/>  Name: string<br/>  Type: winget | module | custom<br/>  Properties: hashtable<br/>  IsOptional: bool<br/>  CustomInstaller: scriptblock<br/>  CustomValidator: scriptblock<br/>}"]
+    end
+
+    subgraph Types["Component Types"]
+        Winget["Winget Packages<br/>Windows Package Manager"]
+        Module["PowerShell Modules<br/>PSGallery"]
+        Custom["Custom Components<br/>Configuration & Scripts"]
+    end
+
+    Setup --> Components
+    Test --> Components
+    Update --> Components
+
+    Components --> Winget
+    Components --> Module
+    Components --> Custom
+
+    style Orchestrator fill:#e1f5ff
+    style Library fill:#fff4e6
+    style Types fill:#f3e5f5
+    style Components fill:#fff9c4
 ```
 
 ## Component Definition Structure

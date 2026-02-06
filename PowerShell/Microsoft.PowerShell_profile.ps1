@@ -14,6 +14,25 @@ if ($host.Name -eq 'ConsoleHost') {
 # Set UTF-8 encoding
 [console]::InputEncoding = [console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 
+# Configure Yazi file.exe path for better file type detection
+if (-not $env:YAZI_FILE_ONE) {
+    try {
+        $gitCommand = Get-Command git -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
+        if ($gitCommand) {
+            # Git is typically at: <GitRoot>\cmd\git.exe or <GitRoot>\bin\git.exe
+            # We need: <GitRoot>\usr\bin\file.exe
+            $gitRoot = Split-Path (Split-Path $gitCommand -Parent) -Parent
+            $fileExePath = Join-Path $gitRoot "usr\bin\file.exe"
+            if (Test-Path $fileExePath) {
+                $env:YAZI_FILE_ONE = $fileExePath
+            }
+        }
+    }
+    catch {
+        # Silently continue if Git detection fails
+    }
+}
+
 # Profile directory
 $profileDir = Split-Path -Parent $PROFILE
 
@@ -24,8 +43,12 @@ $includedScriptsDir = Join-Path $profileDir "IncludedScripts"
 $customScriptsDir = Join-Path $profileDir "CustomScripts"
 
 $scriptPaths = @()
-if (Test-Path $includedScriptsDir) { $scriptPaths += $includedScriptsDir }
-if (Test-Path $customScriptsDir) { $scriptPaths += $customScriptsDir }
+if (Test-Path $includedScriptsDir) {
+    $scriptPaths += $includedScriptsDir
+}
+if (Test-Path $customScriptsDir) {
+    $scriptPaths += $customScriptsDir
+}
 
 if ($scriptPaths.Count -gt 0) {
     $env:PATH = ($scriptPaths -join ";") + ";$env:PATH"
@@ -53,7 +76,7 @@ function Import-CustomModules {
         # Included modules (bundled with repo, static list)
         $includedModules = @(
             @{ Type = "CustomModule"; Name = "IncludedModules\utilities.psm1"; Options = @{ WarningAction = "SilentlyContinue" } },
-            @{ Type = "CustomModule"; Name = "IncludedModules\build_funtions.psm1"; Options = @{ WarningAction = "SilentlyContinue" } }
+            @{ Type = "CustomModule"; Name = "IncludedModules\git.psm1"; Options = @{ WarningAction = "SilentlyContinue" } }
         )
 
         # Standard modules and tools (environment-dependent)

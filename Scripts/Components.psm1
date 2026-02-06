@@ -339,7 +339,6 @@ function Install-YaziWithConfig {
             # plugins
             @{Name = "git"; Package = "yazi-rs/plugins:git"; Description = "git integration" }
             @{Name = "githead"; Package = "Tsabo/githead"; Description = "git status in header" }
-            @{Name = "piper"; Package = "yazi-rs/plugins:piper"; Description = "previewer" }
 
             #flavors
             @{Name = "flexoki-light"; Package = "gosxrgxx/flexoki-light"; Description = "light theme" }

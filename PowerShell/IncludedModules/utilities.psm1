@@ -18,7 +18,9 @@ function Open-Solution {
 
     # Support both .sln and .slnx formats
     if ([string]::IsNullOrEmpty($solution)) {
-        $sln = Get-ChildItem -Include "*.sln", "*.slnx" | Select-Object -First 1
+        $sln = Get-ChildItem -Recurse -Include "*.sln", "*.slnx" |
+            Where-Object { $_.FullName -notmatch '\\\.vs\\' } |
+            Select-Object -First 1
     }
     else {
         $sln = Get-ChildItem $solution | Select-Object -First 1

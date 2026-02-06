@@ -44,6 +44,23 @@ cd PowerShell-DevKit
 .\Scripts\Update.ps1
 ```
 
+### 🔄 Updating PowerShell-DevKit
+
+To update to the latest version with new features and improvements:
+
+```powershell
+# 1. Pull the latest changes from the repository
+git pull
+
+# 2. Re-run setup to apply any configuration updates (safe to run multiple times)
+.\Scripts\Setup.ps1
+
+# 3. Update all installed components (packages, modules, etc.)
+.\Scripts\Update.ps1
+```
+
+> 💡 **Note**: `Setup.ps1` is safe to run multiple times - it only installs missing components and updates configurations.
+
 **[📖 Read the Full Documentation →](https://tsabo.github.io/PowerShell-DevKit/)**
 
 ---

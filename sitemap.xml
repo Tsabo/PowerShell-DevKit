@@ -2,114 +2,118 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/LOCAL_DEVELOPMENT/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/faq/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/troubleshooting/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/architecture/components/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/architecture/failure-recovery/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/architecture/overview/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/components/oh-my-posh/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/components/optional/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/components/overview/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/components/powershell/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/components/terminal/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/components/yazi/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/configuration/custom-modules/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/configuration/custom-profile/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/configuration/customization/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/configuration/themes/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/development/contributing/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/development/developer-reference/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/development/testing/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/getting-started/installation/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
+    </url>
+    <url>
+         <loc>https://tsabo.github.io/PowerShell-DevKit/getting-started/macos-setup/</loc>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/getting-started/quick-start/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/getting-started/requirements/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/scripts/deploy-terminal/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/scripts/overview/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/scripts/setup/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/scripts/test/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/PowerShell-DevKit/scripts/update/</loc>
-         <lastmod>2026-02-06</lastmod>
+         <lastmod>2026-03-14</lastmod>
     </url>
 </urlset>

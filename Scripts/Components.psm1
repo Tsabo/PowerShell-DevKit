@@ -504,6 +504,18 @@ function Get-CrossPlatformPackageInfo {
             apt = $null  # Manual install required
             dnf = $null  # Manual install required
         }
+        "glow" = @{
+            winget = "charmbracelet.glow"
+            homebrew = "glow"
+            apt = "glow"
+            dnf = $null
+        }
+        "microsoft-edit" = @{
+            winget = "Microsoft.Edit"
+            homebrew = "microsoft/edit/edit"  # Requires tap: microsoft/edit
+            apt = $null  # Manual install from releases
+            dnf = $null  # Manual install from releases
+        }
     }
 
     return $packageMappings[$ComponentName]
@@ -521,6 +533,20 @@ function Get-WingetPackageVersion {
                         return $matches[1]
                     }
                 }
+            }
+        }
+    }
+    catch { }
+    return $null
+}
+
+function Get-BrewPackageVersion {
+    param([string]$PackageName)
+    try {
+        $output = brew list --versions $PackageName 2>$null
+        if ($LASTEXITCODE -eq 0 -and $output) {
+            if ($output -match "$PackageName\s+([\d\.]+)") {
+                return $matches[1]
             }
         }
     }
@@ -913,5 +939,189 @@ function Update-YaziPackages {
     }
 }
 
+# Homebrew package management functions (macOS/Linux)
+function Test-HomebrewInstalled {
+    return (Test-CommandExists "brew")
+}
+
+function Install-Homebrew {
+    if (Test-HomebrewInstalled) {
+        Write-Host "Homebrew is already installed" -ForegroundColor Green
+        return $true
+    }
+
+    try {
+        Write-Host "Installing Homebrew package manager..." -ForegroundColor Cyan
+
+        # Install Homebrew using the official method
+        $installScript = Invoke-RestMethod -Uri https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+        bash -c $installScript
+
+        # Refresh PATH for macOS
+        if ($IsMacOS) {
+            $brewPath = "/opt/homebrew/bin/brew"
+            if (Test-Path $brewPath) {
+                & $brewPath shellenv | Invoke-Expression
+            }
+        }
+
+        if (Test-HomebrewInstalled) {
+            Write-Host "Homebrew installed successfully" -ForegroundColor Green
+            return $true
+        }
+        else {
+            Write-Warning "Homebrew installation may have failed - command not found"
+            return $false
+        }
+    }
+    catch {
+        Write-Warning "Failed to install Homebrew: $_"
+        return $false
+    }
+}
+
+function Install-HomebrewPackage {
+    param(
+        [string]$PackageName,
+        [string]$DisplayName = $null,
+        [string]$Tap = $null
+    )
+
+    if (-not $DisplayName) { $DisplayName = $PackageName }
+
+    if (-not (Test-HomebrewInstalled)) {
+        Write-Warning "Homebrew is not installed. Cannot install $DisplayName"
+        return $false
+    }
+
+    try {
+        # Add tap if specified (e.g., for microsoft/edit)
+        if ($Tap) {
+            Write-Host "  → Adding tap: $Tap..." -ForegroundColor Gray
+            brew tap $Tap 2>&1 | Out-Null
+        }
+
+        # Check if already installed
+        $installed = brew list $PackageName 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "$DisplayName is already installed via Homebrew" -ForegroundColor Green
+            return $true
+        }
+
+        Write-Host "Installing $DisplayName via Homebrew..." -ForegroundColor Cyan
+        brew install $PackageName
+
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "$DisplayName installed successfully via Homebrew" -ForegroundColor Green
+            return $true
+        }
+        else {
+            Write-Warning "Failed to install $DisplayName via Homebrew"
+            return $false
+        }
+    }
+    catch {
+        Write-Warning "Error installing $DisplayName via Homebrew: $_"
+        return $false
+    }
+}
+
+function Test-HomebrewPackage {
+    param([string]$PackageName)
+
+    if (-not (Test-HomebrewInstalled)) {
+        return @{ IsInstalled = $false }
+    }
+
+    try {
+        $installed = brew list --versions $PackageName 2>$null
+        if ($LASTEXITCODE -eq 0 -and $installed) {
+            $version = if ($installed -match "([\\d\\.]+)") { $matches[1] } else { "unknown" }
+            return @{
+                IsInstalled = $true
+                Version = $version
+            }
+        }
+    }
+    catch {
+        # Ignore errors, just return not installed
+    }
+
+    return @{ IsInstalled = $false }
+}
+
+function Update-HomebrewPackages {
+    if (-not (Test-HomebrewInstalled)) {
+        Write-Host "Homebrew is not installed, skipping Homebrew package updates" -ForegroundColor Yellow
+        return @{ Updated = @(); Failed = @() }
+    }
+
+    try {
+        Write-Host "Updating Homebrew and packages..." -ForegroundColor Cyan
+
+        # Update homebrew itself
+        brew update 2>&1 | Out-Null
+
+        # Get list of outdated packages
+        $outdated = brew outdated 2>$null
+
+        if (-not $outdated) {
+            Write-Host "All Homebrew packages are up to date" -ForegroundColor Green
+            return @{ Updated = @(); Failed = @() }
+        }
+
+        # Upgrade all packages
+        brew upgrade 2>&1 | Out-Null
+
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "Homebrew packages updated successfully" -ForegroundColor Green
+            return @{ Updated = @("Homebrew packages"); Failed = @() }
+        }
+        else {
+            Write-Warning "Some Homebrew package updates may have failed"
+            return @{ Updated = @(); Failed = @("Homebrew packages") }
+        }
+    }
+    catch {
+        Write-Warning "Error updating Homebrew packages: $_"
+        return @{ Updated = @(); Failed = @("Homebrew packages") }
+    }
+}
+
+function Install-CascadiaFontMacOS {
+    if (-not (Test-HomebrewInstalled)) {
+        Write-Warning "Homebrew is required to install fonts on macOS"
+        return $false
+    }
+
+    try {
+        # Check if font is already installed
+        $fontDir = "$HOME/Library/Fonts"
+        $cascadiaFiles = Get-ChildItem -Path $fontDir -Filter "Cascadia*" -ErrorAction SilentlyContinue
+
+        if ($cascadiaFiles.Count -gt 0) {
+            Write-Host "  ✓ CascadiaCode font already installed" -ForegroundColor Green
+            return $true
+        }
+
+        # Install font using Homebrew cask
+        Write-Host "  → Installing CascadiaCode font via Homebrew..." -ForegroundColor Gray
+        brew install --cask font-caskaydia-cove-nerd-font 2>&1 | Out-Null
+
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "  ✓ CascadiaCode font installed successfully" -ForegroundColor Green
+            return $true
+        }
+        else {
+            Write-Warning "Font installation failed"
+            return $false
+        }
+    }
+    catch {
+        Write-Warning "Font installation exception: $_"
+        return $false
+    }
+}
+
 # Export functions only - classes are automatically available when module is imported
-Export-ModuleMember -Function Get-EnvironmentComponents, Test-EnvironmentComponent, Test-CommandExists, Get-WingetPackageVersion, Update-YaziPackages, Test-ScoopInstalled, Install-Scoop, Install-ScoopPackage, Test-ScoopPackage, Update-ScoopPackages
+Export-ModuleMember -Function Get-EnvironmentComponents, Test-EnvironmentComponent, Test-CommandExists, Get-WingetPackageVersion, Get-BrewPackageVersion, Update-YaziPackages, Test-ScoopInstalled, Install-Scoop, Install-ScoopPackage, Test-ScoopPackage, Update-ScoopPackages, Test-HomebrewInstalled, Install-Homebrew, Install-HomebrewPackage, Test-HomebrewPackage, Update-HomebrewPackages, Install-CascadiaFontMacOS, Get-PlatformPackageManager, Get-CrossPlatformPackageInfo

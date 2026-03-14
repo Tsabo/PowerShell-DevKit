@@ -1,34 +1,37 @@
 # PowerShell-DevKit
 
-> **Keep your PowerShell development environments perfectly synchronized across all your machines**
+> **Keep your PowerShell development environments perfectly synchronized across all your machines - Windows and macOS**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PowerShell 7+](https://img.shields.io/badge/PowerShell-7+-blue.svg)](https://github.com/PowerShell/PowerShell)
 [![Windows](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://www.microsoft.com/windows)
+[![macOS](https://img.shields.io/badge/Platform-macOS-silver.svg)](https://www.apple.com/macos)
 [![Documentation](https://img.shields.io/badge/docs-online-blue.svg)](https://tsabo.github.io/PowerShell-DevKit/)
 
 ---
 
 ## 🎯 The Problem
 
-**Tired of manually syncing your development environment across multiple machines?**
+**Tired of manually syncing your development environment across multiple machines and platforms?**
 
-We've all been there - following lengthy OneNote instructions, manually installing tools, copy-pasting configurations, and hoping you didn't miss anything. Every new machine or reinstall meant hours of tedious setup work.
+We've all been there - following lengthy OneNote instructions, manually installing tools, copy-pasting configurations, and hoping you didn't miss anything. Every new machine or reinstall meant hours of tedious setup work. Switching between Windows and macOS made it even worse.
 
 **PowerShell DevKit eliminates that pain:**
 
 - ✅ **One command** to set up your complete environment
+- ✅ **Cross-platform** - Works on Windows and macOS
 - ✅ **Git-based configuration** keeps everything in sync
 - ✅ **Automatic updates** across all your machines
 - ✅ **Intelligent recovery** when things go wrong
-- ✅ **Consistent experience** whether you're on your desktop, laptop, or fresh Windows install
+- ✅ **Consistent experience** whether you're on your desktop, laptop, Windows PC, or MacBook
 
-Clone once, run `Setup.ps1`, and you're done. Your perfect PowerShell environment, reproduced identically everywhere.
+Clone once, run the appropriate setup script, and you're done. Your perfect PowerShell environment, reproduced identically everywhere.
 
 ---
 
 ## 🚀 Quick Start
 
+### Windows
 ```powershell
 # 1. Clone the repository
 git clone https://github.com/Tsabo/PowerShell-DevKit.git
@@ -44,6 +47,24 @@ cd PowerShell-DevKit
 .\Scripts\Update.ps1
 ```
 
+### macOS
+```powershell
+# 1. Clone the repository
+git clone https://github.com/Tsabo/PowerShell-DevKit.git
+cd PowerShell-DevKit
+
+# 2. Run macOS setup
+./Scripts/Setup-macOS.ps1
+
+# 3. Validate installation
+./Scripts/Test-macOS.ps1
+
+# 4. Keep everything updated
+./Scripts/Update-macOS.ps1
+```
+
+**[📖 macOS Setup Guide →](docs/getting-started/macos-setup.md)**
+
 ### 🔄 Updating PowerShell-DevKit
 
 To update to the latest version with new features and improvements:
@@ -53,10 +74,16 @@ To update to the latest version with new features and improvements:
 git pull
 
 # 2. Re-run setup to apply any configuration updates (safe to run multiple times)
+# Windows:
 .\Scripts\Setup.ps1
+# macOS:
+./Scripts/Setup-macOS.ps1
 
 # 3. Update all installed components (packages, modules, etc.)
+# Windows:
 .\Scripts\Update.ps1
+# macOS:
+./Scripts/Update-macOS.ps1
 ```
 
 > 💡 **Note**: `Setup.ps1` is safe to run multiple times - it only installs missing components and updates configurations.

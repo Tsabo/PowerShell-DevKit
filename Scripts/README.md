@@ -1,13 +1,27 @@
 # PowerShell Environment Automation Scripts
 
-This directory contains streamlined automation scripts for setting up, validating, and maintaining your PowerShell development environment.
+This directory contains streamlined automation scripts for setting up, validating, and maintaining your PowerShell development environment on **Windows** and **macOS**.
 
 > **📖 For Contributors**: See [DEVELOPER-REFERENCE.md](../DEVELOPER-REFERENCE.md) for validation, testing, and contribution guidelines.
 
+## 🖥️ Platform Support
+
+| Script | Windows | macOS | Description |
+|--------|---------|-------|-------------|
+| `Setup.ps1` | ✅ | ❌ | Windows setup using winget |
+| `Setup-macOS.ps1` | ❌ | ✅ | macOS setup using Homebrew |
+| `Test.ps1` | ✅ | ❌ | Windows environment validation |
+| `Test-macOS.ps1` | ❌ | ✅ | macOS environment validation |
+| `Update.ps1` | ✅ | ❌ | Update Windows packages/modules |
+| `Update-macOS.ps1` | ❌ | ✅ | Update macOS packages/modules |
+| `Deploy-Terminal.ps1` | ✅ | ❌ | Windows Terminal configuration |
+| `Validate-Code.ps1` | ✅ | ✅ | PSScriptAnalyzer validation |
+| `Components.psm1` | ✅ | ✅ | Shared cross-platform functions |
+
 ## 📁 Scripts Overview
 
-### 🚀 Setup.ps1
-**Main setup script** - Complete PowerShell environment installation for new machines.
+### 🚀 Setup.ps1 (Windows)
+**Windows setup script** - Complete PowerShell environment installation using winget.
 
 #### Features:
 - Installs all required tools (oh-my-posh, fzf, zoxide, Microsoft Edit)
@@ -32,8 +46,34 @@ This directory contains streamlined automation scripts for setting up, validatin
 
 ---
 
-### ✅ Test.ps1
-**Environment validator** - Comprehensive check of your PowerShell environment.
+### 🍎 Setup-macOS.ps1 (macOS)
+**macOS setup script** - Complete PowerShell environment installation using Homebrew.
+
+#### Features:
+- Auto-installs Homebrew if needed
+- Installs core tools via Homebrew (oh-my-posh, fzf, zoxide, Microsoft Edit, glow)
+- Installs CaskaydiaCove Nerd Font via Homebrew cask
+- Installs PowerShell modules from PSGallery
+- Deploys Yazi file manager with configuration
+- Installs Yazi optional dependencies (ffmpeg, jq, fd, ripgrep, etc.)
+- Cross-platform PowerShell profile deployment
+
+#### Usage:
+```powershell
+# Complete macOS setup
+./Setup-macOS.ps1
+
+# Skip optional components
+./Setup-macOS.ps1 -SkipOptional
+
+# Show previous setup failures
+./Setup-macOS.ps1 -ShowDetails
+```
+
+---
+
+### ✅ Test.ps1 (Windows)
+**Windows environment validator** - Comprehensive check of your PowerShell environment.
 
 #### Features:
 - Validates all tools and modules
@@ -88,7 +128,68 @@ Required Components: 9 / 9 installed
 
 ---
 
-### 🖥️ Deploy-Terminal.ps1
+### 🍎 Test-macOS.ps1 (macOS)
+**macOS environment validator** - Comprehensive check of your PowerShell environment on macOS.
+
+#### Features:
+- Validates Homebrew and all installed packages
+- Checks PowerShell modules
+- Validates CaskaydiaCove Nerd Font installation
+- Checks PowerShell profile configuration
+- Validates Yazi configuration and plugins
+- Shows version information and success rate
+
+#### Usage:
+```powershell
+./Test-macOS.ps1
+```
+
+#### Output Example:
+```
+━━━ Package Manager ━━━
+  ✓ Homebrew (Homebrew 4.2.0)
+
+━━━ Core Tools (Homebrew) ━━━
+  ✓ oh-my-posh (21.0.0)
+  ✓ fzf (0.46.0)
+  ✓ Microsoft Edit (1.2.0)
+  ...
+
+Success Rate: 100%
+🎉 All checks passed!
+```
+
+---
+
+### 🍎 Update-macOS.ps1 (macOS)
+**macOS update script** - Keeps all Homebrew packages and modules current.
+
+#### Features:
+- Updates Homebrew and all installed packages
+- Updates PowerShell modules from PSGallery
+- Updates Yazi plugins via `ya pkg`
+- Updates Yazi configuration from git
+- Selective update options
+- Automatic cleanup of old versions
+
+#### Usage:
+```powershell
+# Update everything
+./Update-macOS.ps1
+
+# Update only Homebrew packages
+./Update-macOS.ps1 -BrewOnly
+
+# Update only PowerShell modules
+./Update-macOS.ps1 -ModulesOnly
+
+# Update only Yazi components
+./Update-macOS.ps1 -YaziOnly
+```
+
+---
+
+### 🖥️ Deploy-Terminal.ps1 (Windows Only)
 **Windows Terminal configurator** - Applies your preferred terminal settings.
 
 #### Features:

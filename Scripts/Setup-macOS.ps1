@@ -440,6 +440,55 @@ function Deploy-OhMyPoshThemeMacOS {
     return $true
 }
 
+# Set PowerShell as the default login shell
+function Set-DefaultShell {
+    Write-Step "Setting PowerShell as default shell..."
+
+    $pwshPath = (Get-Command pwsh -ErrorAction SilentlyContinue)?.Source
+    if (-not $pwshPath) {
+        Write-ErrorMsg "pwsh not found in PATH — skipping default shell setup"
+        return $false
+    }
+
+    # Check if already the default
+    $currentShell = [System.Environment]::GetEnvironmentVariable("SHELL")
+    if ($currentShell -eq $pwshPath) {
+        Write-Skip "PowerShell is already the default shell"
+        return $true
+    }
+
+    try {
+        # Register pwsh in /etc/shells if not already present
+        $allowedShells = Get-Content /etc/shells
+        if ($allowedShells -notcontains $pwshPath) {
+            Write-Host "  → Adding $pwshPath to /etc/shells (requires sudo)..." -ForegroundColor Gray
+            $result = bash -c "echo '$pwshPath' | sudo tee -a /etc/shells" 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Write-ErrorMsg "Failed to add pwsh to /etc/shells: $result"
+                Write-SetupLog -Component "Default Shell" -Type "shell" -Operation "tee /etc/shells" -ErrorMessage $result -ExitCode $LASTEXITCODE
+                return $false
+            }
+        }
+
+        # Change the login shell
+        Write-Host "  → Changing login shell to $pwshPath (requires sudo)..." -ForegroundColor Gray
+        $result = chsh -s $pwshPath 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-ErrorMsg "Failed to set default shell: $result"
+            Write-SetupLog -Component "Default Shell" -Type "shell" -Operation "chsh -s $pwshPath" -ErrorMessage $result -ExitCode $LASTEXITCODE
+            return $false
+        }
+
+        Write-Success "Default shell set to PowerShell — takes effect in new terminal windows"
+        return $true
+    }
+    catch {
+        Write-ErrorMsg "Error setting default shell: $_"
+        Write-SetupLog -Component "Default Shell" -Type "shell" -Operation "chsh" -ErrorMessage $_.Exception.Message -FullOutput $_.Exception.ToString()
+        return $false
+    }
+}
+
 # Main setup orchestrator
 function Start-EnvironmentSetup {
     # Handle special parameters first
@@ -501,7 +550,7 @@ function Start-EnvironmentSetup {
         @{Package = "oh-my-posh"; Name = "oh-my-posh"; Installer = { Install-OhMyPoshMacOS } }
         @{Package = "fzf"; Name = "fzf"; Installer = { Install-BrewPackage -PackageName "fzf" -Name "fzf" } }
         @{Package = "zoxide"; Name = "zoxide"; Installer = { Install-BrewPackage -PackageName "zoxide" -Name "zoxide" } }
-        @{Package = "microsoft/edit/edit"; Name = "Microsoft Edit"; Tap = "microsoft/edit"; Installer = { Install-BrewPackage -PackageName "microsoft/edit/edit" -Name "Microsoft Edit" -Tap "microsoft/edit" } }
+        @{Package = "msedit"; Name = "Microsoft Edit"; Installer = { Install-BrewPackage -PackageName "msedit" -Name "Microsoft Edit" } }
         @{Package = "glow"; Name = "glow"; Installer = { Install-BrewPackage -PackageName "glow" -Name "glow" } }
     )
 
@@ -564,6 +613,14 @@ function Start-EnvironmentSetup {
         $results.Failed += "PowerShell Profile"
     }
 
+    # 8. Set PowerShell as default shell
+    if (Set-DefaultShell) {
+        $results.Success += "Default Shell (pwsh)"
+    }
+    else {
+        $results.Failed += "Default Shell (pwsh)"
+    }
+
     # Show summary
     Write-Host "`n`n╔════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
     Write-Host "║                    SETUP SUMMARY                           ║" -ForegroundColor Cyan
@@ -588,13 +645,14 @@ function Start-EnvironmentSetup {
 
     # Next steps
     Write-Host "`n`n📝 NEXT STEPS:" -ForegroundColor Cyan
-    Write-Host "   1. Reload your profile: " -NoNewline
+    Write-Host "   1. Open a new terminal window to start in PowerShell"
+    Write-Host "   2. Reload your profile: " -NoNewline
     Write-Host ". `$PROFILE" -ForegroundColor Yellow
-    Write-Host "   2. Set your terminal font to " -NoNewline
+    Write-Host "   3. Set your terminal font to " -NoNewline
     Write-Host "CaskaydiaCove Nerd Font Mono" -ForegroundColor Yellow
-    Write-Host "   3. Customize using " -NoNewline
+    Write-Host "   4. Customize using " -NoNewline
     Write-Host "CustomProfile.ps1" -ForegroundColor Yellow
-    Write-Host "   4. Add custom modules to " -NoNewline
+    Write-Host "   5. Add custom modules to " -NoNewline
     Write-Host "CustomModules/" -ForegroundColor Yellow
 
     if ($results.Failed.Count -eq 0) {

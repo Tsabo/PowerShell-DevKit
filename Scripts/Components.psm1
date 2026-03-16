@@ -512,7 +512,7 @@ function Get-CrossPlatformPackageInfo {
         }
         "microsoft-edit" = @{
             winget = "Microsoft.Edit"
-            homebrew = "microsoft/edit/edit"  # Requires tap: microsoft/edit
+            homebrew = "msedit"
             apt = $null  # Manual install from releases
             dnf = $null  # Manual install from releases
         }

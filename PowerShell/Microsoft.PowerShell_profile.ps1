@@ -6,9 +6,11 @@ if ($env:TERM_PROGRAM -eq "vscode") {
     return
 }
 
-# Load PSReadLine for ConsoleHost
+# Load PSReadLine for ConsoleHost (guard against re-import when dot-sourcing)
 if ($host.Name -eq 'ConsoleHost') {
-    Import-Module PSReadLine
+    if (-not (Get-Module -Name PSReadLine)) {
+        Import-Module PSReadLine
+    }
 }
 
 # Set UTF-8 encoding
@@ -142,7 +144,11 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Act
     Import-CustomModules
 } | Out-Null
 
-oh-my-posh --init --shell pwsh --config ~\OneDrive\PowerShell\Posh\iterm2.omp.json | Invoke-Expression
+# Initialize oh-my-posh using the theme deployed by the DevKit setup script
+$ompConfigPath = Join-Path $profileDir "Posh" "iterm2.omp.json"
+if (Test-Path $ompConfigPath) {
+    oh-my-posh --init --shell pwsh --config $ompConfigPath | Invoke-Expression
+}
 
 # Terminal Icons (conditionally)
 if (-not (Get-Module -Name Terminal-Icons)) {

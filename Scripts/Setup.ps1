@@ -214,17 +214,17 @@ function Get-SetupSuggestion {
     }
 
     $suggestions = @{
-        "gsudo" = "Install manually: winget install gerardog.gsudo --scope user"
+        "gsudo" = "Install manually: winget install gerardog.gsudo --source winget --scope user"
         "CascadiaCode Font" = "Install manually via Windows Settings > Fonts, or download from GitHub"
         "oh-my-posh" = "Ensure PATH is updated. Run: refreshenv or restart PowerShell"
-        "fzf" = "Install manually: winget install junegunn.fzf"
+        "fzf" = "Install manually: winget install junegunn.fzf --source winget"
         "PSFzf" = "Update PowerShellGet: Install-Module PowerShellGet -Force -Scope CurrentUser"
         "Terminal-Icons" = "Check PowerShell Gallery access: Test-NetConnection powershellgallery.com -Port 443"
-        "posh-git" = "Ensure Git is installed: winget install Git.Git"
+        "posh-git" = "Ensure Git is installed: winget install Git.Git --source winget"
         "Scoop" = "Install manually: Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression"
         "resvg" = "Install Scoop first, then run: scoop install resvg"
-        "Yazi" = "Install manually: winget install sxyazi.yazi"
-        "Microsoft Edit" = "Install manually: winget install Microsoft.Edit"
+        "Yazi" = "Install manually: winget install sxyazi.yazi --source winget"
+        "Microsoft Edit" = "Install manually: winget install Microsoft.Edit --source winget"
         "PowerShell Profile" = "Check profile path permissions: Test-Path (Split-Path $PROFILE)"
         "Windows Terminal" = "Install Windows Terminal from Microsoft Store first"
     }
@@ -264,7 +264,7 @@ function Install-WingetPackage {
 
         $checkJob = Start-Job -ScriptBlock {
             param($pkgId)
-            $result = winget list --id $pkgId --exact --disable-interactivity 2>$null
+            $result = winget list --id $pkgId --exact --disable-interactivity --source winget 2>$null
             return @{
                 Output = $result
                 ExitCode = $LASTEXITCODE
@@ -299,7 +299,7 @@ function Install-WingetPackage {
 
         $job = Start-Job -ScriptBlock {
             param($pkgId)
-            $output = winget install $pkgId --silent --disable-interactivity --accept-package-agreements --accept-source-agreements 2>&1
+            $output = winget install $pkgId --source winget --silent --disable-interactivity --accept-package-agreements --accept-source-agreements 2>&1
             return @{
                 Output = $output | Out-String
                 ExitCode = $LASTEXITCODE

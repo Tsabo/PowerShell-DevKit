@@ -70,11 +70,11 @@ function Install-OhMyPoshWithFont {
     param([string]$FontName = "CascadiaCode")
 
     # Install oh-my-posh via winget with timeout protection
-    $installed = winget list --id "JanDeDobbeleer.OhMyPosh" --exact --disable-interactivity 2>$null
+    $installed = winget list --id "JanDeDobbeleer.OhMyPosh" --exact --disable-interactivity --source winget 2>$null
     $exitCode = $LASTEXITCODE
 
     if ($exitCode -ne 0 -or $installed -notmatch "JanDeDobbeleer.OhMyPosh") {
-        $installOutput = winget install JanDeDobbeleer.OhMyPosh --silent --disable-interactivity --accept-package-agreements --accept-source-agreements 2>&1
+        $installOutput = winget install JanDeDobbeleer.OhMyPosh --source winget --silent --disable-interactivity --accept-package-agreements --accept-source-agreements 2>&1
         $installExitCode = $LASTEXITCODE
 
         # Check for common "already installed" patterns in output
@@ -140,12 +140,12 @@ function Install-YaziWithConfig {
     Write-Host "  → Installing Yazi..." -ForegroundColor Gray
 
     # Install Yazi
-    $installed = winget list --id "sxyazi.yazi" --exact --disable-interactivity 2>$null
+    $installed = winget list --id "sxyazi.yazi" --exact --disable-interactivity --source winget 2>$null
     $exitCode = $LASTEXITCODE
 
     if ($exitCode -ne 0 -or $installed -notmatch "sxyazi.yazi") {
         Write-Host "  → Downloading and installing Yazi binary..." -ForegroundColor Gray
-        $installOutput = winget install sxyazi.yazi --silent --disable-interactivity --accept-package-agreements --accept-source-agreements 2>&1
+        $installOutput = winget install sxyazi.yazi --source winget --silent --disable-interactivity --accept-package-agreements --accept-source-agreements 2>&1
         $installExitCode = $LASTEXITCODE
 
         # Check for common "already installed" patterns in output
@@ -186,7 +186,7 @@ function Install-YaziWithConfig {
         Write-Host "      → Checking installation status (timeout: 15s)..." -ForegroundColor DarkGray
         $checkJob = Start-Job -ScriptBlock {
             param($packageId)
-            winget list --id $packageId --exact --disable-interactivity 2>&1
+            winget list --id $packageId --exact --disable-interactivity --source winget 2>&1
             return $LASTEXITCODE
         } -ArgumentList $dep.PackageId
 
@@ -203,7 +203,7 @@ function Install-YaziWithConfig {
 
                 $installJob = Start-Job -ScriptBlock {
                     param($packageId)
-                    winget install $packageId --silent --disable-interactivity --accept-package-agreements --accept-source-agreements 2>&1
+                    winget install $packageId --source winget --silent --disable-interactivity --accept-package-agreements --accept-source-agreements 2>&1
                     return $LASTEXITCODE
                 } -ArgumentList $dep.PackageId
 
@@ -524,7 +524,7 @@ function Get-CrossPlatformPackageInfo {
 function Get-WingetPackageVersion {
     param([string]$PackageId)
     try {
-        $output = winget list --id $PackageId --exact 2>$null
+        $output = winget list --id $PackageId --exact --source winget 2>$null
         if ($LASTEXITCODE -eq 0 -and $output -match $PackageId) {
             $lines = $output -split "`n"
             foreach ($line in $lines) {

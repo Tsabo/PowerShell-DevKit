@@ -69,7 +69,12 @@ function Apply-MinimalSettings {
 
     # Apply initial column width if specified in template
     if ($Template.initialCols) {
-        $updated.initialCols = $Template.initialCols
+        if ($updated.PSObject.Properties.Name -contains "initialCols") {
+            $updated.initialCols = $Template.initialCols
+        }
+        else {
+            $updated | Add-Member -NotePropertyName "initialCols" -NotePropertyValue $Template.initialCols
+        }
     }
 
     # Ensure profiles structure exists
@@ -80,12 +85,18 @@ function Apply-MinimalSettings {
     # Apply font to defaults if specified in template
     if ($Template.profiles -and $Template.profiles.defaults -and $Template.profiles.defaults.font) {
         if (-not $updated.profiles.defaults) {
-            $updated.profiles | Add-Member -NotePropertyName "defaults" -NotePropertyValue @{}
+            $updated.profiles | Add-Member -NotePropertyName "defaults" -NotePropertyValue ([PSCustomObject]@{})
         }
         if (-not $updated.profiles.defaults.font) {
-            $updated.profiles.defaults | Add-Member -NotePropertyName "font" -NotePropertyValue @{}
+            $updated.profiles.defaults | Add-Member -NotePropertyName "font" -NotePropertyValue ([PSCustomObject]@{})
         }
-        $updated.profiles.defaults.font.face = $Template.profiles.defaults.font.face
+
+        if ($updated.profiles.defaults.font.PSObject.Properties.Name -contains "face") {
+            $updated.profiles.defaults.font.face = $Template.profiles.defaults.font.face
+        }
+        else {
+            $updated.profiles.defaults.font | Add-Member -NotePropertyName "face" -NotePropertyValue $Template.profiles.defaults.font.face
+        }
     }
 
     return $updated

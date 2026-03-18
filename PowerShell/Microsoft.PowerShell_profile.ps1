@@ -145,9 +145,15 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Act
 } | Out-Null
 
 # Initialize oh-my-posh using the theme deployed by the DevKit setup script
-$ompConfigPath = Join-Path $profileDir "Posh" "iterm2.omp.json"
-if (Test-Path $ompConfigPath) {
-    oh-my-posh --init --shell pwsh --config $ompConfigPath | Invoke-Expression
+$ompConfigCandidates = @(
+    (Join-Path $profileDir "Posh" "iterm2.omp.json")
+    (Join-Path $env:USERPROFILE "OneDrive\PowerShell\Posh\iterm2.omp.json")
+    (Join-Path $env:USERPROFILE "Documents\PowerShell\Posh\iterm2.omp.json")
+    (Join-Path $env:USERPROFILE "OneDrive\Documents\PowerShell\Posh\iterm2.omp.json")
+)
+$ompConfigPath = $ompConfigCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+if ((Get-Command oh-my-posh -ErrorAction SilentlyContinue) -and $ompConfigPath) {
+    oh-my-posh init pwsh --config $ompConfigPath | Invoke-Expression
 }
 
 # Terminal Icons (conditionally)

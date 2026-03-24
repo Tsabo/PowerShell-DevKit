@@ -55,3 +55,28 @@ function git-update-submodules {
     Write-Host ""
     Write-Host "🎉 All repositories processed."
 }
+
+function git-reset-working-tree {
+    [CmdletBinding()]
+    param(
+        [switch]$Force
+    )
+
+    # Safety confirmation unless -Force is used
+    if (-not $Force) {
+        Write-Host "This will discard ALL local changes and delete ALL untracked files." -ForegroundColor Yellow
+        $response = Read-Host "Continue? (y/N)"
+        if ($response -notin @("y","Y")) {
+            Write-Host "Aborted."
+            return
+        }
+    }
+
+    Write-Host "Resetting tracked files to HEAD..." -ForegroundColor Cyan
+    git reset --hard HEAD
+
+    Write-Host "Cleaning untracked files..." -ForegroundColor Cyan
+    git clean -fd
+
+    Write-Host "Working tree reset complete." -ForegroundColor Green
+}

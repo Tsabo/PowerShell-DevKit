@@ -14,13 +14,15 @@ PowerShell DevKit supports Ubuntu (and compatible Debian-based distributions) ru
 | Requirement | Details |
 |-------------|---------|
 | **Distribution** | Ubuntu 22.04 LTS or later (Debian-based) |
-| **PowerShell** | 7.0+ — install via [Microsoft's instructions](https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu) |
+| **PowerShell** | 7.0+ — installed automatically by bootstrap script below |
 | **WSL version** | WSL2 (if running under Windows) |
 | **git** | `sudo apt-get install git` |
 | **curl / unzip** | `sudo apt-get install curl unzip` |
 | **Internet** | Required for downloads |
 
 ### Install PowerShell on Ubuntu
+
+The bootstrap script handles this for you (see [Quick Start](#quick-start) below). If you prefer to install manually:
 
 ```bash
 # Microsoft's official one-liner for Ubuntu
@@ -39,23 +41,69 @@ pwsh
 
 ## Quick Start
 
+The **bootstrap script** is the single entry point for a fresh instance — it installs PowerShell if needed, then runs the full setup:
+
 ```bash
 # 1. Clone the repository (inside WSL / Ubuntu)
 git clone https://github.com/Tsabo/PowerShell-DevKit.git
 cd PowerShell-DevKit
 
-# 2. Run the Linux setup (from within pwsh)
+# 2. Run the bootstrap (handles PowerShell install + full setup)
+bash ./Scripts/bootstrap-linux.sh
+
+# — optionally, also make pwsh your default shell in one go —
+bash ./Scripts/bootstrap-linux.sh --set-default-shell
+```
+
+Once PowerShell is already installed, you can invoke the setup script directly:
+
+```bash
 pwsh -File ./Scripts/Setup-Linux.ps1
+```
 
-# — or, if you're already in a pwsh session —
-./Scripts/Setup-Linux.ps1
+### Validation and updates
 
+```bash
 # 3. Validate the installation
 ./Scripts/Test-Linux.ps1
 
 # 4. Keep everything updated
 ./Scripts/Update-Linux.ps1
 ```
+
+## Making PowerShell the Default WSL Shell
+
+Running `bash` or `sh` by default is fine, but if you want `pwsh` to open automatically whenever you launch your WSL / Ubuntu terminal, you have two options:
+
+### Option 1 — Via Setup script (recommended)
+
+```bash
+bash ./Scripts/bootstrap-linux.sh --set-default-shell
+# or, if PowerShell is already installed:
+./Scripts/Setup-Linux.ps1 -SetDefaultShell
+```
+
+This runs `chsh -s $(which pwsh)` and registers `pwsh` in `/etc/shells` for you.
+
+### Option 2 — Manually
+
+```bash
+# Register pwsh as a valid login shell (if not already listed)
+echo "$(which pwsh)" | sudo tee -a /etc/shells
+
+# Set it as your default shell
+chsh -s $(which pwsh)
+```
+
+Open a new terminal session for the change to take effect.
+
+### Windows Terminal — set the startup command (WSL users)
+
+If you use Windows Terminal, you can also configure the Ubuntu profile to start `pwsh` directly without changing your login shell:
+
+1. Open Windows Terminal → **Settings** → **Profiles** → **Ubuntu**
+2. Under **Command line**, set: `pwsh`
+3. Save. New Ubuntu tab sessions will open straight into PowerShell.
 
 ## What Gets Installed
 

@@ -21,7 +21,8 @@
 param(
     [switch]$SkipOptional,
     [switch]$ShowDetails,
-    [switch]$ClearLogs
+    [switch]$ClearLogs,
+    [switch]$SetDefaultShell
 )
 
 # Requires PowerShell 7+
@@ -248,6 +249,12 @@ function Install-OhMyPoshLinux {
         }
         if ($env:PATH -notmatch [regex]::Escape($localBin)) {
             $env:PATH = "${localBin}:$env:PATH"
+        }
+
+        # Ensure unzip is available — oh-my-posh install script requires it
+        if (-not (Test-CommandExists "unzip")) {
+            Write-Host "  → Installing unzip (required by oh-my-posh installer)..." -ForegroundColor Gray
+            bash -c "sudo apt-get install -y unzip" | Out-Null
         }
 
         $output = bash -c "curl -s https://ohmyposh.dev/install.sh | bash -s -- -d '$localBin' 2>&1"
@@ -757,6 +764,46 @@ function Deploy-PowerShellProfileLinux {
     return $true
 }
 
+# Optionally set pwsh as the user's default login shell
+function Set-DefaultShellToPwsh {
+    Write-Step "Setting PowerShell as default shell..."
+
+    $pwshCmd = Get-Command pwsh -ErrorAction SilentlyContinue
+    $pwshPath = if ($pwshCmd) { $pwshCmd.Source } else { $null }
+    if (-not $pwshPath) {
+        $pathRaw = bash -c "which pwsh 2>/dev/null" 2>$null
+        $pwshPath = if ($pathRaw) { ($pathRaw | Select-Object -First 1).ToString().Trim() } else { $null }
+    }
+
+    if (-not $pwshPath) {
+        Write-ErrorMsg "pwsh not found in PATH — cannot set as default shell"
+        return $false
+    }
+
+    # Ensure pwsh is listed in /etc/shells (required by chsh)
+    $etcShells = bash -c "cat /etc/shells 2>/dev/null" 2>$null | Out-String
+    if ($etcShells -notmatch [regex]::Escape($pwshPath)) {
+        Write-Host "  → Registering $pwshPath in /etc/shells..." -ForegroundColor Gray
+        bash -c "echo '$pwshPath' | sudo tee -a /etc/shells" | Out-Null
+    }
+
+    Write-Host "  → Running: chsh -s $pwshPath" -ForegroundColor Gray
+    $chshOutput = bash -c "chsh -s '$pwshPath' 2>&1"
+    $exitCode = $LASTEXITCODE
+
+    if ($exitCode -eq 0) {
+        Write-Success "Default shell set to pwsh"
+        Write-Host "  ℹ Open a new terminal session for the change to take effect." -ForegroundColor Cyan
+        return $true
+    }
+    else {
+        Write-ErrorMsg "chsh failed (exit code: $exitCode): $chshOutput"
+        Write-Host "  ℹ You can set it manually later with:" -ForegroundColor Gray
+        Write-Host "      chsh -s \$(which pwsh)" -ForegroundColor DarkCyan
+        return $false
+    }
+}
+
 # Deploy oh-my-posh themes
 function Deploy-OhMyPoshThemeLinux {
     Write-Step "Deploying oh-my-posh themes..."
@@ -913,6 +960,12 @@ function Start-EnvironmentSetup {
         $results.Failed += "PowerShell Profile"
     }
 
+    # 8. Optionally set pwsh as the default login shell
+    if ($SetDefaultShell) {
+        if (Set-DefaultShellToPwsh) { $results.Success += "Default Shell (pwsh)" }
+        else                        { $results.Failed  += "Default Shell (pwsh)" }
+    }
+
     # ─── Summary ───────────────────────────────────────────────────────────────
     Write-Host @"
 
@@ -939,16 +992,28 @@ function Start-EnvironmentSetup {
 
     Write-Host "`n📋 Next Steps:" -ForegroundColor Cyan
 
+    $step = 1
+
     if ($isWSL) {
-        Write-Host "  1. Ensure CaskaydiaCove Nerd Font is set in Windows Terminal" -ForegroundColor White
+        Write-Host "  $step. Ensure CaskaydiaCove Nerd Font is set in Windows Terminal" -ForegroundColor White
         Write-Host "     Settings → Profiles → Defaults → Appearance → Font face" -ForegroundColor Gray
+        $step++
     }
 
-    Write-Host "  2. Reload your profile:" -ForegroundColor White
+    if (-not $SetDefaultShell) {
+        Write-Host "  $step. (Optional) Make PowerShell your default WSL shell:" -ForegroundColor White
+        Write-Host "       chsh -s \$(which pwsh)" -ForegroundColor DarkCyan
+        Write-Host "     Or re-run with: ./Scripts/Setup-Linux.ps1 -SetDefaultShell" -ForegroundColor Gray
+        $step++
+    }
+
+    Write-Host "  $step. Reload your profile:" -ForegroundColor White
     Write-Host "       . `$PROFILE" -ForegroundColor DarkCyan
-    Write-Host "  3. Validate the installation:" -ForegroundColor White
+    $step++
+    Write-Host "  $step. Validate the installation:" -ForegroundColor White
     Write-Host "       ./Scripts/Test-Linux.ps1" -ForegroundColor DarkCyan
-    Write-Host "  4. Keep everything updated:" -ForegroundColor White
+    $step++
+    Write-Host "  $step. Keep everything updated:" -ForegroundColor White
     Write-Host "       ./Scripts/Update-Linux.ps1" -ForegroundColor DarkCyan
     Write-Host ""
 

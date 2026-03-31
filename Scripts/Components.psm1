@@ -885,6 +885,30 @@ function Update-ScoopPackages {
     }
 }
 
+# Detect Linux distribution (returns 'ubuntu', 'debian', 'fedora', 'arch', 'unknown')
+function Get-LinuxDistro {
+    if (-not $IsLinux) { return $null }
+
+    try {
+        $osRelease = Get-Content /etc/os-release -ErrorAction SilentlyContinue
+        if ($osRelease -match 'ID=ubuntu')  { return "ubuntu" }
+        if ($osRelease -match 'ID=debian')  { return "debian" }
+        if ($osRelease -match 'ID=fedora')  { return "fedora" }
+        if ($osRelease -match 'ID=arch')    { return "arch" }
+        if ($osRelease -match 'ID_LIKE.*debian|ID_LIKE.*ubuntu') { return "debian" }
+    }
+    catch {}
+
+    return "unknown"
+}
+
+# Test whether running inside WSL
+function Test-IsWSL {
+    if (-not $IsLinux) { return $false }
+    $kernelVersion = Get-Content /proc/version -ErrorAction SilentlyContinue
+    return $kernelVersion -match "microsoft|WSL"
+}
+
 # Update Yazi packages (for use in Update script)
 function Update-YaziPackages {
     if (-not (Test-CommandExists "ya")) {
@@ -908,7 +932,13 @@ function Update-YaziPackages {
             }
 
             # Also update the configuration repository if it exists
-            $yaziConfigPath = Join-Path $env:APPDATA "yazi"
+            # Path is platform-dependent: %APPDATA%\yazi on Windows, ~/.config/yazi on Linux/macOS
+            $yaziConfigPath = if ($IsWindows -or $PSVersionTable.PSEdition -eq 'Desktop') {
+                Join-Path $env:APPDATA "yazi"
+            }
+            else {
+                "$HOME/.config/yazi"
+            }
             if (Test-Path $yaziConfigPath) {
                 Push-Location $yaziConfigPath
                 try {

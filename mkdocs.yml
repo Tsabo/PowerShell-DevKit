@@ -85,6 +85,7 @@ nav:
     - Quick Start: getting-started/quick-start.md
     - Installation: getting-started/installation.md
     - Requirements: getting-started/requirements.md
+    - Linux / WSL Setup: getting-started/linux-setup.md
   - Components:
     - Overview: components/overview.md
     - oh-my-posh: components/oh-my-posh.md

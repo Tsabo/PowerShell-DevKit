@@ -4,10 +4,24 @@ Get your PowerShell development environment set up in under 5 minutes!
 
 ## Prerequisites
 
-- ✅ **Windows 10/11** - Modern Windows version
-- ✅ **PowerShell 7+** - Installed automatically if missing
-- ✅ **Internet Connection** - For downloading packages
-- ⚠️ **Administrator Rights** - Recommended for best results
+=== "Windows"
+    - ✅ **Windows 10/11** - Modern Windows version
+    - ✅ **PowerShell 7+** - Installed automatically if missing
+    - ✅ **Internet Connection** - For downloading packages
+    - ⚠️ **Administrator Rights** - Recommended for best results
+
+=== "macOS"
+    - ✅ **macOS 10.15+** - Catalina or later
+    - ✅ **PowerShell 7+** - `brew install --cask powershell`
+    - ✅ **Homebrew** - Installed automatically if missing
+    - ✅ **Internet Connection** - For downloading packages
+
+=== "Linux / WSL"
+    - ✅ **Ubuntu 22.04 LTS+** (or compatible Debian-based distro)
+    - ✅ **PowerShell 7+** - [Microsoft install guide](https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu)
+    - ✅ **curl, git, unzip** - `sudo apt-get install curl git unzip`
+    - ✅ **Internet Connection** - For downloading packages
+    - ℹ️ **WSL2** recommended when running under Windows
 
 !!! tip "New to PowerShell?"
     Don't worry! The setup script handles everything automatically, including installing PowerShell 7 if you don't have it.

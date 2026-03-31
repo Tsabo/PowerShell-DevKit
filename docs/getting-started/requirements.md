@@ -8,6 +8,8 @@ This page provides a comprehensive overview of what you need to run PowerShell D
 - **Windows 10** (version 1903 or later)
 - **Windows 11** (all versions)
 - **Windows Server 2019/2022**
+- **Ubuntu 22.04 LTS+** (WSL2 or bare metal) — Debian-based distros also supported
+- **macOS 10.15+** (Catalina or later)
 
 ### PowerShell
 - **PowerShell 7.0+** (automatically installed if missing)
@@ -34,6 +36,8 @@ These are installed automatically by the setup script:
 
 ### Package Managers
 - **winget** - Windows Package Manager (built into Windows 10/11)
+- **apt** - Ubuntu/Debian package manager (Linux)
+- **Homebrew** - macOS package manager (macOS)
 
 ### Core Tools
 | Tool | Size | Purpose |
@@ -99,8 +103,10 @@ pip install mkdocs-git-revision-date-localized-plugin
 
 ### Terminal Emulators
 Works best with:
-- ✅ **Windows Terminal** (Recommended, configured automatically)
+- ✅ **Windows Terminal** (Recommended on Windows, configured automatically)
 - ✅ **Windows Terminal Preview**
+- ✅ **Windows Terminal (WSL profile)** — recommended for Linux / WSL
+- ✅ **iTerm2** — recommended for macOS
 - ⚠️ **ConEmu** (Some features may not work)
 - ⚠️ **Console2** (Limited support)
 - ❌ **cmd.exe** (Not supported, use PowerShell)

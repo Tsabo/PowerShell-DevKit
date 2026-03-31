@@ -16,18 +16,28 @@ This is the easiest way to get started.
 
 #### Step 1: Clone the Repository
 
-```powershell
-# Navigate to where you want to install
-cd C:\Dev  # or your preferred location
+=== "Windows"
+    ```powershell
+    cd C:\Dev  # or your preferred location
+    git clone https://github.com/Tsabo/PowerShell-DevKit.git
+    cd PowerShell-DevKit
+    ```
 
-# Clone the repository
-git clone https://github.com/Tsabo/PowerShell-DevKit.git
-cd PowerShell-DevKit
-```
+=== "macOS"
+    ```bash
+    git clone https://github.com/Tsabo/PowerShell-DevKit.git
+    cd PowerShell-DevKit
+    ```
+
+=== "Linux / WSL"
+    ```bash
+    git clone https://github.com/Tsabo/PowerShell-DevKit.git
+    cd PowerShell-DevKit
+    ```
 
 #### Step 2: Run Setup Script
 
-=== "As Administrator (Recommended)"
+=== "Windows — As Administrator (Recommended)"
 
     ```powershell
     # Right-click PowerShell and "Run as Administrator"
@@ -40,7 +50,7 @@ cd PowerShell-DevKit
     - Windows Terminal configured automatically
     - No UAC prompts during installation
 
-=== "As Standard User"
+=== "Windows — As Standard User"
 
     ```powershell
     .\Scripts\Setup.ps1
@@ -50,6 +60,21 @@ cd PowerShell-DevKit
     - Some components may be skipped
     - May require manual UAC approval
     - Windows Terminal config might need manual copy
+
+=== "macOS"
+
+    ```bash
+    ./Scripts/Setup-macOS.ps1
+    ```
+
+=== "Linux / WSL"
+
+    ```bash
+    pwsh -File ./Scripts/Setup-Linux.ps1
+    ```
+
+    !!! tip "Linux / WSL — Full Guide"
+        See the dedicated [Linux / WSL Setup Guide](linux-setup.md) for details on fonts, PATH configuration, and WSL-specific notes.
 
 #### Step 3: Verify Installation
 

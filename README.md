@@ -1,11 +1,12 @@
 # PowerShell-DevKit
 
-> **Keep your PowerShell development environments perfectly synchronized across all your machines - Windows and macOS**
+> **Keep your PowerShell development environments perfectly synchronized across all your machines - Windows, macOS, and Ubuntu / WSL**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PowerShell 7+](https://img.shields.io/badge/PowerShell-7+-blue.svg)](https://github.com/PowerShell/PowerShell)
 [![Windows](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://www.microsoft.com/windows)
 [![macOS](https://img.shields.io/badge/Platform-macOS-silver.svg)](https://www.apple.com/macos)
+[![Linux WSL](https://img.shields.io/badge/Platform-Linux%20%2F%20WSL-orange.svg)](https://learn.microsoft.com/en-us/windows/wsl/)
 [![Documentation](https://img.shields.io/badge/docs-online-blue.svg)](https://tsabo.github.io/PowerShell-DevKit/)
 
 ---
@@ -19,11 +20,11 @@ We've all been there - following lengthy OneNote instructions, manually installi
 **PowerShell DevKit eliminates that pain:**
 
 - ✅ **One command** to set up your complete environment
-- ✅ **Cross-platform** - Works on Windows and macOS
+- ✅ **Cross-platform** - Works on Windows, macOS, and Ubuntu / WSL
 - ✅ **Git-based configuration** keeps everything in sync
 - ✅ **Automatic updates** across all your machines
 - ✅ **Intelligent recovery** when things go wrong
-- ✅ **Consistent experience** whether you're on your desktop, laptop, Windows PC, or MacBook
+- ✅ **Consistent experience** whether you're on your desktop, laptop, Windows PC, MacBook, or WSL terminal
 
 Clone once, run the appropriate setup script, and you're done. Your perfect PowerShell environment, reproduced identically everywhere.
 
@@ -65,6 +66,24 @@ cd PowerShell-DevKit
 
 **[📖 macOS Setup Guide →](docs/getting-started/macos-setup.md)**
 
+### Ubuntu / WSL
+```bash
+# 1. Clone the repository (inside WSL / Ubuntu)
+git clone https://github.com/Tsabo/PowerShell-DevKit.git
+cd PowerShell-DevKit
+
+# 2. Run the Linux setup (from within pwsh)
+pwsh -File ./Scripts/Setup-Linux.ps1
+
+# 3. Validate installation
+pwsh -File ./Scripts/Test-Linux.ps1
+
+# 4. Keep everything updated
+pwsh -File ./Scripts/Update-Linux.ps1
+```
+
+**[📖 Linux / WSL Setup Guide →](docs/getting-started/linux-setup.md)**
+
 ### 🔄 Updating PowerShell-DevKit
 
 To update to the latest version with new features and improvements:
@@ -78,12 +97,16 @@ git pull
 .\Scripts\Setup.ps1
 # macOS:
 ./Scripts/Setup-macOS.ps1
+# Linux / WSL:
+pwsh -File ./Scripts/Setup-Linux.ps1
 
 # 3. Update all installed components (packages, modules, etc.)
 # Windows:
 .\Scripts\Update.ps1
 # macOS:
 ./Scripts/Update-macOS.ps1
+# Linux / WSL:
+pwsh -File ./Scripts/Update-Linux.ps1
 ```
 
 > 💡 **Note**: `Setup.ps1` is safe to run multiple times - it only installs missing components and updates configurations.

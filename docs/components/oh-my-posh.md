@@ -166,6 +166,11 @@ Customize colors in theme JSON:
 2. Configure terminal to use the font
 3. Restart terminal
 
+!!! note "WSL Users"
+    Run `oh-my-posh font install CascadiaCode` on **Windows** (not inside WSL).
+    Windows Terminal uses Windows fonts — fonts installed inside WSL are not visible to the terminal.
+    Open a Windows PowerShell session and run the command there, or run `.\Scripts\Setup.ps1` from Windows which installs the font automatically.
+
 ### Slow Prompt
 
 **Issue:** Prompt takes time to appear

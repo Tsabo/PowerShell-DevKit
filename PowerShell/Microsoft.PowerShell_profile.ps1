@@ -38,6 +38,15 @@ if (-not $env:YAZI_FILE_ONE) {
 # Profile directory
 $profileDir = Split-Path -Parent $PROFILE
 
+# On Linux/macOS, ensure ~/.local/bin is in PATH early so tools installed there
+# (oh-my-posh, zoxide, yazi, etc.) are available throughout this session.
+if ($IsLinux -or $IsMacOS) {
+    $localBin = [IO.Path]::Combine($HOME, ".local", "bin")
+    if ((Test-Path $localBin) -and ($env:PATH -notmatch [System.Text.RegularExpressions.Regex]::Escape($localBin))) {
+        $env:PATH = "${localBin}$([IO.Path]::PathSeparator)$env:PATH"
+    }
+}
+
 # Add script directories to PATH for this session
 # IncludedScripts - bundled with repo
 # CustomScripts - user-specific (auto-created, git-ignored)
@@ -53,7 +62,8 @@ if (Test-Path $customScriptsDir) {
 }
 
 if ($scriptPaths.Count -gt 0) {
-    $env:PATH = ($scriptPaths -join ";") + ";$env:PATH"
+    $pathSep = [IO.Path]::PathSeparator
+    $env:PATH = ($scriptPaths -join $pathSep) + "${pathSep}$env:PATH"
 }
 
 # Deferred module loading
@@ -145,12 +155,14 @@ Register-EngineEvent -SourceIdentifier PowerShell.OnIdle -MaxTriggerCount 1 -Act
 } | Out-Null
 
 # Initialize oh-my-posh using the theme deployed by the DevKit setup script
-$ompConfigCandidates = @(
-    (Join-Path $profileDir "Posh" "iterm2.omp.json")
-    (Join-Path $env:USERPROFILE "OneDrive\PowerShell\Posh\iterm2.omp.json")
-    (Join-Path $env:USERPROFILE "Documents\PowerShell\Posh\iterm2.omp.json")
-    (Join-Path $env:USERPROFILE "OneDrive\Documents\PowerShell\Posh\iterm2.omp.json")
-)
+$ompConfigCandidates = @(Join-Path $profileDir "Posh" "iterm2.omp.json")
+if ($env:USERPROFILE) {
+    $ompConfigCandidates += @(
+        (Join-Path $env:USERPROFILE "OneDrive\PowerShell\Posh\iterm2.omp.json")
+        (Join-Path $env:USERPROFILE "Documents\PowerShell\Posh\iterm2.omp.json")
+        (Join-Path $env:USERPROFILE "OneDrive\Documents\PowerShell\Posh\iterm2.omp.json")
+    )
+}
 $ompConfigPath = $ompConfigCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
 if ((Get-Command oh-my-posh -ErrorAction SilentlyContinue) -and $ompConfigPath) {
     oh-my-posh init pwsh --config $ompConfigPath | Invoke-Expression

@@ -60,7 +60,7 @@ All installed from PowerShell Gallery:
 | Component | Purpose | Installation |
 |-----------|---------|--------------|
 | **gsudo** | Elevated permissions | Optional during setup |
-| **Microsoft Edit** | Text editor | Installed by default |
+| **Microsoft Edit** | Text editor | Installed by default (Linux: downloaded from GitHub release to `~/.local/bin`) |
 
 ### For Yazi Enhanced Functionality
 | Component | Purpose | Size |
@@ -80,11 +80,27 @@ All installed from PowerShell Gallery:
     ```
 
 ### For SVG Support in Yazi
-```powershell
-# Optional: Install Scoop and resvg for SVG thumbnails
-scoop bucket add extras
-scoop install resvg
-```
+
+=== "Windows"
+    ```powershell
+    # Optional: Install Scoop and resvg for SVG thumbnails
+    scoop bucket add extras
+    scoop install resvg
+    ```
+
+=== "macOS"
+    ```bash
+    brew install resvg
+    ```
+
+=== "Linux / WSL"
+    ```bash
+    # Via Cargo (requires Rust)
+    cargo install resvg
+
+    # Or check your distro's package manager
+    sudo apt-get install resvg
+    ```
 
 ## Development Dependencies
 

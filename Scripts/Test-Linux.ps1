@@ -101,11 +101,12 @@ if ($aptInstalled) { $passedChecks++ } else { $failedChecks++ }
 Write-CheckHeader "Core Tools"
 
 $coreTools = @(
-    @{Name = "oh-my-posh"; Command = "oh-my-posh"; VersionCmd = { oh-my-posh version }; InstallHint = "Run ./Scripts/Setup-Linux.ps1" }
-    @{Name = "fzf";        Command = "fzf";        VersionCmd = { (fzf --version).Split(' ')[0] }; InstallHint = "sudo apt-get install fzf" }
-    @{Name = "zoxide";     Command = "zoxide";     VersionCmd = { (zoxide --version).Split(' ')[1] }; InstallHint = "Run ./Scripts/Setup-Linux.ps1" }
-    @{Name = "glow";       Command = "glow";       VersionCmd = { (glow --version).Split(' ')[-1] }; InstallHint = "Run ./Scripts/Setup-Linux.ps1 (adds charm.sh repo)" }
-    @{Name = "yazi";       Command = "yazi";       VersionCmd = { (yazi --version).Split(' ')[1] }; InstallHint = "Run ./Scripts/Setup-Linux.ps1" }
+    @{Name = "oh-my-posh";      Command = "oh-my-posh"; VersionCmd = { oh-my-posh version }; InstallHint = "Run ./Scripts/Setup-Linux.ps1" }
+    @{Name = "fzf";             Command = "fzf";        VersionCmd = { (fzf --version).Split(' ')[0] }; InstallHint = "sudo apt-get install fzf" }
+    @{Name = "zoxide";          Command = "zoxide";     VersionCmd = { (zoxide --version).Split(' ')[1] }; InstallHint = "Run ./Scripts/Setup-Linux.ps1" }
+    @{Name = "glow";            Command = "glow";       VersionCmd = { (glow --version).Split(' ')[-1] }; InstallHint = "Run ./Scripts/Setup-Linux.ps1 (adds charm.sh repo)" }
+    @{Name = "yazi";            Command = "yazi";       VersionCmd = { (yazi --version).Split(' ')[1] }; InstallHint = "Run ./Scripts/Setup-Linux.ps1" }
+    @{Name = "Microsoft Edit";  Command = "edit";       VersionCmd = { (edit --version 2>&1 | Select-Object -First 1) }; InstallHint = "Run ./Scripts/Setup-Linux.ps1 (installs via snap)" }
 )
 
 foreach ($tool in $coreTools) {
@@ -159,7 +160,7 @@ Write-CheckHeader "Fonts"
 if ($isWSL) {
     # In WSL, the font lives on the Windows side — check Windows fonts via /mnt/c
     $winLocalAppData = bash -c "wslpath '\$(cmd.exe /c echo %LOCALAPPDATA% 2>/dev/null)'" 2>$null
-    $winLocalAppData = $winLocalAppData?.Trim()
+    $winLocalAppData = if ($winLocalAppData) { ($winLocalAppData | Select-Object -First 1).ToString().Trim() } else { $null }
 
     $cascadiaFound = $false
     if ($winLocalAppData -and (Test-Path $winLocalAppData)) {
@@ -221,7 +222,7 @@ if ($profileExists) {
     $passedChecks++
     $profileContent = Get-Content $PROFILE -Raw
     $configChecks = @{
-        "oh-my-posh initialization" = $profileContent -match "oh-my-posh.*--init"
+        "oh-my-posh initialization" = $profileContent -match "oh-my-posh init"
         "Terminal-Icons import"     = $profileContent -match "Terminal-Icons"
         "posh-git import"           = $profileContent -match "posh-git"
         "zoxide initialization"     = $profileContent -match "zoxide init"

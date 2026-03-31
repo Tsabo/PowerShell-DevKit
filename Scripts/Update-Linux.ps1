@@ -116,6 +116,33 @@ if ($updateApt) {
         }
     }
 
+    # Update Microsoft Edit via snap
+    Write-Step "Updating Microsoft Edit..."
+
+    if (Test-CommandExists "snap") {
+        try {
+            Write-Host "  → Running snap refresh..." -ForegroundColor Gray
+            $before = if (Test-CommandExists "edit") { edit --version 2>&1 | Select-Object -First 1 } else { "" }
+            bash -c "sudo snap refresh ms-edit 2>&1" | Out-Null
+            $after = if (Test-CommandExists "edit") { edit --version 2>&1 | Select-Object -First 1 } else { "" }
+
+            if ($before -ne $after) {
+                Write-Success "Microsoft Edit updated ($before → $after)"
+            }
+            else {
+                Write-Host "  ✓ Microsoft Edit is already up to date" -ForegroundColor Green
+            }
+            $results.AptSuccess += "Microsoft Edit"
+        }
+        catch {
+            Write-Host "  ✗ Error updating Microsoft Edit: $_" -ForegroundColor Red
+            $results.AptFailed += "Microsoft Edit"
+        }
+    }
+    else {
+        Write-Host "  ⚠ snap not available, skipping Microsoft Edit update" -ForegroundColor Yellow
+    }
+
     # Update oh-my-posh (re-run official install script — it updates in-place)
     Write-Step "Updating oh-my-posh..."
 
@@ -183,12 +210,13 @@ if ($updateApt) {
 
             Write-Host "  → Checking latest Yazi release on GitHub..." -ForegroundColor Gray
             $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/sxyazi/yazi/releases/latest" -ErrorAction SilentlyContinue
-            $latestVersion = $releaseInfo?.tag_name -replace '^v', ''
+            $latestVersion = if ($releaseInfo -and $releaseInfo.tag_name) { $releaseInfo.tag_name -replace '^v', '' } else { $null }
 
             if ($latestVersion -and $latestVersion -ne $currentVersion) {
                 Write-Host "  → Updating Yazi from $currentVersion to $latestVersion..." -ForegroundColor Gray
 
-                $arch = (bash -c "uname -m" 2>$null)?.Trim()
+                $archRaw = bash -c "uname -m" 2>$null
+                $arch = if ($archRaw) { ($archRaw | Select-Object -First 1).ToString().Trim() } else { $null }
                 $yaziArch = switch ($arch) {
                     "x86_64"  { "x86_64-unknown-linux-musl" }
                     "aarch64" { "aarch64-unknown-linux-musl" }
@@ -198,18 +226,38 @@ if ($updateApt) {
 
                 if ($yaziArch) {
                     $localBin = "$HOME/.local/bin"
-                    $downloadScript = @"
+
+                    # Ensure unzip is available
+                    $unzipCheck = bash -c "dpkg -s unzip 2>/dev/null | grep -q '^Status: install ok installed'" 2>&1
+                    if ($LASTEXITCODE -ne 0) {
+                        Write-Host "  → Installing unzip..." -ForegroundColor Gray
+                        bash -c "sudo apt-get install -y unzip 2>&1" | Out-Null
+                    }
+
+                    $scriptContent = (@'
 set -e
-TMP=\$(mktemp -d)
-cd "\$TMP"
-curl -fsSL "https://github.com/sxyazi/yazi/releases/latest/download/yazi-$yaziArch.zip" -o yazi.zip
+TMP=$(mktemp -d)
+cd "$TMP"
+curl -fsSL "https://github.com/sxyazi/yazi/releases/latest/download/yazi-YAZI_ARCH.zip" -o yazi.zip
 unzip -q yazi.zip
-install -m755 yazi-$yaziArch/yazi "$localBin/yazi"
-install -m755 yazi-$yaziArch/ya "$localBin/ya"
-rm -rf "\$TMP"
-"@
-                    bash -c $downloadScript 2>&1 | Out-Null
-                    if ($LASTEXITCODE -eq 0) {
+install -m755 "yazi-YAZI_ARCH/yazi" "LOCAL_BIN/yazi"
+install -m755 "yazi-YAZI_ARCH/ya" "LOCAL_BIN/ya"
+rm -rf "$TMP"
+'@) -replace 'YAZI_ARCH', $yaziArch -replace 'LOCAL_BIN', $localBin
+
+                    $tmpScript = "/tmp/yazi-update-$PID.sh"
+                    $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+                    try {
+                        $scriptBytes = $utf8NoBom.GetBytes(($scriptContent -replace "`r`n", "`n"))
+                        [System.IO.File]::WriteAllBytes($tmpScript, $scriptBytes)
+                        bash $tmpScript 2>&1 | Out-Null
+                        $exitCode = $LASTEXITCODE
+                    }
+                    finally {
+                        Remove-Item $tmpScript -ErrorAction SilentlyContinue
+                    }
+
+                    if ($exitCode -eq 0) {
                         Write-Success "Yazi binary updated to $latestVersion"
                         $results.AptSuccess += "Yazi binary"
                     }

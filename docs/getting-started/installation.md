@@ -135,9 +135,20 @@ Install-Module -Name posh-git -Scope CurrentUser
 
 Run the test script to ensure everything is working:
 
-```powershell
-.\Scripts\Test.ps1
-```
+=== "Windows"
+    ```powershell
+    .\Scripts\Test.ps1
+    ```
+
+=== "macOS"
+    ```powershell
+    pwsh -File ./Scripts/Test-macOS.ps1
+    ```
+
+=== "Linux / WSL"
+    ```powershell
+    pwsh -File ./Scripts/Test-Linux.ps1
+    ```
 
 ### Install Optional Components
 

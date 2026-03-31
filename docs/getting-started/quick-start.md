@@ -38,22 +38,34 @@ cd PowerShell-DevKit
 
 ### Step 2: Run Setup
 
-=== "Recommended (Administrator)"
+=== "Windows (Administrator)"
 
     ```powershell
     # Run as Administrator for full installation
     .\Scripts\Setup.ps1
     ```
 
-=== "Standard User"
+=== "Windows (Standard User)"
 
     ```powershell
     # Most components will install, some may be skipped
     .\Scripts\Setup.ps1
     ```
 
-!!! warning "Execution Policy"
-    If you get an execution policy error, run:
+=== "macOS"
+
+    ```powershell
+    pwsh -File ./Scripts/Setup-macOS.ps1
+    ```
+
+=== "Linux / WSL"
+
+    ```powershell
+    pwsh -File ./Scripts/Setup-Linux.ps1
+    ```
+
+!!! warning "Execution Policy (Windows only)"
+    If you get an execution policy error on Windows, run:
     ```powershell
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
     ```

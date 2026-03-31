@@ -247,7 +247,7 @@ function Install-OhMyPoshLinux {
             New-Item -ItemType Directory -Path $localBin -Force | Out-Null
         }
         if ($env:PATH -notmatch [regex]::Escape($localBin)) {
-            $env:PATH = "$localBin:$env:PATH"
+            $env:PATH = "${localBin}:$env:PATH"
         }
 
         $output = bash -c "curl -s https://ohmyposh.dev/install.sh | bash -s -- -d '$localBin' 2>&1"
@@ -290,7 +290,7 @@ function Install-ZoxideLinux {
             New-Item -ItemType Directory -Path $localBin -Force | Out-Null
         }
         if ($env:PATH -notmatch [regex]::Escape($localBin)) {
-            $env:PATH = "$localBin:$env:PATH"
+            $env:PATH = "${localBin}:$env:PATH"
         }
 
         $output = bash -c "curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh 2>&1"
@@ -375,6 +375,118 @@ function Install-FzfLinux {
     return Install-AptPackage -PackageName "fzf" -DisplayName "fzf"
 }
 
+function Install-MicrosoftEditLinux {
+    Write-Step "Installing Microsoft Edit..."
+
+    # Check specifically for our installed binary to avoid matching system 'edit'
+    if (Test-Path "$HOME/.local/bin/edit") {
+        Write-Skip "Microsoft Edit is already installed"
+        return $true
+    }
+
+    try {
+        $localBin = "$HOME/.local/bin"
+        if (-not (Test-Path $localBin)) {
+            New-Item -ItemType Directory -Path $localBin -Force | Out-Null
+        }
+        if ($env:PATH -notmatch [regex]::Escape($localBin)) {
+            $env:PATH = "${localBin}:$env:PATH"
+        }
+
+        Write-Host "  → Fetching latest release info from GitHub..." -ForegroundColor Gray
+        $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/edit/releases/latest" -ErrorAction Stop
+
+        $archRaw = bash -c "uname -m" 2>$null
+        $arch = if ($archRaw) { ($archRaw | Select-Object -First 1).ToString().Trim() } else { $null }
+
+        $assetPattern = switch ($arch) {
+            "x86_64"  { "x86_64-linux" }
+            "aarch64" { "aarch64-linux" }
+            "armv7l"  { "armv7-linux" }
+            default   { $null }
+        }
+
+        if (-not $assetPattern) {
+            Write-ErrorMsg "Unsupported architecture: $arch"
+            Write-SetupLog -Component "Microsoft Edit" -Type "github-release" `
+                -Operation "Detect architecture" -ErrorMessage "Unsupported architecture: $arch"
+            return $false
+        }
+
+        $asset = $releaseInfo.assets | Where-Object { $_.name -match $assetPattern } | Select-Object -First 1
+
+        if (-not $asset) {
+            Write-ErrorMsg "No compatible Linux binary found in latest release"
+            Write-Host "  ℹ Available assets:" -ForegroundColor Gray
+            $releaseInfo.assets | ForEach-Object { Write-Host "    $($_.name)" -ForegroundColor Gray }
+            Write-SetupLog -Component "Microsoft Edit" -Type "github-release" `
+                -Operation "Find Linux asset for $arch" -ErrorMessage "No matching asset found" `
+                -FullOutput ($releaseInfo.assets.name -join "`n")
+            return $false
+        }
+
+        Write-Host "  → Downloading $($asset.name)..." -ForegroundColor Gray
+        $tmpDir = "/tmp/ms-edit-$PID"
+        bash -c "mkdir -p '$tmpDir'" | Out-Null
+
+        $dlOutput = bash -c "curl -fsSL '$($asset.browser_download_url)' -o '$tmpDir/asset' 2>&1"
+        if ($LASTEXITCODE -ne 0) {
+            Write-ErrorMsg "Download failed (exit $LASTEXITCODE)"
+            bash -c "rm -rf '$tmpDir'" | Out-Null
+            Write-SetupLog -Component "Microsoft Edit" -Type "github-release" `
+                -Operation "Download $($asset.name)" `
+                -ErrorMessage "curl failed" -ExitCode $LASTEXITCODE -FullOutput ($dlOutput | Out-String)
+            return $false
+        }
+
+        # Extract based on file type
+        if ($asset.name -match '\.tar\.zst$') {
+            # Ensure zstd is available for decompression
+            $zstdCheck = bash -c "dpkg -s zstd 2>/dev/null | grep -q '^Status: install ok installed'" 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "  → Installing zstd..." -ForegroundColor Gray
+                bash -c "sudo apt-get install -y zstd 2>&1" | Out-Null
+            }
+            bash -c "tar -I zstd -xf '$tmpDir/asset' -C '$tmpDir'" | Out-Null
+        }
+        elseif ($asset.name -match '\.tar\.gz$|\.tgz$') {
+            bash -c "tar -xzf '$tmpDir/asset' -C '$tmpDir'" | Out-Null
+        }
+        elseif ($asset.name -match '\.zip$') {
+            bash -c "unzip -q '$tmpDir/asset' -d '$tmpDir'" | Out-Null
+        }
+        # else: raw binary already at $tmpDir/asset
+
+        # Find the 'edit' binary in extracted contents
+        $editBinRaw = bash -c "find '$tmpDir' -name 'edit' -type f 2>/dev/null | head -1" 2>$null
+        $editBin = if ($editBinRaw) { ($editBinRaw | Select-Object -First 1).ToString().Trim() } else { "" }
+        if (-not $editBin) { $editBin = "$tmpDir/asset" }  # fallback: raw binary
+
+        $installOutput = bash -c "install -m755 '$editBin' '$localBin/edit' 2>&1"
+        $installExit   = $LASTEXITCODE
+        bash -c "rm -rf '$tmpDir'" | Out-Null
+
+        if ($installExit -eq 0 -and (Test-Path "$localBin/edit")) {
+            Write-Success "Microsoft Edit installed successfully"
+            return $true
+        }
+        else {
+            Write-ErrorMsg "Microsoft Edit binary install failed"
+            Write-SetupLog -Component "Microsoft Edit" -Type "github-release" `
+                -Operation "install -m755 edit to $localBin" `
+                -ErrorMessage "install failed" -ExitCode $installExit -FullOutput ($installOutput | Out-String)
+            return $false
+        }
+    }
+    catch {
+        Write-ErrorMsg "Microsoft Edit installation exception: $_"
+        Write-SetupLog -Component "Microsoft Edit" -Type "github-release" `
+            -Operation "GitHub release download" `
+            -ErrorMessage $_.Exception.Message -FullOutput $_.Exception.ToString()
+        return $false
+    }
+}
+
 function Install-YaziLinux {
     Write-Step "Installing Yazi..."
 
@@ -387,8 +499,8 @@ function Install-YaziLinux {
             Write-Host "  → Fetching latest Yazi release from GitHub..." -ForegroundColor Gray
 
             # Detect architecture
-            $arch = bash -c "uname -m" 2>$null
-            $arch = $arch?.Trim()
+            $archRaw = bash -c "uname -m" 2>&1
+            $arch = if ($archRaw) { ($archRaw | Select-Object -First 1).ToString().Trim() } else { $null }
             $yaziArch = switch ($arch) {
                 "x86_64"  { "x86_64-unknown-linux-musl" }
                 "aarch64" { "aarch64-unknown-linux-musl" }
@@ -404,21 +516,38 @@ function Install-YaziLinux {
                 New-Item -ItemType Directory -Path $localBin -Force | Out-Null
             }
             if ($env:PATH -notmatch [regex]::Escape($localBin)) {
-                $env:PATH = "$localBin:$env:PATH"
+                $env:PATH = "${localBin}:$env:PATH"
             }
 
-            $downloadScript = @"
+            # Ensure unzip is available (not always present in minimal Ubuntu installs)
+            $unzipCheck = bash -c "dpkg -s unzip 2>/dev/null | grep -q '^Status: install ok installed'" 2>&1
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "  → Installing unzip (required for Yazi download)..." -ForegroundColor Gray
+                bash -c "sudo apt-get install -y unzip 2>&1" | Out-Null
+            }
+
+            $downloadScript = (@'
 set -e
-TMP=\$(mktemp -d)
-cd "\$TMP"
-curl -fsSL "https://github.com/sxyazi/yazi/releases/latest/download/yazi-$yaziArch.zip" -o yazi.zip
+TMP=$(mktemp -d)
+cd "$TMP"
+curl -fsSL "https://github.com/sxyazi/yazi/releases/latest/download/yazi-YAZI_ARCH.zip" -o yazi.zip
 unzip -q yazi.zip
-install -m755 yazi-$yaziArch/yazi "$localBin/yazi"
-install -m755 yazi-$yaziArch/ya "$localBin/ya"
-rm -rf "\$TMP"
-"@
-            $output = bash -c $downloadScript 2>&1
-            $exitCode = $LASTEXITCODE
+install -m755 "yazi-YAZI_ARCH/yazi" "LOCAL_BIN/yazi"
+install -m755 "yazi-YAZI_ARCH/ya" "LOCAL_BIN/ya"
+rm -rf "$TMP"
+'@) -replace 'YAZI_ARCH', $yaziArch -replace 'LOCAL_BIN', $localBin
+
+            # Write with LF line endings and no BOM — required for bash on Linux
+            $tmpScript = "/tmp/yazi-install-$PID.sh"
+            $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+            try {
+                [System.IO.File]::WriteAllText($tmpScript, ($downloadScript -replace "`r`n", "`n"), $utf8NoBom)
+                $output = bash $tmpScript 2>&1
+                $exitCode = $LASTEXITCODE
+            }
+            finally {
+                Remove-Item $tmpScript -Force -ErrorAction SilentlyContinue
+            }
 
             if ($exitCode -ne 0 -or -not (Test-CommandExists "yazi")) {
                 Write-ErrorMsg "Yazi installation failed (exit code: $exitCode)"
@@ -727,8 +856,8 @@ function Start-EnvironmentSetup {
     # glow via charm.sh
     if (Install-GlowLinux) { $results.Success += "glow" } else { $results.Failed += "glow" }
 
-    # Note: Microsoft Edit is not available on Linux
-    $results.Skipped += "Microsoft Edit (Linux not supported)"
+    # Microsoft Edit via snap
+    if (Install-MicrosoftEditLinux) { $results.Success += "Microsoft Edit" } else { $results.Failed += "Microsoft Edit" }
 
     # Note: gsudo / Scoop / Windows Terminal are not applicable
     $results.Skipped += "gsudo (use sudo)"

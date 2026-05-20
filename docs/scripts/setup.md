@@ -83,6 +83,24 @@ Specify the Nerd Font to install:
 - Hack
 - Meslo
 
+### -EnableAdminShares
+
+Windows-only opt-in setting to enable local administrative shares for local administrator accounts.
+
+```powershell
+.\Scripts\Setup.ps1 -EnableAdminShares
+```
+
+This sets the following registry value:
+
+- `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy = 1`
+
+Notes:
+
+- Requires running PowerShell as Administrator.
+- Off by default; only applied when this switch is provided.
+- This component is optional and is skipped by `-SkipOptional`.
+
 ### -ShowDetails
 
 View detailed failure information from previous setup runs:
@@ -219,6 +237,7 @@ If not skipped:
 - gsudo
 - PowerColorLS
 - Scoop + resvg
+- Local Admin Shares Policy (only when `-EnableAdminShares` is used)
 
 ```
 🔹 Installing optional components...

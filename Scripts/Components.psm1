@@ -682,9 +682,79 @@ function Test-WindowsTerminal {
     }
 }
 
+function Install-LocalAdminSharesPolicy {
+    if (-not ($IsWindows -or $PSVersionTable.PSEdition -eq 'Desktop')) {
+        Write-Warning "Local admin shares policy is only supported on Windows"
+        return $false
+    }
+
+    $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($currentUser)
+    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Write-Warning "Administrator privileges are required to modify HKLM policies"
+        return $false
+    }
+
+    $policyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+    $policyName = "LocalAccountTokenFilterPolicy"
+    $desiredValue = 1
+
+    try {
+        $existing = Get-ItemProperty -Path $policyPath -Name $policyName -ErrorAction SilentlyContinue
+        if ($existing -and $existing.$policyName -eq $desiredValue) {
+            Write-Host "  ✓ LocalAccountTokenFilterPolicy is already set to 1" -ForegroundColor Green
+            return $true
+        }
+
+        if (-not $existing) {
+            New-ItemProperty -Path $policyPath -Name $policyName -PropertyType DWord -Value $desiredValue -Force -ErrorAction Stop | Out-Null
+        }
+        else {
+            Set-ItemProperty -Path $policyPath -Name $policyName -Value $desiredValue -ErrorAction Stop
+        }
+
+        Write-Host "  ✓ LocalAccountTokenFilterPolicy set to 1" -ForegroundColor Green
+        return $true
+    }
+    catch {
+        Write-Warning "Failed to configure LocalAccountTokenFilterPolicy: $_"
+        return $false
+    }
+}
+
+function Test-LocalAdminSharesPolicy {
+    if (-not ($IsWindows -or $PSVersionTable.PSEdition -eq 'Desktop')) {
+        return @{
+            IsInstalled = $false
+            Issues = @("Windows-only component")
+        }
+    }
+
+    $policyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+    $policyName = "LocalAccountTokenFilterPolicy"
+
+    try {
+        $value = (Get-ItemProperty -Path $policyPath -Name $policyName -ErrorAction SilentlyContinue).$policyName
+        return @{
+            IsInstalled = ($value -eq 1)
+            Version = if ($null -ne $value) { "$value" } else { $null }
+        }
+    }
+    catch {
+        return @{
+            IsInstalled = $false
+            Issues = @("Unable to read LocalAccountTokenFilterPolicy")
+        }
+    }
+}
+
 # Get all components in order - SINGLE SOURCE OF TRUTH
 function Get-EnvironmentComponents {
-    return @(
+    param(
+        [switch]$EnableAdminShares
+    )
+
+    $components = @(
         [SetupComponent]::new("gsudo", "winget", @{PackageId = "gerardog.gsudo" }, $true)
         [SetupComponent]::new("oh-my-posh", { Install-OhMyPoshWithFont }, { Test-OhMyPosh }, $false)
         [SetupComponent]::new("CascadiaCode Font", { Install-CascadiaCodeFont }, { Test-CascadiaCodeFont }, $false)
@@ -703,6 +773,17 @@ function Get-EnvironmentComponents {
         [SetupComponent]::new("PowerShell Profile", { Deploy-PowerShellProfile }, { Test-PowerShellProfile }, $false)
         [SetupComponent]::new("Windows Terminal", { Deploy-TerminalSettings }, { Test-WindowsTerminal }, $false)
     )
+
+    if ($EnableAdminShares) {
+        $components += [SetupComponent]::new(
+            "Local Admin Shares Policy",
+            { Install-LocalAdminSharesPolicy },
+            { Test-LocalAdminSharesPolicy },
+            $true
+        )
+    }
+
+    return $components
 }
 
 # Validate a single component

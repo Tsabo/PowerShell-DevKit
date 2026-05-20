@@ -77,6 +77,28 @@ Timeout protection should prevent this, but if it occurs:
 
 ---
 
+### EnableAdminShares Fails With Access Denied
+
+**Symptom:**
+```
+Installation failed for Local Admin Shares Policy
+Permission denied / access denied
+```
+
+**Cause:**
+`-EnableAdminShares` writes to an HKLM policy key and requires elevation.
+
+**Solution:**
+```powershell
+# Start PowerShell using "Run as Administrator", then:
+.\Scripts\Setup.ps1 -EnableAdminShares
+
+# Verify the registry value
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name LocalAccountTokenFilterPolicy
+```
+
+---
+
 ## Component Issues
 
 ### oh-my-posh Not Showing Correctly

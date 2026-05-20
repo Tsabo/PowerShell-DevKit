@@ -30,6 +30,7 @@ This directory contains streamlined automation scripts for setting up, validatin
 - Configures Windows Terminal settings with Nerd Font
 - Deploys Yazi file manager configuration
 - Installs optional components (gsudo, PowerColorLS)
+- Optional: Enables local administrative shares policy (`LocalAccountTokenFilterPolicy=1`)
 - Provides detailed installation summary
 
 #### Usage:
@@ -42,6 +43,9 @@ This directory contains streamlined automation scripts for setting up, validatin
 
 # Use different font
 .\Setup.ps1 -FontName "MesloLGM NF"
+
+# Optional: Enable local admin shares policy (c$, d$, etc.)
+.\Setup.ps1 -EnableAdminShares
 ```
 
 ---

@@ -8,6 +8,9 @@
     Skip installation of optional components (gsudo, PowerColorLS)
 .PARAMETER FontName
     Font to install for oh-my-posh (default: CascadiaCode)
+.PARAMETER EnableAdminShares
+    Applies LocalAccountTokenFilterPolicy=1 to enable local administrative shares (e.g., c$, d$)
+    for local administrator accounts. Windows only and requires running as Administrator.
 .PARAMETER ShowDetails
     Shows detailed failure information from previous setup runs
 .PARAMETER ClearLogs
@@ -16,6 +19,9 @@
     .\Setup.ps1
 .EXAMPLE
     .\Setup.ps1 -SkipOptional
+.EXAMPLE
+    .\Setup.ps1 -EnableAdminShares
+    Applies LocalAccountTokenFilterPolicy=1 for local administrative shares.
 .EXAMPLE
     .\Setup.ps1 -ShowDetails
     Shows detailed failure information from the last setup run
@@ -27,6 +33,7 @@
 param(
     [switch]$SkipOptional,
     [string]$FontName = "CascadiaCode",
+    [switch]$EnableAdminShares,
     [switch]$ShowDetails,
     [switch]$ClearLogs
 )
@@ -216,6 +223,7 @@ function Get-SetupSuggestion {
     $suggestions = @{
         "gsudo" = "Install manually: winget install gerardog.gsudo --source winget --scope user"
         "CascadiaCode Font" = "Install manually via Windows Settings > Fonts, or download from GitHub"
+        "Local Admin Shares Policy" = "Re-run setup as Administrator with -EnableAdminShares to write HKLM policy key"
         "oh-my-posh" = "Ensure PATH is updated. Run: refreshenv or restart PowerShell"
         "fzf" = "Install manually: winget install junegunn.fzf --source winget"
         "PSFzf" = "Update PowerShellGet: Install-Module PowerShellGet -Force -Scope CurrentUser"
@@ -231,6 +239,9 @@ function Get-SetupSuggestion {
 
     # Check for common error patterns
     if ($ErrorMessage -match "access.*denied|permission.*denied") {
+        if ($Component -eq "Local Admin Shares Policy") {
+            return "This policy writes to HKLM and requires an elevated PowerShell session (Run as Administrator)"
+        }
         return "Permission denied. Try running as Administrator or use --scope user"
     }
     if ($ErrorMessage -match "network|timeout|connection|powershellgallery") {
@@ -564,7 +575,7 @@ function Start-EnvironmentSetup {
         Skipped = @()
     }
 
-    $components = Get-EnvironmentComponents
+    $components = Get-EnvironmentComponents -EnableAdminShares:$EnableAdminShares
 
     foreach ($component in $components) {
         Install-SetupComponent -Component $component -Results $results

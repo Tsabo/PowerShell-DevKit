@@ -43,6 +43,9 @@ This is the easiest way to get started.
     # Right-click PowerShell and "Run as Administrator"
     cd C:\Dev\PowerShell-DevKit
     .\Scripts\Setup.ps1
+
+    # Optional: enable local admin shares policy (c$, d$, etc.)
+    .\Scripts\Setup.ps1 -EnableAdminShares
     ```
 
     **Benefits:**
@@ -163,6 +166,24 @@ Install-YaziOptionals -PluginsOnly
 Install-YaziOptionals -DependenciesOnly
 ```
 
+### Optional: Enable Local Administrative Shares (Windows)
+
+If you need local administrative shares such as `c$` or `d$` with local administrator accounts, run setup with:
+
+```powershell
+.\Scripts\Setup.ps1 -EnableAdminShares
+```
+
+This writes:
+
+- `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy = 1`
+
+Notes:
+
+- Windows only
+- Requires Administrator privileges
+- Skipped when using `-SkipOptional`
+
 ## Setup Process Details
 
 ### What the Setup Script Does
@@ -193,6 +214,10 @@ Install-YaziOptionals -DependenciesOnly
    - Runs component tests
    - Displays installation summary
    - Shows any issues that need attention
+
+Optional with `-EnableAdminShares`:
+
+- Applies `LocalAccountTokenFilterPolicy=1` for local administrative share access
 
 ### Progress Indicators
 

@@ -1139,6 +1139,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-enableadminshares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        -EnableAdminShares
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-showdetails" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2286,6 +2297,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-enableadminshares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        -EnableAdminShares
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-showdetails" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2762,32 +2784,46 @@
 <li>Hack</li>
 <li>Meslo</li>
 </ul>
+<h3 id="-enableadminshares">-EnableAdminShares<a class="headerlink" href="#-enableadminshares" title="Permanent link">&para;</a></h3>
+<p>Windows-only opt-in setting to enable local administrative shares for local administrator accounts.</p>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-EnableAdminShares</span>
+</span></code></pre></div>
+<p>This sets the following registry value:</p>
+<ul>
+<li><code>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\LocalAccountTokenFilterPolicy = 1</code></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Requires running PowerShell as Administrator.</li>
+<li>Off by default; only applied when this switch is provided.</li>
+<li>This component is optional and is skipped by <code>-SkipOptional</code>.</li>
+</ul>
 <h3 id="-showdetails">-ShowDetails<a class="headerlink" href="#-showdetails" title="Permanent link">&para;</a></h3>
 <p>View detailed failure information from previous setup runs:</p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-ShowDetails</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-ShowDetails</span>
 </span></code></pre></div>
 <p><strong>Example output:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>╔════════════════════════════════════════════════════════════╗
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>║                 SETUP FAILURE DETAILS                      ║
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>╚════════════════════════════════════════════════════════════╝
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>🔸 Yazi (winget)
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>   Last failure: 2025-11-02 10:30:15
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>   Operation: winget install sxyazi.yazi
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   Admin Rights: False
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>   Exit Code: 1
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>   Error: Network timeout during download
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>   💡 Suggestion: Network issue. Check internet connection and try again
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>╔════════════════════════════════════════════════════════════╗
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>║                 SETUP FAILURE DETAILS                      ║
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>╚════════════════════════════════════════════════════════════╝
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>🔸 Yazi (winget)
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>   Last failure: 2025-11-02 10:30:15
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>   Operation: winget install sxyazi.yazi
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>   Admin Rights: False
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>   Exit Code: 1
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>   Error: Network timeout during download
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>   💡 Suggestion: Network issue. Check internet connection and try again
 </span></code></pre></div>
 <h3 id="-clearlogs">-ClearLogs<a class="headerlink" href="#-clearlogs" title="Permanent link">&para;</a></h3>
 <p>Clear stored failure logs:</p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-ClearLogs</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-ClearLogs</span>
 </span></code></pre></div>
 <h2 id="installation-process">Installation Process<a class="headerlink" href="#installation-process" title="Permanent link">&para;</a></h2>
 <h3 id="1-prerequisites-check">1. Prerequisites Check<a class="headerlink" href="#1-prerequisites-check" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>🔹 Checking prerequisites...
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  ✓ PowerShell 7.4.1
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  ✓ winget available
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>🔹 Checking prerequisites...
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  ✓ PowerShell 7.4.1
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  ✓ winget available
 </span></code></pre></div>
 <p>Validates:</p>
 <ul>
@@ -2805,15 +2841,15 @@
 <li>Microsoft Edit</li>
 </ul>
 <p><strong>Example:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>🔹 Installing oh-my-posh...
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  → Checking if already installed...
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  → Running winget (timeout: 60s)...
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  ✓ oh-my-posh installed successfully
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>🔹 Installing oh-my-posh...
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  → Checking if already installed...
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  → Running winget (timeout: 60s)...
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  ✓ oh-my-posh installed successfully
 </span></code></pre></div>
 <h3 id="3-font-installation">3. Font Installation<a class="headerlink" href="#3-font-installation" title="Permanent link">&para;</a></h3>
 <p>Installs CascadiaCode Nerd Font (or specified font):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>🔹 Installing CascadiaCode Nerd Font...
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  ✓ Font installed via oh-my-posh
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>🔹 Installing CascadiaCode Nerd Font...
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  ✓ Font installed via oh-my-posh
 </span></code></pre></div>
 <h3 id="4-powershell-modules">4. PowerShell Modules<a class="headerlink" href="#4-powershell-modules" title="Permanent link">&para;</a></h3>
 <p>Installs from PSGallery:</p>
@@ -2824,11 +2860,11 @@
 <li>posh-git</li>
 </ul>
 <p><strong>Example:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>🔹 Installing PowerShell modules...
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  → Installing PSFzf...
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  ✓ PSFzf installed
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  → Installing Terminal-Icons...
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  ✓ Terminal-Icons installed
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>🔹 Installing PowerShell modules...
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  → Installing PSFzf...
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  ✓ PSFzf installed
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>  → Installing Terminal-Icons...
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  ✓ Terminal-Icons installed
 </span></code></pre></div>
 <h3 id="5-configuration-deployment">5. Configuration Deployment<a class="headerlink" href="#5-configuration-deployment" title="Permanent link">&para;</a></h3>
 <p>Deploys:</p>
@@ -2837,8 +2873,8 @@
 <li>Windows Terminal settings</li>
 <li>oh-my-posh themes</li>
 </ul>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>🔹 Deploying PowerShell profile...
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  ✓ Profile deployed to: C:\Users\...\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>🔹 Deploying PowerShell profile...
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  ✓ Profile deployed to: C:\Users\...\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 </span></code></pre></div>
 <h3 id="6-yazi-ecosystem">6. Yazi Ecosystem<a class="headerlink" href="#6-yazi-ecosystem" title="Permanent link">&para;</a></h3>
 <p>Installs:</p>
@@ -2848,15 +2884,15 @@
 <li>Yazi themes</li>
 <li>Optional dependencies</li>
 </ul>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>🔹 Setting up Yazi configuration...
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  → Cloning yazi_config repository...
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  ✓ Yazi configuration deployed
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>🔹 Installing Yazi plugins...
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  → Installing git plugin...
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  ✓ git plugin installed
-</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>  → Installing githead plugin (custom fork)...
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>  ✓ githead plugin installed
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>🔹 Setting up Yazi configuration...
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  → Cloning yazi_config repository...
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  ✓ Yazi configuration deployed
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>🔹 Installing Yazi plugins...
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  → Installing git plugin...
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  ✓ git plugin installed
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>  → Installing githead plugin (custom fork)...
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>  ✓ githead plugin installed
 </span></code></pre></div>
 <h3 id="7-optional-components">7. Optional Components<a class="headerlink" href="#7-optional-components" title="Permanent link">&para;</a></h3>
 <p>If not skipped:</p>
@@ -2864,17 +2900,18 @@
 <li>gsudo</li>
 <li>PowerColorLS</li>
 <li>Scoop + resvg</li>
+<li>Local Admin Shares Policy (only when <code>-EnableAdminShares</code> is used)</li>
 </ul>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>🔹 Installing optional components...
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  → Installing gsudo...
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  ✓ gsudo installed
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  ⊘ Scoop installation skipped (user declined)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>🔹 Installing optional components...
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  → Installing gsudo...
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  ✓ gsudo installed
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  ⊘ Scoop installation skipped (user declined)
 </span></code></pre></div>
 <h3 id="8-validation">8. Validation<a class="headerlink" href="#8-validation" title="Permanent link">&para;</a></h3>
 <p>Runs basic validation:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>🔹 Validating installation...
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  ✓ All core components installed
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  ⚠ 2 optional components skipped
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>🔹 Validating installation...
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  ✓ All core components installed
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  ⚠ 2 optional components skipped
 </span></code></pre></div>
 <h2 id="idempotent-behavior">Idempotent Behavior<a class="headerlink" href="#idempotent-behavior" title="Permanent link">&para;</a></h2>
 <p>Setup.ps1 is idempotent - safe to run multiple times:</p>
@@ -2884,9 +2921,9 @@
 <li>Failed components can be retried</li>
 </ul>
 <p><strong>Example:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>🔹 Installing Yazi...
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  → Checking if already installed...
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  ⊘ Yazi is already installed
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>🔹 Installing Yazi...
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>  → Checking if already installed...
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>  ⊘ Yazi is already installed
 </span></code></pre></div>
 <h2 id="timeout-protection">Timeout Protection<a class="headerlink" href="#timeout-protection" title="Permanent link">&para;</a></h2>
 <p>All operations have timeouts to prevent hangs:</p>
@@ -2913,16 +2950,16 @@
 </tbody>
 </table>
 <p>When timeout occurs:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>  → Check timed out, proceeding with installation...
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>  → Check timed out, proceeding with installation...
 </span></code></pre></div>
 <p>Or:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>  ⚠ Installation timed out, skipping component
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>  ⚠ Installation timed out, skipping component
 </span></code></pre></div>
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <h3 id="non-critical-errors">Non-Critical Errors<a class="headerlink" href="#non-critical-errors" title="Permanent link">&para;</a></h3>
 <p>Component failures are logged but setup continues:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>  ✗ Failed to install PowerColorLS
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  → Continuing with next component...
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>  ✗ Failed to install PowerColorLS
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>  → Continuing with next component...
 </span></code></pre></div>
 <p>Failures are logged to <code>Scripts/Logs/setup-details.json</code></p>
 <h3 id="critical-errors">Critical Errors<a class="headerlink" href="#critical-errors" title="Permanent link">&para;</a></h3>
@@ -2932,19 +2969,19 @@
 <li>winget not available</li>
 <li>Invalid parameters</li>
 </ul>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ERROR: PowerShell 7.0 or higher is required
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Current version: 5.1
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>Please install PowerShell 7: https://aka.ms/powershell
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ERROR: PowerShell 7.0 or higher is required
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Current version: 5.1
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>Please install PowerShell 7: https://aka.ms/powershell
 </span></code></pre></div>
 <h2 id="post-installation">Post-Installation<a class="headerlink" href="#post-installation" title="Permanent link">&para;</a></h2>
 <h3 id="reload-profile">Reload Profile<a class="headerlink" href="#reload-profile" title="Permanent link">&para;</a></h3>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># Reload PowerShell profile</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="p">.</span> <span class="nv">$PROFILE</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># Reload PowerShell profile</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="p">.</span> <span class="nv">$PROFILE</span>
 </span></code></pre></div>
 <p>Or restart PowerShell.</p>
 <h3 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h3>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c"># Run validation script</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Test</span><span class="p">.</span><span class="n">ps1</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c"># Run validation script</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Test</span><span class="p">.</span><span class="n">ps1</span>
 </span></code></pre></div>
 <h3 id="configure-terminal-font">Configure Terminal Font<a class="headerlink" href="#configure-terminal-font" title="Permanent link">&para;</a></h3>
 <p>In Windows Terminal:</p>
@@ -2955,11 +2992,11 @@
 </ol>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="view-failure-details">View Failure Details<a class="headerlink" href="#view-failure-details" title="Permanent link">&para;</a></h3>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-ShowDetails</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-ShowDetails</span>
 </span></code></pre></div>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <h4 id="execution-policy-error">Execution Policy Error<a class="headerlink" href="#execution-policy-error" title="Permanent link">&para;</a></h4>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">-ExecutionPolicy</span> <span class="n">RemoteSigned</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nb">Set-ExecutionPolicy</span> <span class="n">-ExecutionPolicy</span> <span class="n">RemoteSigned</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
 </span></code></pre></div>
 <h4 id="winget-not-found">winget Not Found<a class="headerlink" href="#winget-not-found" title="Permanent link">&para;</a></h4>
 <p>Update Windows or install App Installer from Microsoft Store.</p>
@@ -2973,18 +3010,18 @@
 <p>Run PowerShell as Administrator.</p>
 <h3 id="re-run-after-failures">Re-run After Failures<a class="headerlink" href="#re-run-after-failures" title="Permanent link">&para;</a></h3>
 <p>Simply re-run Setup.ps1:</p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span>
 </span></code></pre></div>
 <p>Already-installed components will be skipped, and it will retry failed components.</p>
 <h2 id="advanced-usage">Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permanent link">&para;</a></h2>
 <h3 id="custom-installation-path">Custom Installation Path<a class="headerlink" href="#custom-installation-path" title="Permanent link">&para;</a></h3>
 <p>The script uses standard paths, but you can customize by editing environment variables:</p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c"># Custom profile path (before running setup)</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="nv">$env:PSModulePath</span> <span class="p">=</span> <span class="s2">&quot;C:\CustomPath\Modules;$env:PSModulePath&quot;</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c"># Custom profile path (before running setup)</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="nv">$env:PSModulePath</span> <span class="p">=</span> <span class="s2">&quot;C:\CustomPath\Modules;$env:PSModulePath&quot;</span>
 </span></code></pre></div>
 <h3 id="selective-installation">Selective Installation<a class="headerlink" href="#selective-installation" title="Permanent link">&para;</a></h3>
 <p>To install only specific component types, modify Components.psm1 to mark others as optional, then run:</p>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-SkipOptional</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-SkipOptional</span>
 </span></code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -3015,7 +3052,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 2, 2025 15:57:53 UTC">November 2, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 20, 2026 12:57:22 UTC">May 20, 2026</span>
   </span>
 
     

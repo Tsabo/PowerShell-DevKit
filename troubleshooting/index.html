@@ -1689,6 +1689,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#enableadminshares-fails-with-access-denied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EnableAdminShares Fails With Access Denied
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2060,6 +2071,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#enableadminshares-fails-with-access-denied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EnableAdminShares Fails With Access Denied
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2368,6 +2390,21 @@ Timeout protection should prevent this, but if it occurs:</p>
 3. Check logs in <code>.\Scripts\Logs\</code>
 4. Re-run setup (already installed components will be skipped)</p>
 <hr />
+<h3 id="enableadminshares-fails-with-access-denied">EnableAdminShares Fails With Access Denied<a class="headerlink" href="#enableadminshares-fails-with-access-denied" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Installation failed for Local Admin Shares Policy
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Permission denied / access denied
+</span></code></pre></div></p>
+<p><strong>Cause:</strong>
+<code>-EnableAdminShares</code> writes to an HKLM policy key and requires elevation.</p>
+<p><strong>Solution:</strong>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Start PowerShell using &quot;Run as Administrator&quot;, then:</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Setup</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-EnableAdminShares</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Verify the registry value</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System&quot;</span> <span class="n">-Name</span> <span class="n">LocalAccountTokenFilterPolicy</span>
+</span></code></pre></div></p>
+<hr />
 <h2 id="component-issues">Component Issues<a class="headerlink" href="#component-issues" title="Permanent link">&para;</a></h2>
 <h3 id="oh-my-posh-not-showing-correctly">oh-my-posh Not Showing Correctly<a class="headerlink" href="#oh-my-posh-not-showing-correctly" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom:</strong>
@@ -2376,8 +2413,8 @@ Weird characters or boxes in prompt.</p>
 <ol>
 <li>
 <p><strong>Font Issue:</strong>
-   <div class="language-powershell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Reinstall font</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">oh-my-posh</span> <span class="n">font</span> <span class="n">install</span> <span class="n">CascadiaCode</span>
+   <div class="language-powershell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Reinstall font</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">oh-my-posh</span> <span class="n">font</span> <span class="n">install</span> <span class="n">CascadiaCode</span>
 </span></code></pre></div></p>
 </li>
 <li>
@@ -2390,15 +2427,15 @@ Weird characters or boxes in prompt.</p>
 <hr />
 <h3 id="yazi-doesnt-start">Yazi Doesn't Start<a class="headerlink" href="#yazi-doesnt-start" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom:</strong>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>yazi : The term &#39;yazi&#39; is not recognized
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>yazi : The term &#39;yazi&#39; is not recognized
 </span></code></pre></div></p>
 <p><strong>Solution:</strong>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Restart terminal to refresh PATH</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c"># Or manually add to PATH</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$env:PATH</span> <span class="p">+=</span> <span class="s2">&quot;;$env:LOCALAPPDATA\Microsoft\WinGet\Links&quot;</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Reload profile</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">.</span> <span class="nv">$PROFILE</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Restart terminal to refresh PATH</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c"># Or manually add to PATH</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nv">$env:PATH</span> <span class="p">+=</span> <span class="s2">&quot;;$env:LOCALAPPDATA\Microsoft\WinGet\Links&quot;</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c"># Reload profile</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">.</span> <span class="nv">$PROFILE</span>
 </span></code></pre></div></p>
 <hr />
 <h3 id="git-status-not-showing-in-prompt">Git Status Not Showing in Prompt<a class="headerlink" href="#git-status-not-showing-in-prompt" title="Permanent link">&para;</a></h3>
@@ -2408,12 +2445,12 @@ No git branch or status in prompt when in a git repository.</p>
 <ol>
 <li>
 <p><strong>Ensure posh-git is installed:</strong>
-   <div class="language-powershell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="n">posh-git</span>
+   <div class="language-powershell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="n">posh-git</span>
 </span></code></pre></div></p>
 </li>
 <li>
 <p><strong>Reload profile:</strong>
-   <div class="language-powershell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">.</span> <span class="nv">$PROFILE</span>
+   <div class="language-powershell highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">.</span> <span class="nv">$PROFILE</span>
 </span></code></pre></div></p>
 </li>
 <li>
@@ -2427,12 +2464,12 @@ No git branch or status in prompt when in a git repository.</p>
 <p><strong>Symptom:</strong>
 Yazi plugins don't appear to work.</p>
 <p><strong>Solution:</strong>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Check plugin installation</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">ya</span> <span class="n">pkg</span> <span class="n">list</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># Reinstall plugins</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">ya</span> <span class="n">pkg</span> <span class="n">add</span> <span class="s2">&quot;yazi-rs/plugins:git&quot;</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">ya</span> <span class="n">pkg</span> <span class="n">add</span> <span class="s2">&quot;Tsabo/githead&quot;</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Check plugin installation</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">ya</span> <span class="n">pkg</span> <span class="n">list</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Reinstall plugins</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">ya</span> <span class="n">pkg</span> <span class="n">add</span> <span class="s2">&quot;yazi-rs/plugins:git&quot;</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="n">ya</span> <span class="n">pkg</span> <span class="n">add</span> <span class="s2">&quot;Tsabo/githead&quot;</span>
 </span></code></pre></div></p>
 <hr />
 <h3 id="no-file-previews">No File Previews<a class="headerlink" href="#no-file-previews" title="Permanent link">&para;</a></h3>
@@ -2441,8 +2478,8 @@ Yazi doesn't show file previews.</p>
 <p><strong>Cause:</strong>
 Missing optional dependencies.</p>
 <p><strong>Solution:</strong>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Install all optional dependencies</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Install-YaziOptionals</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Install all optional dependencies</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Install-YaziOptionals</span>
 </span></code></pre></div></p>
 <hr />
 <h3 id="configuration-overwritten">Configuration Overwritten<a class="headerlink" href="#configuration-overwritten" title="Permanent link">&para;</a></h3>
@@ -2453,10 +2490,10 @@ Git pull overwrites local changes.</p>
 <p><strong>Prevention:</strong>
 The setup now detects local modifications and skips pulling updates.</p>
 <p><strong>Manual Update:</strong>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">cd </span><span class="nv">$env:APPDATA</span><span class="p">\</span><span class="n">yazi</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">git</span> <span class="n">stash</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">git</span> <span class="n">pull</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="n">git</span> <span class="n">stash</span> <span class="n">pop</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd </span><span class="nv">$env:APPDATA</span><span class="p">\</span><span class="n">yazi</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">git</span> <span class="n">stash</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">git</span> <span class="n">pull</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">git</span> <span class="n">stash</span> <span class="n">pop</span>
 </span></code></pre></div></p>
 <hr />
 <h2 id="update-issues">Update Issues<a class="headerlink" href="#update-issues" title="Permanent link">&para;</a></h2>
@@ -2464,53 +2501,53 @@ The setup now detects local modifications and skips pulling updates.</p>
 <p><strong>Symptom:</strong>
 <code>Update.ps1</code> reports errors.</p>
 <p><strong>Solution:</strong>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Update with detailed output</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Update</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Verbose</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c"># Check specific component</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Test</span><span class="p">.</span><span class="n">ps1</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Update with detailed output</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Update</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Verbose</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c"># Check specific component</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Test</span><span class="p">.</span><span class="n">ps1</span>
 </span></code></pre></div></p>
 <hr />
 <h3 id="modules-wont-update">Modules Won't Update<a class="headerlink" href="#modules-wont-update" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom:</strong>
 PowerShell modules show as outdated but won't update.</p>
 <p><strong>Solution:</strong>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Force update</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">Update-Module</span> <span class="n">-Name</span> <span class="n">PSFzf</span> <span class="n">-Force</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nb">Update-Module</span> <span class="n">-Name</span> <span class="n">Terminal-Icons</span> <span class="n">-Force</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nb">Update-Module</span> <span class="n">-Name</span> <span class="n">posh-git</span> <span class="n">-Force</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># Force update</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">Update-Module</span> <span class="n">-Name</span> <span class="n">PSFzf</span> <span class="n">-Force</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="nb">Update-Module</span> <span class="n">-Name</span> <span class="n">Terminal-Icons</span> <span class="n">-Force</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="nb">Update-Module</span> <span class="n">-Name</span> <span class="n">posh-git</span> <span class="n">-Force</span>
 </span></code></pre></div></p>
 <hr />
 <h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
 <h3 id="check-installation-status">Check Installation Status<a class="headerlink" href="#check-installation-status" title="Permanent link">&para;</a></h3>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Run test script</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Test</span><span class="p">.</span><span class="n">ps1</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c"># Check specific component</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="nb">Get-Command</span> <span class="n">oh-my-posh</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="nb">Get-Command</span> <span class="n">yazi</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="n">PSFzf</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c"># Run test script</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Test</span><span class="p">.</span><span class="n">ps1</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c"># Check specific component</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nb">Get-Command</span> <span class="n">oh-my-posh</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="nb">Get-Command</span> <span class="n">yazi</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="n">PSFzf</span>
 </span></code></pre></div>
 <h3 id="view-setup-logs">View Setup Logs<a class="headerlink" href="#view-setup-logs" title="Permanent link">&para;</a></h3>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># View latest log</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nb">Get-Content</span> <span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Setup_</span><span class="p">*.</span><span class="n">log</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">50</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c"># Search for errors</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nb">Get-Content</span> <span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Setup_</span><span class="p">*.</span><span class="n">log</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s2">&quot;error|fail&quot;</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c"># View latest log</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">Get-Content</span> <span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Setup_</span><span class="p">*.</span><span class="n">log</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">50</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c"># Search for errors</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nb">Get-Content</span> <span class="p">.\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Setup_</span><span class="p">*.</span><span class="n">log</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="s2">&quot;error|fail&quot;</span>
 </span></code></pre></div>
 <h3 id="verify-path">Verify PATH<a class="headerlink" href="#verify-path" title="Permanent link">&para;</a></h3>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c"># Check if tools are in PATH</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nv">$env:PATH</span> <span class="n">-split</span> <span class="s1">&#39;;&#39;</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-like</span> <span class="s1">&#39;*winget*&#39;</span> <span class="o">-or</span> <span class="nv">$_</span> <span class="o">-like</span> <span class="s1">&#39;*yazi*&#39;</span> <span class="p">}</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c"># Check if tools are in PATH</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nv">$env:PATH</span> <span class="n">-split</span> <span class="s1">&#39;;&#39;</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span> <span class="o">-like</span> <span class="s1">&#39;*winget*&#39;</span> <span class="o">-or</span> <span class="nv">$_</span> <span class="o">-like</span> <span class="s1">&#39;*yazi*&#39;</span> <span class="p">}</span>
 </span></code></pre></div>
 <h3 id="check-profile-loading">Check Profile Loading<a class="headerlink" href="#check-profile-loading" title="Permanent link">&para;</a></h3>
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c"># Verify profile exists</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">Test-Path</span> <span class="nv">$PROFILE</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c"># Check profile content</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nb">Get-Content</span> <span class="nv">$PROFILE</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c"># Reload profile</span>
-</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="p">.</span> <span class="nv">$PROFILE</span>
+<div class="language-powershell highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c"># Verify profile exists</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nb">Test-Path</span> <span class="nv">$PROFILE</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c"># Check profile content</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nb">Get-Content</span> <span class="nv">$PROFILE</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c"># Reload profile</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="p">.</span> <span class="nv">$PROFILE</span>
 </span></code></pre></div>
 <hr />
 <h2 id="getting-more-help">Getting More Help<a class="headerlink" href="#getting-more-help" title="Permanent link">&para;</a></h2>
@@ -2545,7 +2582,7 @@ PowerShell modules show as outdated but won't update.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 2, 2025 15:09:39 UTC">November 2, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 20, 2026 12:57:22 UTC">May 20, 2026</span>
   </span>
 
     

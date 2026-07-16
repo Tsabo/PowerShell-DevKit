@@ -106,22 +106,30 @@ function git-diff {
         [switch]$UseForkPoint,
 
         [Parameter()]
+        [switch]$CommittedOnly,
+
+        [Parameter()]
+        [switch]$IncludeUntracked,
+
+        [Parameter()]
         [switch]$VerboseOutput
     )
 
     <#
     .SYNOPSIS
-    Shows a diff between the current HEAD and the default branch (or a specified branch).
+    Shows a diff between the current working state (or HEAD) and the default branch (or a specified branch).
 
     .DESCRIPTION
-    The git-diff function produces a unified diff between the current HEAD and a
-    reference branch. By default, it compares HEAD against the repository's default
-    branch (commonly 'main' or 'master'), determined via git-default.
+    The git-diff function produces a unified diff between a reference branch and either
+    your current working tree (default) or HEAD only. By default, it compares against
+    the repository's default branch (commonly 'main' or 'master'), determined via git-default.
 
     The function supports:
     - Custom remotes (e.g., origin, upstream)
     - Custom branches
     - Using merge-base or fork-point
+    - Including uncommitted changes (default) or restricting to committed history only
+    - Optionally including untracked files
     - Verbose diagnostic output
 
     It uses a very large unified context (100000 lines) and --minimal to produce
@@ -136,20 +144,35 @@ function git-diff {
     .PARAMETER UseForkPoint
     Uses `git merge-base --fork-point` instead of the standard merge-base.
 
+    .PARAMETER CommittedOnly
+    Restricts the diff to committed history only (base..HEAD), excluding any
+    uncommitted working tree or staged changes. By default, uncommitted changes
+    are included.
+
+    .PARAMETER IncludeUntracked
+    Includes untracked files in the diff by running `git add -N` (intent-to-add)
+    before diffing. Only relevant when uncommitted changes are included (i.e.,
+    -CommittedOnly is not set). Note: this modifies the index by adding
+    intent-to-add entries for untracked files.
+
     .PARAMETER VerboseOutput
     Displays diagnostic information about branch resolution and merge-base selection.
 
     .EXAMPLE
     git-diff
-    Shows a diff between HEAD and the default branch.
+    Shows a diff between the default branch and your current working tree (including uncommitted changes).
 
     .EXAMPLE
-    git-diff -Remote upstream
-    Diffs HEAD against the default branch of the 'upstream' remote.
+    git-diff -CommittedOnly
+    Shows a diff between the default branch and HEAD only, ignoring uncommitted changes.
+
+    .EXAMPLE
+    git-diff -IncludeUntracked
+    Includes untracked files in the working-tree diff.
 
     .EXAMPLE
     git-diff -Branch develop
-    Diffs HEAD against the 'develop' branch.
+    Diffs against the 'develop' branch instead of the default.
 
     .EXAMPLE
     git-diff -UseForkPoint
@@ -177,8 +200,14 @@ function git-diff {
     }
 
     # Determine merge-base or fork-point
-    $baseCmd = if ($UseForkPoint) { "--fork-point" } else { "" }
-    $base = git merge-base $baseCmd $Branch HEAD 2>$null
+    $mergeBaseArgs = @()
+    if ($UseForkPoint) {
+        $mergeBaseArgs += "--fork-point"
+    }
+    $mergeBaseArgs += $Branch
+    $mergeBaseArgs += "HEAD"
+
+    $base = git merge-base @mergeBaseArgs 2>$null
 
     if ($VerboseOutput) {
         Write-Host "Merge base: $base" -ForegroundColor DarkYellow
@@ -189,8 +218,24 @@ function git-diff {
         return
     }
 
+    # Optionally stage untracked files as intent-to-add so they show up in the diff
+    if ($IncludeUntracked -and -not $CommittedOnly) {
+        git add -N . 2>$null | Out-Null
+    }
+
     # Perform diff
-    git --no-pager diff --no-prefix --unified=100000 --minimal "$base..HEAD"
+    if ($CommittedOnly) {
+        if ($VerboseOutput) {
+            Write-Host "Diffing committed history only: $base..HEAD" -ForegroundColor DarkGray
+        }
+        git --no-pager diff --no-prefix --unified=100000 --minimal "$base..HEAD"
+    }
+    else {
+        if ($VerboseOutput) {
+            Write-Host "Diffing working tree against: $base" -ForegroundColor DarkGray
+        }
+        git --no-pager diff --no-prefix --unified=100000 --minimal $base
+    }
 }
 
 function git-update-submodules {
@@ -354,6 +399,13 @@ function git-update-submodules {
 }
 
 function git-reset-working-tree {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param(
+        [switch]$Force,
+        [switch]$DryRun,
+        [switch]$VerboseOutput
+    )
+
     <#
     .SYNOPSIS
     Resets the working tree by discarding all local changes and removing all untracked files.
@@ -393,13 +445,6 @@ function git-reset-working-tree {
     git-reset-working-tree -DryRun
     Shows what would be reset or deleted without making changes.
     #>
-
-    [CmdletBinding(SupportsShouldProcess = $true)]
-    param(
-        [switch]$Force,
-        [switch]$DryRun,
-        [switch]$VerboseOutput
-    )
 
     # Ensure we're inside a Git repo
     $isRepo = git rev-parse --is-inside-work-tree 2>$null

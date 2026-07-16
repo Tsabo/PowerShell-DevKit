@@ -1,17 +1,279 @@
-function git-default
-{
-    (git symbolic-ref refs/remotes/origin/HEAD) -replace 'refs/remotes/origin/', ''
+function git-default {
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]$Remote = "origin",
+
+        [Parameter()]
+        [switch]$VerboseOutput
+    )
+
+    <#
+    .SYNOPSIS
+    Returns the default branch name for a Git remote, with robust fallbacks.
+
+    .DESCRIPTION
+    The git-default function determines the default branch for a Git remote
+    (commonly 'origin'). It first attempts to read the symbolic reference at
+    refs/remotes/<remote>/HEAD. If that reference is missing or not configured,
+    the function falls back to:
+
+    1. Using `git ls-remote --symref` to resolve HEAD.
+    2. Selecting the first remote branch alphabetically (useful in bare repos).
+
+    This makes the function resilient across repositories that use 'main',
+    'master', or any other default branch name, and across remotes that may not
+    have HEAD configured.
+
+    .PARAMETER Remote
+    Specifies the remote to inspect. Defaults to 'origin'.
+
+    .PARAMETER VerboseOutput
+    Displays diagnostic information about how the default branch was resolved.
+
+    .EXAMPLE
+    git-default
+    Returns the default branch for the 'origin' remote.
+
+    .EXAMPLE
+    git-default -Remote upstream
+    Returns the default branch for the 'upstream' remote.
+
+    .EXAMPLE
+    git checkout (git-default)
+    Checks out the default branch without needing to know its name.
+    #>
+
+    # Ensure we're inside a Git repo
+    $isRepo = git rev-parse --is-inside-work-tree 2>$null
+    if (-not $isRepo) {
+        Write-Error "Not inside a Git repository."
+        return
+    }
+
+    # Try the symbolic ref first (best case)
+    $symbolic = git symbolic-ref "refs/remotes/$Remote/HEAD" 2>$null
+
+    if ($VerboseOutput) {
+        Write-Host "Symbolic ref: $symbolic" -ForegroundColor Cyan
+    }
+
+    if ($symbolic) {
+        return ($symbolic -replace "refs/remotes/$Remote/", "")
+    }
+
+    # Fallback: check remote HEAD via ls-remote
+    $lsRemote = git ls-remote --symref $Remote HEAD 2>$null |
+        Select-String "ref:" |
+        ForEach-Object {
+            ($_ -split '\s+')[1] -replace "refs/heads/", ""
+        }
+
+    if ($VerboseOutput -and $lsRemote) {
+        Write-Host "ls-remote HEAD: $lsRemote" -ForegroundColor Cyan
+    }
+
+    if ($lsRemote) {
+        return $lsRemote
+    }
+
+    # Fallback: pick the first branch alphabetically (common in bare repos)
+    $branches = git branch -r 2>$null |
+        ForEach-Object { $_.Trim() -replace "$Remote/", "" } |
+        Where-Object { $_ -ne "HEAD" }
+
+    if ($VerboseOutput -and $branches) {
+        Write-Host "Remote branches: $($branches -join ', ')" -ForegroundColor DarkYellow
+    }
+
+    if ($branches) {
+        return ($branches | Select-Object -First 1)
+    }
+
+    Write-Error "Unable to determine default branch for remote '$Remote'."
 }
 
 function git-diff {
-    git --no-pager diff --no-prefix --unified=100000 --minimal "$((git merge-base $(git-default) --fork-point))..HEAD"
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [string]$Remote = "origin",
+
+        [Parameter()]
+        [string]$Branch = $null,
+
+        [Parameter()]
+        [switch]$UseForkPoint,
+
+        [Parameter()]
+        [switch]$VerboseOutput
+    )
+
+    <#
+    .SYNOPSIS
+    Shows a diff between the current HEAD and the default branch (or a specified branch).
+
+    .DESCRIPTION
+    The git-diff function produces a unified diff between the current HEAD and a
+    reference branch. By default, it compares HEAD against the repository's default
+    branch (commonly 'main' or 'master'), determined via git-default.
+
+    The function supports:
+    - Custom remotes (e.g., origin, upstream)
+    - Custom branches
+    - Using merge-base or fork-point
+    - Verbose diagnostic output
+
+    It uses a very large unified context (100000 lines) and --minimal to produce
+    cleaner diffs useful for code review and patch generation.
+
+    .PARAMETER Remote
+    Specifies the Git remote whose default branch should be used. Defaults to 'origin'.
+
+    .PARAMETER Branch
+    Overrides the branch to diff against. If omitted, the default branch is used.
+
+    .PARAMETER UseForkPoint
+    Uses `git merge-base --fork-point` instead of the standard merge-base.
+
+    .PARAMETER VerboseOutput
+    Displays diagnostic information about branch resolution and merge-base selection.
+
+    .EXAMPLE
+    git-diff
+    Shows a diff between HEAD and the default branch.
+
+    .EXAMPLE
+    git-diff -Remote upstream
+    Diffs HEAD against the default branch of the 'upstream' remote.
+
+    .EXAMPLE
+    git-diff -Branch develop
+    Diffs HEAD against the 'develop' branch.
+
+    .EXAMPLE
+    git-diff -UseForkPoint
+    Uses fork-point instead of merge-base for more accurate diffs on rebased branches.
+    #>
+
+    # Ensure we're inside a Git repo
+    $isRepo = git rev-parse --is-inside-work-tree 2>$null
+    if (-not $isRepo) {
+        Write-Error "Not inside a Git repository."
+        return
+    }
+
+    # Determine branch to diff against
+    if (-not $Branch) {
+        $Branch = git-default -Remote $Remote
+        if ($VerboseOutput) {
+            Write-Host "Default branch resolved to: $Branch" -ForegroundColor Cyan
+        }
+    }
+
+    if (-not $Branch) {
+        Write-Error "Unable to determine branch to diff against."
+        return
+    }
+
+    # Determine merge-base or fork-point
+    $baseCmd = if ($UseForkPoint) { "--fork-point" } else { "" }
+    $base = git merge-base $baseCmd $Branch HEAD 2>$null
+
+    if ($VerboseOutput) {
+        Write-Host "Merge base: $base" -ForegroundColor DarkYellow
+    }
+
+    if (-not $base) {
+        Write-Error "Unable to determine merge-base between '$Branch' and HEAD."
+        return
+    }
+
+    # Perform diff
+    git --no-pager diff --no-prefix --unified=100000 --minimal "$base..HEAD"
 }
 
 function git-update-submodules {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
+        [Parameter()]
         [string]$BasePath = ".",
-        [switch]$PullMainRepo
+
+        [Parameter()]
+        [switch]$PullMainRepo,
+
+        [Parameter()]
+        [switch]$DryRun,
+
+        [Parameter()]
+        [switch]$VerboseOutput,
+
+        [Parameter()]
+        [string[]]$Exclude = @(),
+
+        [Parameter()]
+        [int]$Depth = [int]::MaxValue
     )
+
+    <#
+    .SYNOPSIS
+    Updates Git submodules for all repositories under a specified directory tree.
+
+    .DESCRIPTION
+    The git-update-submodules function scans a directory tree for Git repositories
+    and updates their submodules safely and consistently. It supports:
+
+    - Pulling the main repository before updating submodules
+    - Dry-run mode for previewing actions without making changes
+    - Verbose diagnostic output
+    - Excluding specific repositories by name
+    - Limiting recursion depth
+    - Proper handling of worktrees and nested repositories
+    - Safe directory handling using Push-Location / Pop-Location
+    - SupportsShouldProcess for -WhatIf and -Confirm
+
+    This makes the function ideal for multi-repo workspaces, monorepos, and
+    development environments containing many nested Git projects.
+
+    .PARAMETER BasePath
+    The root directory to scan for Git repositories. Defaults to the current directory.
+
+    .PARAMETER PullMainRepo
+    Pulls the main repository before updating submodules. Useful when submodules
+    track remote branches.
+
+    .PARAMETER DryRun
+    Shows what actions would be taken without performing them. No Git commands are executed.
+
+    .PARAMETER VerboseOutput
+    Displays detailed diagnostic information about repository discovery and actions taken.
+
+    .PARAMETER Exclude
+    A list of repository directory names to skip during processing.
+
+    .PARAMETER Depth
+    Limits recursion depth relative to BasePath. Useful for large directory trees.
+
+    .EXAMPLE
+    git-update-submodules
+    Updates all submodules under the current directory.
+
+    .EXAMPLE
+    git-update-submodules -PullMainRepo
+    Pulls each repository before updating its submodules.
+
+    .EXAMPLE
+    git-update-submodules -DryRun
+    Shows what would be updated without making any changes.
+
+    .EXAMPLE
+    git-update-submodules -Exclude @("docs", "tools")
+    Skips the docs and tools repositories.
+
+    .EXAMPLE
+    git-update-submodules -Depth 2
+    Only processes repositories within two directory levels of BasePath.
+    #>
 
     Write-Host "🔍 Scanning for Git repositories under: $BasePath"
 
@@ -20,35 +282,70 @@ function git-update-submodules {
         return
     }
 
-    # Find all directories containing a .git folder
-    $repos = Get-ChildItem -Path $BasePath -Directory -Recurse |
-        Where-Object { Test-Path (Join-Path $_.FullName ".git") }
+    # Find all directories containing a .git folder or file (worktrees)
+    $repos = Get-ChildItem -Path $BasePath -Directory -Recurse -Force |
+        Where-Object {
+            $gitPath = Join-Path $_.FullName ".git"
+            (Test-Path $gitPath -PathType Leaf) -or
+            (Test-Path $gitPath -PathType Container)
+        } |
+        Where-Object {
+            $_.FullName.Split([IO.Path]::DirectorySeparatorChar).Count -le
+            ($BasePath.Split([IO.Path]::DirectorySeparatorChar).Count + $Depth)
+        } |
+        Where-Object {
+            $Exclude -notcontains $_.Name
+        }
+
 
     if ($repos.Count -eq 0) {
         Write-Host "⚠️ No Git repositories found under: $BasePath"
         return
     }
 
+    Write-Host "📁 Found $($repos.Count) repositories."
+
     foreach ($repo in $repos) {
         Write-Host ""
         Write-Host "📁 Processing repo: $($repo.FullName)"
-        Set-Location $repo.FullName
 
-        if ($PullMainRepo) {
-            Write-Host "⬇️ Pulling latest changes for main repo..."
-            git pull
+        Push-Location $repo.FullName
+        try {
+            if ($PullMainRepo) {
+                Write-Host "⬇️ Pulling latest changes..."
+                if ($DryRun) {
+                    Write-Host "[DryRun] git pull"
+                }
+                elseif ($PSCmdlet.ShouldProcess($repo.FullName, "git pull")) {
+                    git pull
+                }
+            }
+
+            Write-Host "🔧 Initializing submodules..."
+            if ($DryRun) {
+                Write-Host "[DryRun] git submodule init"
+            }
+            elseif ($PSCmdlet.ShouldProcess($repo.FullName, "git submodule init")) {
+                git submodule init
+            }
+
+            Write-Host "🔄 Updating submodules recursively..."
+            if ($DryRun) {
+                Write-Host "[DryRun] git submodule update --recursive --remote"
+            }
+            elseif ($PSCmdlet.ShouldProcess($repo.FullName, "git submodule update")) {
+                git submodule update --recursive --remote
+            }
+
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "✅ Submodules updated successfully for $($repo.Name)"
+            }
+            else {
+                Write-Host "❌ Failed to update submodules for $($repo.Name)"
+            }
         }
-
-        Write-Host "🔧 Initializing submodules..."
-        git submodule init
-
-        Write-Host "🔄 Updating submodules recursively..."
-        git submodule update --recursive --remote
-
-        if ($LASTEXITCODE -eq 0) {
-            Write-Host "✅ Submodules updated successfully for $($repo.Name)"
-        } else {
-            Write-Host "❌ Failed to update submodules for $($repo.Name)"
+        finally {
+            Pop-Location
         }
     }
 
@@ -57,26 +354,89 @@ function git-update-submodules {
 }
 
 function git-reset-working-tree {
-    [CmdletBinding()]
+    <#
+    .SYNOPSIS
+    Resets the working tree by discarding all local changes and removing all untracked files.
+
+    .DESCRIPTION
+    The git-reset-working-tree function performs a destructive reset of the current
+    Git working tree. It does two things:
+
+    1. `git reset --hard HEAD`
+       Restores all tracked files to their state at HEAD, discarding any local
+       modifications.
+
+    2. `git clean -fd`
+       Removes all untracked files and directories from the working tree.
+
+    The function includes safety checks, optional dry-run mode, verbose output,
+    and a -Force switch to skip confirmation.
+
+    .PARAMETER Force
+    Skips the confirmation prompt and performs the reset immediately.
+
+    .PARAMETER DryRun
+    Shows what actions *would* be taken without performing them.
+
+    .PARAMETER VerboseOutput
+    Displays detailed diagnostic information.
+
+    .EXAMPLE
+    git-reset-working-tree
+    Prompts for confirmation, then resets tracked files and removes untracked files.
+
+    .EXAMPLE
+    git-reset-working-tree -Force
+    Performs the reset without prompting.
+
+    .EXAMPLE
+    git-reset-working-tree -DryRun
+    Shows what would be reset or deleted without making changes.
+    #>
+
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
-        [switch]$Force
+        [switch]$Force,
+        [switch]$DryRun,
+        [switch]$VerboseOutput
     )
 
+    # Ensure we're inside a Git repo
+    $isRepo = git rev-parse --is-inside-work-tree 2>$null
+    if (-not $isRepo) {
+        Write-Error "Not inside a Git repository."
+        return
+    }
+
     # Safety confirmation unless -Force is used
-    if (-not $Force) {
+    if (-not $Force -and -not $DryRun) {
         Write-Host "This will discard ALL local changes and delete ALL untracked files." -ForegroundColor Yellow
         $response = Read-Host "Continue? (y/N)"
-        if ($response -notin @("y","Y")) {
+        if ($response -notin @("y", "Y")) {
             Write-Host "Aborted."
             return
         }
     }
 
     Write-Host "Resetting tracked files to HEAD..." -ForegroundColor Cyan
-    git reset --hard HEAD
+    if ($DryRun) {
+        Write-Host "[DryRun] git reset --hard HEAD"
+    }
+    elseif ($PSCmdlet.ShouldProcess("Working tree", "git reset --hard HEAD")) {
+        git reset --hard HEAD
+    }
 
     Write-Host "Cleaning untracked files..." -ForegroundColor Cyan
-    git clean -fd
+    if ($DryRun) {
+        Write-Host "[DryRun] git clean -fd"
+    }
+    elseif ($PSCmdlet.ShouldProcess("Working tree", "git clean -fd")) {
+        git clean -fd
+    }
+
+    if ($VerboseOutput) {
+        Write-Host "Verbose: Reset and clean operations completed." -ForegroundColor DarkGray
+    }
 
     Write-Host "Working tree reset complete." -ForegroundColor Green
 }

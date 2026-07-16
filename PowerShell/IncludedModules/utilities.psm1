@@ -1,4 +1,41 @@
-function Clean {
+function y {
+    <#
+    .SYNOPSIS
+    Launches Yazi and automatically changes the shell's working directory based on Yazi's output.
+
+    .DESCRIPTION
+    The y function is a convenience wrapper around the Yazi terminal file manager.
+    It creates a temporary file and passes its path to Yazi via the --cwd-file option.
+    When Yazi exits, it writes the desired working directory to that file.
+
+    The function reads the directory from the temporary file and, if it is not empty
+    and differs from the current working directory, uses the `z` command to jump to
+    that location. Finally, the temporary file is removed.
+
+    This provides seamless directory navigation when using Yazi inside PowerShell.
+
+    .PARAMETER args
+    Any arguments passed to Yazi. These are forwarded directly to the `yazi` command.
+
+    .EXAMPLE
+    y
+    Launches Yazi and changes the working directory after exit if Yazi requests it.
+
+    .EXAMPLE
+    y --chooser
+    Runs Yazi with additional arguments and updates the working directory accordingly.
+    #>
+
+    $tmp = (New-TemporaryFile).FullName
+    yazi $args --cwd-file="$tmp"
+    $cwd = Get-Content -Path $tmp -Encoding UTF8
+    if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
+        z $cwd
+    }
+    Remove-Item -Path $tmp
+}
+
+function Clean-Solution {
     [CmdletBinding(
         SupportsShouldProcess = $true,
         ConfirmImpact = 'Medium'
@@ -103,43 +140,6 @@ function Clean {
             }
         }
     }
-}
-
-function y {
-    <#
-    .SYNOPSIS
-    Launches Yazi and automatically changes the shell's working directory based on Yazi's output.
-
-    .DESCRIPTION
-    The y function is a convenience wrapper around the Yazi terminal file manager.
-    It creates a temporary file and passes its path to Yazi via the --cwd-file option.
-    When Yazi exits, it writes the desired working directory to that file.
-
-    The function reads the directory from the temporary file and, if it is not empty
-    and differs from the current working directory, uses the `z` command to jump to
-    that location. Finally, the temporary file is removed.
-
-    This provides seamless directory navigation when using Yazi inside PowerShell.
-
-    .PARAMETER args
-    Any arguments passed to Yazi. These are forwarded directly to the `yazi` command.
-
-    .EXAMPLE
-    y
-    Launches Yazi and changes the working directory after exit if Yazi requests it.
-
-    .EXAMPLE
-    y --chooser
-    Runs Yazi with additional arguments and updates the working directory accordingly.
-    #>
-
-    $tmp = (New-TemporaryFile).FullName
-    yazi $args --cwd-file="$tmp"
-    $cwd = Get-Content -Path $tmp -Encoding UTF8
-    if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
-        z $cwd
-    }
-    Remove-Item -Path $tmp
 }
 
 function Open-Solution {
@@ -308,8 +308,11 @@ function Convert-ISO8601ToLocalTime {
 
 function grep {
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $true, Position = 0)]
         [string]$Pattern,
+
+        [Parameter(ValueFromPipeline = $true)]
+        [object]$InputObject,
 
         [switch]$i,
         [switch]$v
@@ -372,21 +375,34 @@ function grep {
     Returns all lines that do NOT contain "debug".
     #>
 
-    $params = @{ Pattern = $Pattern }
-
-    if ($i) {
-        # Select-String is case-insensitive by default, but this ensures clarity
-        $params['CaseSensitive'] = $false
+    begin {
+        $matchParams = @{ Pattern = $Pattern }
+        if ($i) {
+            $matchParams['CaseSensitive'] = $false
+        }
+        $collected = @()
     }
 
-    $results = $_ | Select-String @params
-
-    if ($v) {
-        # Inverted match: return lines that do NOT match the pattern
-        $_ | Where-Object { $_ -notmatch $Pattern }
+    process {
+        $collected += $InputObject
     }
-    else {
-        # Normal match: return only the matched lines
-        $results | ForEach-Object { $_.Line }
+
+    end {
+        # Format the WHOLE collection at once, just like the console does,
+        # then split into individual text lines.
+        $lines = $collected | Out-String -Stream
+
+        foreach ($line in $lines) {
+            if ($v) {
+                if ($line -notmatch $Pattern) {
+                    $line
+                }
+            }
+            else {
+                if ($line | Select-String @matchParams) {
+                    $line
+                }
+            }
+        }
     }
 }

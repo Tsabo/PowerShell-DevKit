@@ -5,7 +5,9 @@ function y {
 
     .DESCRIPTION
     The y function is a convenience wrapper around the Yazi terminal file manager.
-    It creates a temporary file and passes its path to Yazi via the --cwd-file option.
+    It creates a temporary file and passes its path to Yazi via the --cwd-file option,
+    along with the current PowerShell directory so Yazi opens there even on platforms
+    where the new process would not otherwise inherit it (e.g. macOS/Linux).
     When Yazi exits, it writes the desired working directory to that file.
 
     The function reads the directory from the temporary file and, if it is not empty
@@ -27,7 +29,7 @@ function y {
     #>
 
     $tmp = (New-TemporaryFile).FullName
-    yazi $args --cwd-file="$tmp"
+    yazi $PWD.Path @args --cwd-file="$tmp"
     $cwd = Get-Content -Path $tmp -Encoding UTF8
     if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
         z $cwd

@@ -485,3 +485,98 @@ function git-reset-working-tree {
 
     Write-Host "Working tree reset complete." -ForegroundColor Green
 }
+
+function git-remote-ssh {
+    [CmdletBinding(SupportsShouldProcess = $true)]
+    param(
+        [Parameter()]
+        [string]$Remote = "origin",
+
+        [Parameter()]
+        [switch]$DryRun,
+
+        [Parameter()]
+        [switch]$VerboseOutput
+    )
+
+    <#
+    .SYNOPSIS
+    Switches a Git remote URL from HTTPS to SSH authentication.
+
+    .DESCRIPTION
+    The git-remote-ssh function reads the URL of a Git remote and, if it uses
+    HTTPS, rewrites it to the equivalent SSH form and applies it with
+    `git remote set-url`. For example:
+
+        https://github.com/Owner/Repo.git  ->  git@github.com:Owner/Repo.git
+
+    Embedded credentials (https://user@host/...) are dropped, and a missing
+    .git suffix is added. Remotes that already use SSH are left unchanged.
+
+    .PARAMETER Remote
+    Specifies the remote to convert. Defaults to 'origin'.
+
+    .PARAMETER DryRun
+    Shows the new URL without changing the remote.
+
+    .PARAMETER VerboseOutput
+    Displays diagnostic information about the URL conversion.
+
+    .EXAMPLE
+    git-remote-ssh
+    Converts the 'origin' remote from HTTPS to SSH.
+
+    .EXAMPLE
+    git-remote-ssh -Remote upstream -DryRun
+    Shows the SSH URL the 'upstream' remote would be switched to.
+    #>
+
+    # Ensure we're inside a Git repo
+    $isRepo = git rev-parse --is-inside-work-tree 2>$null
+    if (-not $isRepo) {
+        Write-Error "Not inside a Git repository."
+        return
+    }
+
+    $currentUrl = git remote get-url $Remote 2>$null
+    if (-not $currentUrl) {
+        Write-Error "Remote '$Remote' not found."
+        return
+    }
+
+    if ($VerboseOutput) {
+        Write-Host "Current URL: $currentUrl" -ForegroundColor Cyan
+    }
+
+    if ($currentUrl -match '^(ssh://|[^@/]+@[^:/]+:)') {
+        Write-Host "Remote '$Remote' already uses SSH: $currentUrl" -ForegroundColor Green
+        return
+    }
+
+    # https://[user@]host[:port]/owner/repo[.git][/]
+    if ($currentUrl -notmatch '^https?://(?:[^@/]+@)?(?<host>[^/:]+)(?::\d+)?/(?<path>.+?)(?:\.git)?/?$') {
+        Write-Error "Remote '$Remote' URL is not a recognized HTTPS URL: $currentUrl"
+        return
+    }
+
+    $sshUrl = "git@$($Matches.host):$($Matches.path).git"
+
+    if ($VerboseOutput) {
+        Write-Host "Host: $($Matches.host)  Path: $($Matches.path)" -ForegroundColor DarkYellow
+    }
+
+    if ($DryRun) {
+        Write-Host "[DryRun] git remote set-url $Remote $sshUrl"
+        return
+    }
+
+    if ($PSCmdlet.ShouldProcess($Remote, "git remote set-url $sshUrl")) {
+        git remote set-url $Remote $sshUrl
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "Remote '$Remote' switched to SSH: $sshUrl" -ForegroundColor Green
+        }
+        else {
+            Write-Error "Failed to update remote '$Remote'."
+        }
+    }
+}

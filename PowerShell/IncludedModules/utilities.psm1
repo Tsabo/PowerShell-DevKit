@@ -61,7 +61,7 @@ function Clean-Solution {
     Cleans .NET build output directories (bin and obj) with safety, flexibility, and optional dry-run support.
 
     .DESCRIPTION
-    The Clean function recursively removes build output directories such as 'bin' and 'obj'
+    The Clean-Solution function recursively removes build output directories such as 'bin' and 'obj'
     from the current directory tree. It improves on simple deletion by adding:
 
     - SupportsShouldProcess for safe deletion with -Confirm and -WhatIf
@@ -88,15 +88,15 @@ function Clean-Solution {
     Removes all bin and obj directories under the current directory.
 
     .EXAMPLE
-    Clean -DryRun
+    Clean-Solution -DryRun
     Shows which directories would be removed without deleting anything.
 
     .EXAMPLE
-    Clean -Depth 2
+    Clean-Solution -Depth 2
     Removes bin/obj directories only within two levels of the current directory.
 
     .EXAMPLE
-    Clean -Include @('bin', 'obj', 'out')
+    Clean-Solution -Include @('bin', 'obj', 'out')
     Removes bin, obj, and out directories.
     #>
 
